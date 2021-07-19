@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Rayucan"><meta name="copyright" content="Rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Maven | Rayの云端小屋</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"Rayの云端小屋","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="软件项目管理（特别是Java软件）及自动构建工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven">
+<meta property="og:url" content="http://example.com/2020/10/05/Maven/index.html">
+<meta property="og:site_name" content="Rayの云端小屋">
+<meta property="og:description" content="软件项目管理（特别是Java软件）及自动构建工具。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150806.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150757.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150812.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150847.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150847.png">
+<meta property="article:published_time" content="2020-10-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-01T15:17:36.592Z">
+<meta property="article:author" content="Rayucan">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="Rayucan"></a><div class="site-author-name"><a href="/about/">Rayucan</a></div><a class="site-name" href="/about/site.html">Rayの云端小屋</a><sub class="site-subtitle"></sub><div class="site-desciption">Gaze into abyss.</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">37</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">11</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=775972516&amp;site=qq&amp;menu=yes" title="QQ" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:775972516@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=362729060" title="网易云音乐" target="_blank" style="color:#C10D0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/ray-63-72" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/226098990/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Maven简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%89%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">目前存在的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">构建？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E7%9A%84%E5%90%84%E4%B8%AA%E7%8E%AF%E8%8A%82"><span class="toc-number">1.3.</span> <span class="toc-text">构建的各个环节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">Maven核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E5%B7%A5%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">Maven工程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%A6%E5%AE%9A%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">创建约定的目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%81%B5%E5%BE%AA%E7%BA%A6%E5%AE%9A%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%EF%BC%9F"><span class="toc-number">3.2.</span> <span class="toc-text">为什么要遵循约定的目录结构？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8Maven%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">常用Maven命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E8%81%94%E7%BD%91"><span class="toc-number">5.</span> <span class="toc-text">Maven联网</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#POM"><span class="toc-number">6.</span> <span class="toc-text">POM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%90%E6%A0%87"><span class="toc-number">7.</span> <span class="toc-text">坐标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">8.</span> <span class="toc-text">依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="toc-number">8.1.</span> <span class="toc-text">依赖的范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%9A%84%E4%BC%A0%E9%80%92%E6%80%A7"><span class="toc-number">8.2.</span> <span class="toc-text">依赖的传递性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%9A%84%E6%8E%92%E9%99%A4"><span class="toc-number">8.3.</span> <span class="toc-text">依赖的排除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%9A%84%E5%8E%9F%E5%88%99"><span class="toc-number">8.4.</span> <span class="toc-text">依赖的原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86%E4%BE%9D%E8%B5%96%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">8.5.</span> <span class="toc-text">统一管理依赖的版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%93%E5%BA%93"><span class="toc-number">9.</span> <span class="toc-text">仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%93%E5%BA%93%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">9.1.</span> <span class="toc-text">仓库的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%93%E5%BA%93%E4%B8%AD%E4%BF%9D%E5%AD%98%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">9.2.</span> <span class="toc-text">仓库中保存的内容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">10.</span> <span class="toc-text">生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E5%92%8C%E7%9B%AE%E6%A0%87"><span class="toc-number">11.</span> <span class="toc-text">插件和目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">12.</span> <span class="toc-text">继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%90%88"><span class="toc-number">13.</span> <span class="toc-text">聚合</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2020/10/05/Maven/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rayの云端小屋"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Maven</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-10-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-10-05T00:00:00+08:00">2020-10-05</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-06-01 23:17:36" itemprop="dateModified" datetime="2021-06-01T23:17:36+08:00">2021-06-01</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Web/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Web</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="Maven简介"><a href="#Maven简介" class="headerlink" title="Maven简介"></a>Maven简介</h2><p>Maven是一款服务于 Java 平台的自动化构建工具。</p>
+<h3 id="目前存在的问题"><a href="#目前存在的问题" class="headerlink" title="目前存在的问题"></a>目前存在的问题</h3><ol>
+<li><p>一个项目就是一个工程</p>
+<p>如果项目非常庞大，就不适合继续使用package来划分模块。最好每个模块对应一个工程，利于分工合作。</p>
+<p>借助Maven，就可以将一个项目拆分成多个工程。</p>
+</li>
+<li><p>项目中需要的jar包必须手动”复制粘贴“到 <em><strong>WEB-INF/lib</strong></em> 目录下</p>
+<p>带来的问题是，同样的jar包文件重复出现在不同的项目工程中，不仅浪费存储空间，也让工程变得臃肿。</p>
+<p>借助Maven，可以将jar包仅仅保存在“仓库”中，有需要使用的工程“引用”这个文件接口，而不需要真正把jar包复制过来。</p>
+</li>
+<li><p>jar包需要别人替我们准备好，或到官网下载</p>
+<p>借助Maven，能以一种规范的方式下载jar包，所有的知名框架或第三方工具的jar包以统一的规范存放在Maven的中央仓库中。以规范的方式下载的jar包，内容也是可靠的。</p>
+<p><strong>“统一的规范”非常重要！</strong></p>
+</li>
+<li><p>一个jar包依赖的其他jar包需要自己手动加入到项目中</p>
+<p>如果所有的jar包之间依赖关系都需要程序员自己非常了解，就会极大增加学习成本。</p>
+<p>借助Maven，jar包会被自动导入。</p>
+</li>
+</ol>
+<h3 id="构建？"><a href="#构建？" class="headerlink" title="构建？"></a>构建？</h3><p>[1]概念：以”Java源文件“、“框架配置文件”等资源为原材料，去生产一个可运行项目的过程。</p>
+<ul>
+<li>编译</li>
+<li>部署</li>
+<li>搭建</li>
+</ul>
+<p>[2]编译：Java源文件 -&gt; 编译 -&gt; Class字节码文件 -&gt; JVM</p>
+<p>[3]部署：一个B/S项目最终运行的并不是动态web工程本身，而是此web工程“编译的结果”</p>
+<p><strong>在开发过程中，所有的”路径“都是以编译结果的目录结构为标准</strong></p>
+<p>以Eclipse为例</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png" alt="0tEgnx.jpg" loading="lazy"></p>
+<h3 id="构建的各个环节"><a href="#构建的各个环节" class="headerlink" title="构建的各个环节"></a>构建的各个环节</h3><p>①清理：删除以前的编译结果，为重新编译做好准备。<br>②编译：将 Java 源程序编译为字节码文件。<br>③测试：针对项目中的关键点进行测试，确保项目在迭代开发过程中关键点的正确性。<br>④报告：在每一次测试后以标准的格式记录和展示测试结果。<br>⑤打包：将一个包含诸多文件的工程封装为一个压缩文件用于安装或部署。Java 工程对应 jar 包，Web工程对应 war 包。<br>⑥安装：在 Maven 环境下特指将打包的结果——jar 包或 war 包安装到本地仓库中。<br>⑦部署：将打包的结果部署到远程仓库或将 war 包部署到服务器上运行。</p>
+<h2 id="Maven核心概念"><a href="#Maven核心概念" class="headerlink" title="Maven核心概念"></a>Maven核心概念</h2><p>①POM<br>②约定的目录结构<br>③坐标<br><strong>④依赖</strong><br>⑤仓库<br>⑥生命周期<br>⑦插件和目标<br>⑧继承<br>⑨聚合 </p>
+<h2 id="Maven工程"><a href="#Maven工程" class="headerlink" title="Maven工程"></a>Maven工程</h2><h3 id="创建约定的目录结构"><a href="#创建约定的目录结构" class="headerlink" title="创建约定的目录结构"></a>创建约定的目录结构</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png" alt="0tZKJg.png" loading="lazy"></p>
+<h3 id="为什么要遵循约定的目录结构？"><a href="#为什么要遵循约定的目录结构？" class="headerlink" title="为什么要遵循约定的目录结构？"></a>为什么要遵循约定的目录结构？</h3><ul>
+<li><p>Maven要负责此项目的自动化构建，必须知道Java源文件保存在何处</p>
+</li>
+<li><p>如果我们需要进行自定义，有两种方法</p>
+<ul>
+<li>以配置的方式明确告诉框架</li>
+<li>遵守框架内部已存在的约定</li>
+</ul>
+</li>
+<li><p>现在 JavaEE 开发领域普遍认同一个观点：</p>
+<p><strong>约定&gt;配置&gt;编码</strong></p>
+<p>意思就是能用配置解决的问题就不编码，能基于约定的就不进行配置。</p>
+<p>而 Maven 正是因为指定了特定文件保存的目录才能够对我们的 Java 工程进行自动化构建。</p>
+</li>
+</ul>
+<h2 id="常用Maven命令"><a href="#常用Maven命令" class="headerlink" title="常用Maven命令"></a>常用Maven命令</h2><p>注意：<strong>执行与构建过程相关的Maven命令，必须进入pom.xml所在的目录</strong></p>
+<p>与构建过程相关：编译、测试、打包等</p>
+<ol>
+<li><em><strong>mvn clean</strong></em> ：清理</li>
+<li><em><strong>mvn compile</strong></em> ：编译主程序</li>
+<li><em><strong>mvn test-complie</strong></em> ：编译测试程序</li>
+<li><em><strong>mvn test</strong></em> ：执行测试</li>
+<li><em><strong>mvn package</strong></em> ：打包</li>
+<li><em><strong>mvn install</strong></em> ：安装</li>
+<li><em><strong>mvn site</strong></em> ：生成站点</li>
+</ol>
+<h2 id="Maven联网"><a href="#Maven联网" class="headerlink" title="Maven联网"></a>Maven联网</h2><p>Maven 的核心程序中仅仅定义了抽象的生命周期，而具体的操作则是由 Maven 的插件来完成的，但Maven 的插件并不包含在 Maven 的核心程序中，在首次使用时需要联网下载。<br>下载得到的插件会被保存到本地仓库中。本地仓库默认的位置是：<em><strong>C:\Users\user\.m2\repository</strong></em>。</p>
+<h2 id="POM"><a href="#POM" class="headerlink" title="POM"></a>POM</h2><p>Project Object Model：项目对象模型</p>
+<p>即：将 Java 工程的相关信息封装为对象作为便于操作和管理的模型</p>
+<p><strong>pom.xml是Maven 工程的核心配置文件，可以说学习 Maven 就是学习 pom.xml 中的配置</strong></p>
+<h2 id="坐标"><a href="#坐标" class="headerlink" title="坐标"></a>坐标</h2><ul>
+<li>几何中的坐标<br>[1]在一个平面中使用 x、y 两个向量可以唯一的确定平面中的一个点。<br>[2]在空间中使用 x、y、z 三个向量可以唯一的确定空间中的一个点。</li>
+<li>Maven 的坐标<br>使用如下三个向量在 Maven 的仓库中唯一的确定一个 Maven 工程。<br>[1]<em><strong>groupid</strong></em>：公司或组织的域名倒序+当前项目名称<br>[2]<em><strong>artifactId</strong></em>：模块名<br>[3]<em><strong>version</strong></em>：版本</li>
+</ul>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>com<span class="token punctuation">.</span>atguigu<span class="token punctuation">.</span>maven<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span><span class="token class-name">Hello</span><span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>version<span class="token punctuation">></span></span><span class="token number">0.0</span><span class="token number">.1</span><span class="token operator">-</span>SNAPSHOT<span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span></code></pre>
+
+<ul>
+<li><p>如何根据坐标在仓库中找到jar包？</p>
+<p>[1]将 gav 三个向量连起来</p>
+<p><em><strong>com.atguigu.maven+Hello+0.0.1-SNAPSHOT</strong></em></p>
+<p>[2]以连起来的字符串作为目录结构到仓库中查找</p>
+<p><em><strong>com/atguigu/maven/Hello/0.0.1-SNAPSHOT/Hello-0.0.1-SNAPSHOT.jar</strong></em></p>
+<p>注意：我们自己的 Maven 工程必须执行安装操作才会进入仓库。安装的命令是：<em><strong>mvn install</strong></em></p>
+</li>
+</ul>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>Maven解析依赖信息时会到本地仓库中查找被依赖的jar包</p>
+<p>对于我们自己开发的Maven工程，使用<em><strong>mvn install</strong></em>命令安装后就可以进入仓库</p>
+<h3 id="依赖的范围"><a href="#依赖的范围" class="headerlink" title="依赖的范围"></a>依赖的范围</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150717.png" alt="0tmN24.png" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150806.png" alt="0tmUxJ.png" loading="lazy"></p>
+<h3 id="依赖的传递性"><a href="#依赖的传递性" class="headerlink" title="依赖的传递性"></a>依赖的传递性</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150757.png" alt="0tm7i8.png" loading="lazy"></p>
+<p>好处：可以传递的依赖不必在每个模块工程中重复声明</p>
+<p>注意：非compile范围的依赖不能传递</p>
+<h3 id="依赖的排除"><a href="#依赖的排除" class="headerlink" title="依赖的排除"></a>依赖的排除</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150812.png" alt="0tmzd0.png" loading="lazy"></p>
+<p>设置方式：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>exclusions<span class="token punctuation">></span></span> 
+	<span class="token generics"><span class="token punctuation">&lt;</span>exclusion<span class="token punctuation">></span></span> 
+ 		<span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>commons<span class="token operator">-</span>logging<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span> 
+		<span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>commons<span class="token operator">-</span>logging<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span> 
+	<span class="token operator">&lt;</span><span class="token operator">/</span>exclusion<span class="token operator">></span> 
+<span class="token operator">&lt;</span><span class="token operator">/</span>exclusions<span class="token operator">></span></code></pre>
+
+<h3 id="依赖的原则"><a href="#依赖的原则" class="headerlink" title="依赖的原则"></a>依赖的原则</h3><p>作用：<strong>解决jar包冲突问题</strong></p>
+<ol>
+<li><p>路径最短者优先</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150847.png" alt="0tncT0.png" loading="lazy"></p>
+</li>
+<li><p>路径相同时先声明者优先</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202150847.png" alt="0tnRYT.png" loading="lazy"></p>
+<p>这里“声明”的先后顺序是指<em><strong>dependency</strong></em>标签配置的先后顺序</p>
+</li>
+</ol>
+<h3 id="统一管理依赖的版本"><a href="#统一管理依赖的版本" class="headerlink" title="统一管理依赖的版本"></a>统一管理依赖的版本</h3><p>统一声明版本号</p>
+<pre class="language-none"><code class="language-none">&lt;properties&gt;
+	&lt;atguigu.spring.version&gt;4.1.1.RELEASE&lt;&#x2F;atguigu.spring.version&gt;
+&lt;&#x2F;properties&gt;</code></pre>
+
+<p>引用前面声明的版本号</p>
+<pre class="language-none"><code class="language-none">&lt;dependencies&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;
+		&lt;artifactId&gt;spring-core&lt;&#x2F;artifactId&gt;
+		&lt;version&gt;$&#123;atguigu.spring.version&#125;&lt;&#x2F;version&gt;
+	&lt;&#x2F;dependency&gt;
+	
+	……
+
+&lt;&#x2F;dependencies&gt;</code></pre>
+
+<p>其他用法</p>
+<pre class="language-none"><code class="language-none">&lt;properties&gt;
+	&lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;
+&lt;&#x2F;properties&gt;</code></pre>
+
+
+
+<h2 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h2><h3 id="仓库的分类"><a href="#仓库的分类" class="headerlink" title="仓库的分类"></a>仓库的分类</h3><ol>
+<li><p>本地仓库：当前电脑上部署的仓库目录</p>
+</li>
+<li><p>远程仓库：</p>
+<p>​    私服：搭建在局域网环境中，为局域网范围内的所有Maven工程服务</p>
+<p>​    中央仓库：架设在Internet上，为世界范围内Maven工程服务</p>
+<p>​    中央仓库镜像：为了分担中央仓库的流量，提升用户访问速度</p>
+</li>
+</ol>
+<h3 id="仓库中保存的内容"><a href="#仓库中保存的内容" class="headerlink" title="仓库中保存的内容"></a>仓库中保存的内容</h3><p>Maven工程。</p>
+<ol>
+<li>Maven自身所需要的插件</li>
+<li>第三方框架或工具的jar包</li>
+<li>自己开发的Maven工程</li>
+</ol>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><ul>
+<li>Maven 生命周期定义了各个构建环节的执行顺序，如此才能自动化执行构建命令。</li>
+</ul>
+<ol>
+<li>不能打乱顺序，必须按照指定的正确顺序来执行</li>
+<li>Maven的核心程序中定义了抽象的生命周期，生命周期中各个阶段的具体任务是由插件来完成的</li>
+<li>Maven的核心程序为了更好实现自动化构建，<strong>不论要执行生命周期哪一阶段，都是从生命周期的最初位置开始执行</strong></li>
+</ol>
+<ul>
+<li>Maven 有三套相互独立的生命周期，分别是：</li>
+</ul>
+<p>①<em><strong>Clean Lifecycle</strong></em> 在进行真正的构建之前进行一些清理工作。<br>②<em><strong>Default Lifecycle</strong></em> 构建的核心部分，编译，测试，打包，安装，部署等等。<br>③<em><strong>Site Lifecycle</strong></em> 生成项目报告，站点，发布站点。</p>
+<h2 id="插件和目标"><a href="#插件和目标" class="headerlink" title="插件和目标"></a>插件和目标</h2><p>Maven 的核心仅仅定义了抽象的生命周期，具体的任务都是交由插件完成的。<br>每个插件都能实现多个功能，每个功能就是一个插件目标。<br>Maven 的生命周期与插件目标相互绑定，以完成某个具体的构建任务。</p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ul>
+<li><p>情景</p>
+<p>Hello依赖的junit：4.0</p>
+<p>HelloFriend依赖的junit：4.0</p>
+<p>MakeFriend依赖的junit：4.9</p>
+<p>由于test范围得到依赖不能传递，必然会分散在各个模块工程中，容易造成版本不一致。</p>
+</li>
+<li><p>需求</p>
+<p>统一管理各个模块工程中对junit依赖的版本</p>
+</li>
+<li><p>解决方案</p>
+<p>将junit依赖统一提取到“父工程”中，在子工程中声明junit依赖时不指定版本，以父工程为准</p>
+</li>
+<li><p>步骤</p>
+<ol>
+<li>创建父工程，与创建一般的 Java 工程操作一致，注意：<strong>打包方式设置为 pom</strong></li>
+<li>在子工程中引用父工程</li>
+<li>将子工程坐标中与父工程坐标重复内容删除</li>
+<li>在父工程中管理依赖</li>
+<li>在子工程中删除junit依赖的版本号</li>
+</ol>
+</li>
+<li><p>注意</p>
+<p>配置继承后，执行安装命令时要先安装父工程</p>
+</li>
+</ul>
+<h2 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h2><ul>
+<li><p>作用</p>
+<p>一键安装各个模块工程</p>
+</li>
+<li><p>配置方式</p>
+<p>在一个“总聚合工程”中配置各个参与聚合的模块</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>modules<span class="token punctuation">></span></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token keyword">module</span><span class="token punctuation">></span></span><span class="token punctuation">.</span><span class="token punctuation">.</span>/<span class="token class-name">Hello</span><span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">module</span><span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token keyword">module</span><span class="token punctuation">></span></span><span class="token punctuation">.</span><span class="token punctuation">.</span>/<span class="token class-name">HelloFriend</span><span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">module</span><span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token keyword">module</span><span class="token punctuation">></span></span><span class="token punctuation">.</span><span class="token punctuation">.</span>/<span class="token class-name">MakeFriends</span><span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">module</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>modules<span class="token operator">></span></code></pre></li>
+</ul>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>Rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2020/10/05/Maven/" title="Maven">http://example.com/2020/10/05/Maven/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/10/25/SSM%E6%A1%86%E6%9E%B6%E4%B9%8BSpring/" rel="prev" title="SSM框架之Spring"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">SSM框架之Spring</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/10/04/Socket/" rel="next" title="Socket"><span class="post-nav-text">Socket</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2020 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

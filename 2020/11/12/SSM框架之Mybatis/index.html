@@ -1,0 +1,698 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Rayucan"><meta name="copyright" content="Rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>SSM框架之Mybatis | Rayの云端小屋</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"Rayの云端小屋","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSM框架之Mybatis">
+<meta property="og:url" content="http://example.com/2020/11/12/SSM%E6%A1%86%E6%9E%B6%E4%B9%8BMybatis/index.html">
+<meta property="og:site_name" content="Rayの云端小屋">
+<meta property="og:description" content="支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209155734.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160035.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160212.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160249.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160258.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160321.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160510.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160432.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160526.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160536.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160609.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160619.png">
+<meta property="article:published_time" content="2020-11-12T02:58:38.000Z">
+<meta property="article:modified_time" content="2021-06-01T15:17:59.967Z">
+<meta property="article:author" content="Rayucan">
+<meta property="article:tag" content="SSM框架">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209155734.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="Rayucan"></a><div class="site-author-name"><a href="/about/">Rayucan</a></div><a class="site-name" href="/about/site.html">Rayの云端小屋</a><sub class="site-subtitle"></sub><div class="site-desciption">Gaze into abyss.</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">37</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">11</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=775972516&amp;site=qq&amp;menu=yes" title="QQ" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:775972516@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=362729060" title="网易云音乐" target="_blank" style="color:#C10D0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/ray-63-72" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/226098990/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Mybatis简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8Mybatis"><span class="toc-number">1.1.</span> <span class="toc-text">为什么要使用Mybatis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">Mybatis的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">全局配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#properties%E5%B1%9E%E6%80%A7"><span class="toc-number">3.1.</span> <span class="toc-text">properties属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#settings%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">settings设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#typeAliases%E5%88%AB%E5%90%8D%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">3.3.</span> <span class="toc-text">typeAliases别名处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#typeHandlers%E7%B1%BB%E5%9E%8B%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">3.4.</span> <span class="toc-text">typeHandlers类型处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">3.5.</span> <span class="toc-text">日期类型的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">3.6.</span> <span class="toc-text">自定义类型处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#plugins%E6%8F%92%E4%BB%B6"><span class="toc-number">3.7.</span> <span class="toc-text">plugins插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#environments%E7%8E%AF%E5%A2%83"><span class="toc-number">3.8.</span> <span class="toc-text">environments环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#environment-%E6%8C%87%E5%AE%9A%E5%85%B7%E4%BD%93%E7%8E%AF%E5%A2%83"><span class="toc-number">3.9.</span> <span class="toc-text">environment-指定具体环境</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#transactionManager"><span class="toc-number">3.9.1.</span> <span class="toc-text">transactionManager</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dataSource"><span class="toc-number">3.9.2.</span> <span class="toc-text">dataSource</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#databaseIdProvider%E7%8E%AF%E5%A2%83"><span class="toc-number">3.10.</span> <span class="toc-text">databaseIdProvider环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mapper%E6%98%A0%E5%B0%84"><span class="toc-number">3.11.</span> <span class="toc-text">mapper映射</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">映射文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#insert-update-delete%E5%85%83%E7%B4%A0"><span class="toc-number">4.1.</span> <span class="toc-text">insert update delete元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E7%94%9F%E6%88%90%E6%96%B9%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">主键生成方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#selectKey"><span class="toc-number">4.3.</span> <span class="toc-text">selectKey</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%EF%BC%88Parameters%EF%BC%89%E4%BC%A0%E9%80%92"><span class="toc-number">4.4.</span> <span class="toc-text">参数（Parameters）传递</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86"><span class="toc-number">4.5.</span> <span class="toc-text">参数处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#select%E5%85%83%E7%B4%A0"><span class="toc-number">4.6.</span> <span class="toc-text">select元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E6%98%A0%E5%B0%84"><span class="toc-number">4.7.</span> <span class="toc-text">自动映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#resultMap"><span class="toc-number">4.8.</span> <span class="toc-text">resultMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#id-amp-result"><span class="toc-number">4.9.</span> <span class="toc-text">id&amp;result</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#association"><span class="toc-number">4.10.</span> <span class="toc-text">association</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Collection"><span class="toc-number">4.11.</span> <span class="toc-text">Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E5%A4%9A%E5%88%97%E5%80%BC%E5%B0%81%E8%A3%85map%E4%BC%A0%E9%80%92"><span class="toc-number">4.12.</span> <span class="toc-text">扩展：多列值封装map传递</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81SQL"><span class="toc-number">5.</span> <span class="toc-text">动态SQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#foreach"><span class="toc-number">5.1.</span> <span class="toc-text">foreach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bind"><span class="toc-number">5.2.</span> <span class="toc-text">bind</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-db-vendor-support"><span class="toc-number">5.3.</span> <span class="toc-text">Multi-db vendor support</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="toc-number">6.</span> <span class="toc-text">缓存机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E7%BA%A7%E7%BC%93%E5%AD%98"><span class="toc-number">6.1.</span> <span class="toc-text">一级缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E7%BA%A7%E7%BC%93%E5%AD%98%E6%BC%94%E7%A4%BA-amp-%E5%A4%B1%E6%95%88%E6%83%85%E5%86%B5"><span class="toc-number">6.1.1.</span> <span class="toc-text">一级缓存演示&amp;失效情况</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98"><span class="toc-number">6.2.</span> <span class="toc-text">二级缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7"><span class="toc-number">6.3.</span> <span class="toc-text">缓存相关属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E6%9C%89%E5%85%B3%E8%AE%BE%E7%BD%AE"><span class="toc-number">6.4.</span> <span class="toc-text">缓存有关设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BC%93%E5%AD%98%E6%95%B4%E5%90%88"><span class="toc-number">6.5.</span> <span class="toc-text">第三方缓存整合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mabatis-Spring%E6%95%B4%E5%90%88"><span class="toc-number">7.</span> <span class="toc-text">Mabatis-Spring整合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MyBatis-%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B"><span class="toc-number">8.</span> <span class="toc-text">MyBatis-逆向工程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MyBatis-Generator"><span class="toc-number">8.1.</span> <span class="toc-text">MyBatis Generator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MBG%E4%BD%BF%E7%94%A8"><span class="toc-number">8.2.</span> <span class="toc-text">MBG使用</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2020/11/12/SSM%E6%A1%86%E6%9E%B6%E4%B9%8BMybatis/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rayの云端小屋"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">SSM框架之Mybatis</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-11-12 10:58:38" itemprop="dateCreated datePublished" datetime="2020-11-12T10:58:38+08:00">2020-11-12</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-06-01 23:17:59" itemprop="dateModified" datetime="2021-06-01T23:17:59+08:00">2021-06-01</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/SSM%E6%A1%86%E6%9E%B6/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SSM框架</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="Mybatis简介"><a href="#Mybatis简介" class="headerlink" title="Mybatis简介"></a>Mybatis简介</h2><ul>
+<li>MyBatis 是支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架</li>
+<li>MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集</li>
+<li>MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO（Plain Old Java Objects，普通的Java对象）映射成数据库中的记录</li>
+</ul>
+<h3 id="为什么要使用Mybatis"><a href="#为什么要使用Mybatis" class="headerlink" title="为什么要使用Mybatis"></a>为什么要使用Mybatis</h3><ul>
+<li><p>MyBatis是一个半自动化的持久化层框架。</p>
+</li>
+<li><p>JDBC</p>
+<ul>
+<li>SQL夹在Java代码块里，耦合度高导致硬编码内伤</li>
+<li>维护不易且实际开发需求中sql是有变化，频繁修改的情况多见</li>
+</ul>
+</li>
+<li><p>Hibernate和JPA</p>
+<ul>
+<li>长难复杂SQL，对于Hibernate而言处理也不容易</li>
+<li>内部自动生产的SQL，不容易做特殊优化。</li>
+<li>基于全映射的全自动框架，大量字段的POJO进行部分映射时比较困难。导致数据库性能下降。</li>
+</ul>
+</li>
+<li><p>对开发人员而言，核心sql还是需要自己优化</p>
+</li>
+<li><p>sql和java编码分开，功能边界清晰，一个专注业务、一个专注数据。</p>
+</li>
+</ul>
+<h2 id="Mybatis的配置"><a href="#Mybatis的配置" class="headerlink" title="Mybatis的配置"></a>Mybatis的配置</h2><p><a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/configuration.html">https://mybatis.org/mybatis-3/zh/configuration.html</a></p>
+<h2 id="全局配置文件"><a href="#全局配置文件" class="headerlink" title="全局配置文件"></a>全局配置文件</h2><ul>
+<li>MyBatis 的配置文件包含了影响 MyBatis 行为甚深的设置（settings）和属性（properties）信息。文档的顶层结构如下：<ul>
+<li>configuration 配置<ul>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">properties </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">属性</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">settings </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">设置</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">typeAliases</a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html"> </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">类型命名</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">typeHandlers</a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html"> </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">类型处理器</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">objectFactory</a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html"> </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">对象工厂</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">plugins </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">插件</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">environments </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">环境</a><ul>
+<li>environment 环境变量</li>
+<li>transactionManager 事务管理器</li>
+<li>dataSource 数据源</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">databaseIdProvider</a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html"> </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">数据库厂商标识</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">mappers </a><a target="_blank" rel="noopener" href="http://www.mybatis.org/mybatis-3/zh/configuration.html">映射器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="properties属性"><a href="#properties属性" class="headerlink" title="properties属性"></a>properties属性</h3><ul>
+<li>如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：<ul>
+<li>在 properties 元素体内指定的属性首先被读取。 </li>
+<li>然后根据 properties 元素中的 resource 属性读取类路径下属性文件或根据 url 属性指定的路径读取属性文件，并覆盖已读取的同名属性。</li>
+<li>最后读取作为方法参数传递的属性，并覆盖已读取的同名属性。 </li>
+</ul>
+</li>
+</ul>
+<h3 id="settings设置"><a href="#settings设置" class="headerlink" title="settings设置"></a>settings设置</h3><ul>
+<li><p>这是 MyBatis 中极为重要的调整设置，它们会改变 MyBatis 的运行时行为。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209155734.png" alt="DC4V7n.png" loading="lazy"></p>
+</li>
+</ul>
+<h3 id="typeAliases别名处理器"><a href="#typeAliases别名处理器" class="headerlink" title="typeAliases别名处理器"></a>typeAliases别名处理器</h3><ul>
+<li><p>类型别名是为 Java 类型设置一个短的名字，可以方便我们引用某个类。</p>
+</li>
+<li><p>类很多的情况下，可以批量设置别名这个包下的每一个类创建一个默认的别名，就是简单类名小写。</p>
+</li>
+<li><p>也可以使用@Alias注解为其指定一个别名</p>
+</li>
+<li><p>值得注意的是，MyBatis已经为许多常见的 Java 类型内建了相应的类型别名。它们都是大小写不敏感的，我们在起别名的时候千万不要占用已有的别名。</p>
+<table>
+<thead>
+<tr>
+<th>别名</th>
+<th>映射的类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>_byte</td>
+<td>byte</td>
+</tr>
+<tr>
+<td>_long</td>
+<td>long</td>
+</tr>
+<tr>
+<td>_short</td>
+<td>short</td>
+</tr>
+<tr>
+<td>_int</td>
+<td>int</td>
+</tr>
+<tr>
+<td>_integer</td>
+<td>int</td>
+</tr>
+<tr>
+<td>_double</td>
+<td>double</td>
+</tr>
+<tr>
+<td>_float</td>
+<td>float</td>
+</tr>
+<tr>
+<td>_boolean</td>
+<td>boolean</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>别名</th>
+<th>映射的类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>_byte</td>
+<td>byte</td>
+</tr>
+<tr>
+<td>_long</td>
+<td>long</td>
+</tr>
+<tr>
+<td>_short</td>
+<td>short</td>
+</tr>
+<tr>
+<td>_int</td>
+<td>int</td>
+</tr>
+<tr>
+<td>_integer</td>
+<td>int</td>
+</tr>
+<tr>
+<td>_double</td>
+<td>double</td>
+</tr>
+<tr>
+<td>_float</td>
+<td>float</td>
+</tr>
+<tr>
+<td>_boolean</td>
+<td>boolean</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>date</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>decimal</td>
+<td>BigDecimal</td>
+</tr>
+<tr>
+<td>bigdecimal</td>
+<td>BigDecimal</td>
+</tr>
+<tr>
+<td>object</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>map</td>
+<td>Map</td>
+</tr>
+<tr>
+<td>hashmap</td>
+<td>HashMap</td>
+</tr>
+<tr>
+<td>list</td>
+<td>List</td>
+</tr>
+<tr>
+<td>arraylist</td>
+<td>ArrayList</td>
+</tr>
+<tr>
+<td>collection</td>
+<td>Collection</td>
+</tr>
+<tr>
+<td>iterator</td>
+<td>Iterator</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="typeHandlers类型处理器"><a href="#typeHandlers类型处理器" class="headerlink" title="typeHandlers类型处理器"></a>typeHandlers类型处理器</h3><p>无论是 MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时， 都会用类型处理器将获取的值以合适的方式转换成 Java 类型。</p>
+<table>
+<thead>
+<tr>
+<th>类型处理器</th>
+<th>Java 类型</th>
+<th>JDBC 类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BooleanTypeHandler</td>
+<td>java.lang.Boolean, boolean</td>
+<td>数据库兼容的  BOOLEAN</td>
+</tr>
+<tr>
+<td>ByteTypeHandler</td>
+<td>java.lang.Byte, byte</td>
+<td>数据库兼容的  NUMERIC  或 BYTE</td>
+</tr>
+<tr>
+<td>ShortTypeHandler</td>
+<td>java.lang.Short, short</td>
+<td>数据库兼容的  NUMERIC  或 SHORT  INTEGER</td>
+</tr>
+<tr>
+<td>IntegerTypeHandler</td>
+<td>java.lang.Integer, int</td>
+<td>数据库兼容的  NUMERIC  或 INTEGER</td>
+</tr>
+<tr>
+<td>LongTypeHandler</td>
+<td>java.lang.Long, long</td>
+<td>数据库兼容的  NUMERIC  或 LONG  INTEGER</td>
+</tr>
+<tr>
+<td>FloatTypeHandler</td>
+<td>java.lang.Float, float</td>
+<td>数据库兼容的  NUMERIC  或 FLOAT</td>
+</tr>
+<tr>
+<td>DoubleTypeHandler</td>
+<td>java.lang.Double, double</td>
+<td>数据库兼容的  NUMERIC  或 DOUBLE</td>
+</tr>
+<tr>
+<td>BigDecimalTypeHandler</td>
+<td>java.math.BigDecimal</td>
+<td>数据库兼容的  NUMERIC  或 DECIMAL</td>
+</tr>
+<tr>
+<td>StringTypeHandler</td>
+<td>java.lang.String</td>
+<td>CHAR, VARCHAR</td>
+</tr>
+</tbody></table>
+<h3 id="日期类型的处理"><a href="#日期类型的处理" class="headerlink" title="日期类型的处理"></a>日期类型的处理</h3><ul>
+<li>日期和时间的处理，JDK1.8以前一直是个头疼的问题。我们通常使用JSR310规范领导者Stephen Colebourne创建的Joda-Time来操作。1.8已经实现全部的JSR310规范了。</li>
+<li>日期时间处理上，我们可以使用MyBatis基于JSR310（Date and Time API）编写的各种日期时间类型处理器。</li>
+<li>MyBatis3.4以前的版本需要我们手动注册这些处理器，以后的版本都是自动注册的</li>
+</ul>
+<h3 id="自定义类型处理器"><a href="#自定义类型处理器" class="headerlink" title="自定义类型处理器"></a>自定义类型处理器</h3><ul>
+<li><p>我们可以重写类型处理器或创建自己的类型处理器来处理不支持的或非标准的类型。</p>
+</li>
+<li><p>步骤：</p>
+<ul>
+<li>实现org.apache.ibatis.type.TypeHandler接口或者继承org.apache.ibatis.type.BaseTypeHandler</li>
+<li>指定其映射某个JDBC类型（可选操作）</li>
+<li>在mybatis全局配置文件中注册</li>
+</ul>
+</li>
+</ul>
+<h3 id="plugins插件"><a href="#plugins插件" class="headerlink" title="plugins插件"></a>plugins插件</h3><ul>
+<li><p>插件是MyBatis提供的一个非常强大的机制，我们可以通过插件来修改MyBatis的一些核心行为。插件通过动态代理机制，可以介入四大对象的任何一个方法的执行。后面会有专门的章节我们来介绍mybatis运行原理以及插件</p>
+</li>
+<li><p>Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)</p>
+</li>
+<li><p>ParameterHandler (getParameterObject, setParameters) </p>
+</li>
+<li><p>ResultSetHandler (handleResultSets, handleOutputParameters) </p>
+</li>
+<li><p>StatementHandler (prepare, parameterize, batch, update, query) </p>
+</li>
+</ul>
+<h3 id="environments环境"><a href="#environments环境" class="headerlink" title="environments环境"></a>environments环境</h3><ul>
+<li>MyBatis可以配置多种环境，比如开发、测试和生产环境需要有不同的配置。</li>
+<li>每种环境使用一个environment标签进行配置并指定唯一标识符</li>
+<li>可以通过environments标签中的default属性指定一个环境的标识符来快速的切换环境</li>
+</ul>
+<h3 id="environment-指定具体环境"><a href="#environment-指定具体环境" class="headerlink" title="environment-指定具体环境"></a>environment-指定具体环境</h3><ul>
+<li>id：指定当前环境的唯一标识</li>
+<li>transactionManager和dataSource都必须有</li>
+</ul>
+<h4 id="transactionManager"><a href="#transactionManager" class="headerlink" title="transactionManager"></a>transactionManager</h4><ul>
+<li><p>type：  JDBC | MANAGED | 自定义</p>
+<ul>
+<li><p>JDBC：使用了 JDBC 的提交和回滚设置，依赖于从数据源得到的连接来管理事务范围。 JdbcTransactionFactory</p>
+</li>
+<li><p>MANAGED：不提交或回滚一个连接、让容器来管理事务的整个生命周期（比如 JEE 应用服务器的上下文）。 </p>
+<p>ManagedTransactionFactory</p>
+</li>
+<li><p>自定义：实现TransactionFactory接口，type=全类名/别名</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="dataSource"><a href="#dataSource" class="headerlink" title="dataSource"></a>dataSource</h4><ul>
+<li><p>type：  UNPOOLED | POOLED | JNDI | 自定义</p>
+<ul>
+<li>UNPOOLED：不使用连接池， UnpooledDataSourceFactory</li>
+<li>POOLED：使用连接池， PooledDataSourceFactory</li>
+<li>JNDI： 在EJB 或应用服务器这类容器中查找指定的数据源</li>
+<li>自定义：实现DataSourceFactory接口，定义数据源的获取方式。</li>
+</ul>
+</li>
+<li><p>实际开发中我们使用Spring管理数据源，并进行事务控制的配置来覆盖上述配置</p>
+</li>
+</ul>
+<h3 id="databaseIdProvider环境"><a href="#databaseIdProvider环境" class="headerlink" title="databaseIdProvider环境"></a>databaseIdProvider环境</h3><ul>
+<li><p>MyBatis 可以根据不同的数据库厂商执行不同的语句。</p>
+</li>
+<li><p>Type： DB_VENDOR</p>
+<ul>
+<li>使用MyBatis提供的VendorDatabaseIdProvider解析数据库厂商标识。也可以实现DatabaseIdProvider接口来自定义</li>
+</ul>
+</li>
+<li><p>Property-name：数据库厂商标识</p>
+</li>
+<li><p>Property-value：为标识起一个别名，方便SQL语句使用databaseId属性引用</p>
+</li>
+<li><p>DB_VENDOR </p>
+<ul>
+<li>会通过 DatabaseMetaData#getDatabaseProductName() 返回的字符串进行设置。由于通常情况下这个字符串都非常长而且相同产品的不同版本会返回不同的值，所以最好通过设置属性别名来使其变短</li>
+</ul>
+</li>
+<li><p>MyBatis匹配规则如下：</p>
+<ul>
+<li>如果没有配置databaseIdProvider标签，那么databaseId=null</li>
+<li>如果配置了databaseIdProvider标签，使用标签配置的name去匹配数据库信息，匹配上设置databaseId=配置指定的值，否则依旧为null</li>
+<li>如果databaseId不为null，他只会找到配置databaseId的sql语句</li>
+<li>MyBatis 会加载不带 databaseId 属性和带有匹配当前数据库databaseId 属性的所有语句。如果同时找到带有 databaseId 和不带databaseId 的相同语句，则后者会被舍弃。</li>
+</ul>
+</li>
+</ul>
+<h3 id="mapper映射"><a href="#mapper映射" class="headerlink" title="mapper映射"></a>mapper映射</h3><ul>
+<li><p>mapper逐个注册SQL映射文件</p>
+</li>
+<li><p>或者使用批量注册：这种方式要求SQL映射文件名必须和接口名相同并且在同一目录下</p>
+</li>
+</ul>
+<h2 id="映射文件"><a href="#映射文件" class="headerlink" title="映射文件"></a>映射文件</h2><ul>
+<li>映射文件指导着MyBatis如何进行数据库增删改查，有着非常重要的意义<ul>
+<li>cache –命名空间的二级缓存配置</li>
+<li>cache-ref – 其他命名空间缓存配置的引用</li>
+<li>resultMap – 自定义结果集映射</li>
+<li>parameterMap – <strong>已废弃</strong>！老式风格的参数映射</li>
+<li>sql –抽取可重用语句块</li>
+<li>insert – 映射插入语句 </li>
+<li>update – 映射更新语句 </li>
+<li>delete – 映射删除语句 </li>
+<li>select – 映射查询语句</li>
+</ul>
+</li>
+</ul>
+<h3 id="insert-update-delete元素"><a href="#insert-update-delete元素" class="headerlink" title="insert update delete元素"></a>insert update delete元素</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160035.png" alt="BxuNWV.png" loading="lazy"></p>
+<h3 id="主键生成方式"><a href="#主键生成方式" class="headerlink" title="主键生成方式"></a>主键生成方式</h3><p>若数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server），则可以设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置到目标属性上</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160212.png" alt="BxuRSK.png" loading="lazy"></p>
+<p>而对于不支持自增型主键的数据库（例如 Oracle），则可以使用 selectKey 子元素：selectKey  元素将会首先运行，id  会被设置，然后插入语句会被调用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160249.png" alt="BxuIwd.png" loading="lazy"></p>
+<h3 id="selectKey"><a href="#selectKey" class="headerlink" title="selectKey"></a>selectKey</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160258.png" alt="Bxu7FI.png" loading="lazy"></p>
+<h3 id="参数（Parameters）传递"><a href="#参数（Parameters）传递" class="headerlink" title="参数（Parameters）传递"></a>参数（Parameters）传递</h3><ul>
+<li>单个参数<ul>
+<li>可以接受基本类型，对象类型，集合类型的值。这种情况MyBatis可直接使用这个参数，不需要经过任何处理</li>
+</ul>
+</li>
+<li>多个参数<ul>
+<li>任意多个参数，都会被MyBatis重新包装成一个Map传入。Map的key是param1，param2，0，1…，值就是参数的值</li>
+</ul>
+</li>
+<li>命名参数<ul>
+<li>为参数使用@Param起一个名字，MyBatis就会将这些参数封装进map中，key就是我们自己指定的名字</li>
+</ul>
+</li>
+<li>POJO<ul>
+<li>当这些参数属于我们业务POJO时，我们直接传递POJO</li>
+</ul>
+</li>
+<li>Map<ul>
+<li>我们也可以封装多个参数为map，直接传递</li>
+</ul>
+</li>
+</ul>
+<h3 id="参数处理"><a href="#参数处理" class="headerlink" title="参数处理"></a>参数处理</h3><ul>
+<li><p>参数也可以指定一个特殊的数据类型：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160321.png" alt="BxuxmQ.png" loading="lazy"></p>
+<ul>
+<li>javaType 通常可以从参数对象中来去确定</li>
+<li>如果 null 被当作值来传递，对于所有可能为空的列，jdbcType 需要被设置</li>
+<li>对于数值类型，还可以设置小数点后保留的位数</li>
+<li>mode 属性允许指定 IN，OUT 或 INOUT 参数。如果参数为 OUT 或 INOUT，参数对象属性的真实值将会被改变，就像在获取输出参数时所期望的那样</li>
+</ul>
+</li>
+<li><p>参数位置支持的属性</p>
+<ul>
+<li>javaType、jdbcType、mode、numericScale、resultMap、typeHandler、jdbcTypeName、expression</li>
+</ul>
+</li>
+<li><p>实际上通常被设置的是：</p>
+<ul>
+<li>可能为空的列名指定 jdbcType</li>
+</ul>
+</li>
+<li><p>#{key}：获取参数的值，预编译到SQL中。<strong>安全</strong>。</p>
+</li>
+<li><p>${key}：获取参数的值，拼接到SQL中。有SQL注入问题。ORDER BY ${name}</p>
+</li>
+</ul>
+<p>​    </p>
+<h3 id="select元素"><a href="#select元素" class="headerlink" title="select元素"></a>select元素</h3><ul>
+<li><p>Select元素来定义查询操作。</p>
+</li>
+<li><p>Id：唯一标识符。</p>
+<ul>
+<li>用来引用这条语句，需要和接口的方法名一致</li>
+</ul>
+</li>
+<li><p>parameterType：参数类型。</p>
+<ul>
+<li>可以不传，MyBatis会根据TypeHandler自动推断</li>
+</ul>
+</li>
+<li><p>resultType：返回值类型。</p>
+<ul>
+<li>别名或者全类名，如果返回的是集合，定义集合中元素的类型。不能和resultMap同时使用</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160510.png" alt="BxK6BQ.png" loading="lazy"></p>
+<h3 id="自动映射"><a href="#自动映射" class="headerlink" title="自动映射"></a>自动映射</h3><ul>
+<li>全局setting设置<ul>
+<li>autoMappingBehavior默认是PARTIAL，开启自动映射的功能。唯一的要求是列名和javaBean属性名一致</li>
+<li>如果autoMappingBehavior设置为null则会取消自动映射</li>
+<li>数据库字段命名规范，POJO属性符合驼峰命名法，如A_COLUMNaColumn，我们可以开启自动驼峰命名规则映射功能，mapUnderscoreToCamelCase=true</li>
+</ul>
+</li>
+<li>自定义resultMap，实现高级结果集映射</li>
+</ul>
+<h3 id="resultMap"><a href="#resultMap" class="headerlink" title="resultMap"></a>resultMap</h3><ul>
+<li>constructor - 类在实例化时, 用来注入结果到构造方法中<ul>
+<li>idArg - ID 参数; 标记结果作为 ID 可以帮助提高整体效能</li>
+<li>arg - 注入到构造方法的一个普通结果</li>
+</ul>
+</li>
+<li>id – 一个 ID 结果; 标记结果作为 ID 可以帮助提高整体效能</li>
+<li>result – 注入到字段或 JavaBean 属性的普通结果</li>
+<li>association – 一个复杂的类型关联;许多结果将包成这种类型<ul>
+<li>嵌入结果映射 – 结果映射自身的关联,或者参考一个</li>
+</ul>
+</li>
+<li>collection – 复杂类型的集<ul>
+<li>嵌入结果映射 – 结果映射自身的集,或者参考一个</li>
+</ul>
+</li>
+<li>discriminator – 使用结果值来决定使用哪个结果映射<ul>
+<li>case – 基于某些值的结果映射</li>
+<li>嵌入结果映射 – 这种情形结果也映射它本身,因此可以包含很多相同的元素,或者它可以参照一个外部的结果映射。</li>
+</ul>
+</li>
+</ul>
+<h3 id="id-amp-result"><a href="#id-amp-result" class="headerlink" title="id&amp;result"></a>id&amp;result</h3><p>id 和 result 映射一个单独列的值到简单数据类型(字符串,整型,双精度浮点数,日期等)的属性或字段</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160432.png" alt="BxMV8P.png" loading="lazy"></p>
+<h3 id="association"><a href="#association" class="headerlink" title="association"></a>association</h3><ul>
+<li><p>复杂对象映射</p>
+</li>
+<li><p>POJO中的属性可能会是一个对象</p>
+</li>
+<li><p>我们可以使用联合查询，并以级联属性的方式封装对象</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160526.png" alt="BxMev8.png" loading="lazy"></p>
+</li>
+<li><p>使用association标签定义对象的封装规则</p>
+</li>
+<li><p>association-嵌套结果集</p>
+</li>
+<li><p>association-分段查询</p>
+</li>
+<li><p>association-分段查询&amp;延迟加载</p>
+</li>
+</ul>
+<h3 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h3><ul>
+<li>Collection-集合类型&amp;嵌套结果集</li>
+<li>Collection-分步查询&amp;延迟加载</li>
+</ul>
+<h3 id="扩展：多列值封装map传递"><a href="#扩展：多列值封装map传递" class="headerlink" title="扩展：多列值封装map传递"></a>扩展：多列值封装map传递</h3><ul>
+<li><p>分步查询的时候通过column指定，将对应的列的数据传递过去，我们有时需要传递多列数据</p>
+</li>
+<li><p>使用{key1=column1,key2=column2…}的形式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160536.png" alt="BxMhad.png" loading="lazy"></p>
+</li>
+<li><p>association或者collection标签的fetchType=eager/lazy可以覆盖全局的延迟加载策略，指定立即加载（eager）或者延迟加载（lazy）</p>
+</li>
+</ul>
+<h2 id="动态SQL"><a href="#动态SQL" class="headerlink" title="动态SQL"></a>动态SQL</h2><ul>
+<li>动态 SQL是MyBatis强大特性之一。极大的简化我们拼装SQL的操作。</li>
+<li>动态 SQL 元素和使用 JSTL 或其他类似基于 XML 的文本处理器相似。</li>
+<li>MyBatis 采用功能强大的基于 OGNL 的表达式来简化操作。<ul>
+<li>if</li>
+<li>choose (when, otherwise)</li>
+<li>trim (where, set)</li>
+<li>foreach</li>
+</ul>
+</li>
+</ul>
+<h3 id="foreach"><a href="#foreach" class="headerlink" title="foreach"></a>foreach</h3><ul>
+<li>动态 SQL 的另外一个常用的必要操作是需要对一个集合进行遍历，通常是在构建 IN 条件语句的时候。</li>
+<li>当迭代列表、集合等可迭代对象或者数组时<ul>
+<li>index是当前迭代的次数，item的值是本次迭代获取的元素</li>
+</ul>
+</li>
+<li>当使用字典（或者Map.Entry对象的集合）时<ul>
+<li>index是键，item是值</li>
+</ul>
+</li>
+</ul>
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h3><p>bind 元素可以从 OGNL 表达式中创建一个变量并将其绑定到上下文</p>
+<h3 id="Multi-db-vendor-support"><a href="#Multi-db-vendor-support" class="headerlink" title="Multi-db vendor support"></a>Multi-db vendor support</h3><p>若在 mybatis 配置文件中配置了 databaseIdProvider , 则可以使用 “_databaseId”变量，这样就可以根据不同的数据库厂商构建特定的语句</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160609.png" alt="BxQGod.png" loading="lazy"></p>
+<h2 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a>缓存机制</h2><ul>
+<li>MyBatis 包含一个非常强大的查询缓存特性,它可以非常方便地配置和定制。缓存可以极大的提升查询效率。</li>
+<li>MyBatis系统中默认定义了两级缓存。<ul>
+<li>一级缓存和二级缓存。<ul>
+<li>默认情况下，只有一级缓存（SqlSession级别的缓存，也称为本地缓存）开启。</li>
+<li>二级缓存需要手动开启和配置，他是基于namespace级别的缓存。</li>
+<li>为了提高扩展性。MyBatis定义了缓存接口Cache。我们可以通过实现Cache接口来自定义二级缓存</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="一级缓存"><a href="#一级缓存" class="headerlink" title="一级缓存"></a>一级缓存</h3><ul>
+<li>一级缓存(local cache), 即本地缓存, 作用域默认为sqlSession。当  Session flush 或 close 后, 该 Session 中的所有 Cache 将被清空</li>
+<li>本地缓存不能被关闭, 但可以调用 clearCache() 来清空本地缓存, 或者改变缓存的作用域</li>
+<li>在mybatis3.1之后, 可以配置本地缓存的作用域. 在 mybatis.xml 中配置</li>
+</ul>
+<h4 id="一级缓存演示-amp-失效情况"><a href="#一级缓存演示-amp-失效情况" class="headerlink" title="一级缓存演示&amp;失效情况"></a>一级缓存演示&amp;失效情况</h4><ul>
+<li><p>同一次会话期间只要查询过的数据都会保存在当前SqlSession的一个Map中</p>
+<ul>
+<li>key:hashCode+查询的SqlId+编写的sql查询语句+参数</li>
+</ul>
+</li>
+<li><p>一级缓存失效的四种情况</p>
+<ul>
+<li>1、不同的SqlSession对应不同的一级缓存</li>
+<li>2、同一个SqlSession但是查询条件不同</li>
+<li>3、同一个SqlSession两次查询期间执行了任何一次增删改操作</li>
+<li>4、同一个SqlSession两次查询期间手动清空了缓存</li>
+</ul>
+</li>
+</ul>
+<h3 id="二级缓存"><a href="#二级缓存" class="headerlink" title="二级缓存"></a>二级缓存</h3><ul>
+<li><p>二级缓存(second level cache)，全局作用域缓存</p>
+</li>
+<li><p>二级缓存默认不开启，需要手动配置</p>
+</li>
+<li><p>MyBatis提供二级缓存的接口以及实现，缓存实现要求POJO实现Serializable接口</p>
+</li>
+<li><p>二级缓存在 SqlSession 关闭或提交之后才会生效</p>
+</li>
+<li><p>使用步骤</p>
+<ul>
+<li><p>1、全局配置文件中开启二级缓存</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>setting name<span class="token operator">=</span><span class="token string">"cacheEnabled"</span> value<span class="token operator">=</span><span class="token string">"true"</span><span class="token operator">/</span><span class="token operator">></span></code></pre></li>
+<li><p>2、需要使用二级缓存的映射文件处使用cache配置缓存</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>cache<span class="token operator">/</span><span class="token operator">></span></code></pre></li>
+<li><p>3、注意：POJO需要实现Serializable接口</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="缓存相关属性"><a href="#缓存相关属性" class="headerlink" title="缓存相关属性"></a>缓存相关属性</h3><ul>
+<li><p>eviction=“FIFO”：缓存回收策略：</p>
+<ul>
+<li>LRU – 最近最少使用的：移除最长时间不被使用的对象。</li>
+<li>FIFO – 先进先出：按对象进入缓存的顺序来移除它们。</li>
+<li>SOFT – 软引用：移除基于垃圾回收器状态和软引用规则的对象。</li>
+<li>WEAK – 弱引用：更积极地移除基于垃圾收集器状态和弱引用规则的对象。</li>
+<li>默认的是 LRU。</li>
+</ul>
+</li>
+<li><p>flushInterval：刷新间隔，单位毫秒</p>
+<ul>
+<li>默认情况是不设置，也就是没有刷新间隔，缓存仅仅调用语句时刷新</li>
+</ul>
+</li>
+<li><p>size：引用数目，正整数</p>
+<ul>
+<li>代表缓存最多可以存储多少个对象，太大容易导致内存溢出</li>
+</ul>
+</li>
+<li><p>readOnly：只读，true/false</p>
+<ul>
+<li>true：只读缓存；会给所有调用者返回缓存对象的相同实例。因此这些对象不能被修改。这提供了很重要的性能优势。</li>
+<li>false：读写缓存；会返回缓存对象的拷贝（通过序列化）。这会慢一些，但是安全，因此默认是 false。</li>
+</ul>
+</li>
+</ul>
+<h3 id="缓存有关设置"><a href="#缓存有关设置" class="headerlink" title="缓存有关设置"></a>缓存有关设置</h3><ul>
+<li>全局setting的cacheEnable：<ul>
+<li>配置二级缓存的开关。一级缓存一直是打开的。</li>
+</ul>
+</li>
+<li>select标签的useCache属性：<ul>
+<li>配置这个select是否使用二级缓存。一级缓存一直是使用的</li>
+</ul>
+</li>
+<li>sql标签的flushCache属性：<ul>
+<li>增删改默认flushCache=true。sql执行以后，会同时清空一级和二级缓存。查询默认flushCache=false。</li>
+</ul>
+</li>
+<li>sqlSession.clearCache()：<ul>
+<li>只是用来清除一级缓存。</li>
+</ul>
+</li>
+<li>当在某一个作用域 (一级缓存Session/二级缓存Namespaces) 进行了 C/U/D 操作后，默认该作用域下所有 select 中的缓存将被clear。 </li>
+</ul>
+<h3 id="第三方缓存整合"><a href="#第三方缓存整合" class="headerlink" title="第三方缓存整合"></a>第三方缓存整合</h3><p>EhCache 是一个纯Java的进程内缓存框架，具有快速、精干等特点，是Hibernate中默认的CacheProvider。<br>MyBatis定义了Cache接口方便我们进行自定义扩展。<br>步骤：</p>
+<ul>
+<li>1、导入ehcache包，以及整合包，日志包<br>ehcache-core-2.6.8.jar、mybatis-ehcache-1.0.3.jar<br>slf4j-api-1.6.1.jar、slf4j-log4j12-1.6.2.jar</li>
+<li>2、编写ehcache.xml配置文件</li>
+<li>3、配置cache标签</li>
+</ul>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>cache type<span class="token operator">=</span><span class="token string">"org.mybatis.caches.ehcache.EhcacheCache"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>cache<span class="token operator">></span></code></pre>
+
+<ul>
+<li>参照缓存：若想在命名空间中共享相同的缓存配置和实例。可以使用 cache-ref 元素来引用另外一个缓存。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210209160619.png" alt="Bxle0g.png" loading="lazy"></p>
+<ul>
+<li>当执行一条查询SQL时，流程为 <ul>
+<li>从二级缓存中进行查询 </li>
+<li>进入一级缓存中查询 </li>
+<li>执行 JDBC 查询</li>
+</ul>
+</li>
+</ul>
+<h2 id="Mabatis-Spring整合"><a href="#Mabatis-Spring整合" class="headerlink" title="Mabatis-Spring整合"></a>Mabatis-Spring整合</h2><p><a target="_blank" rel="noopener" href="http://www.mybatis.org/spring/">http</a><a target="_blank" rel="noopener" href="http://www.mybatis.org/spring/">://www.mybatis.org/spring</a><a target="_blank" rel="noopener" href="http://www.mybatis.org/spring/">/</a></p>
+<h2 id="MyBatis-逆向工程"><a href="#MyBatis-逆向工程" class="headerlink" title="MyBatis-逆向工程"></a>MyBatis-逆向工程</h2><h3 id="MyBatis-Generator"><a href="#MyBatis-Generator" class="headerlink" title="MyBatis Generator"></a>MyBatis Generator</h3><p>简称MBG，是一个专门为MyBatis框架使用者定制的代码生成器，可以快速的根据表生成对应的映射文件，接口，以及bean类。支持基本的增删改查，以及QBC风格的条件查询。但是表连接、存储过程等这些复杂sql的定义需要我们手工编写</p>
+<h3 id="MBG使用"><a href="#MBG使用" class="headerlink" title="MBG使用"></a>MBG使用</h3><p>使用步骤：</p>
+<ul>
+<li><p>编写MBG的配置文件（重要几处配置）</p>
+<ul>
+<li><p>jdbcConnection配置数据库连接信息</p>
+<ul>
+<li><p>javaModelGenerator配置javaBean的生成策略</p>
+</li>
+<li><p>sqlMapGenerator 配置sql映射文件生成策略</p>
+</li>
+<li><p>javaClientGenerator配置Mapper接口的生成策略</p>
+</li>
+<li><p>table 配置要逆向解析的数据表</p>
+<p>​    tableName：表名<br>​    domainObjectName：对应的javaBean名</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>运行代码生成器生成代码</p>
+</li>
+<li><p>注意：<br>Context标签<br>targetRuntime=“MyBatis3“可以生成带条件的增删改查<br>targetRuntime=“MyBatis3Simple“可以生成基本的增删改查<br>如果再次生成，建议将之前生成的数据删除，避免xml向后追加内容出现的问题。</p>
+</li>
+</ul>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>Rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2020/11/12/SSM%E6%A1%86%E6%9E%B6%E4%B9%8BMybatis/" title="SSM框架之Mybatis">http://example.com/2020/11/12/SSM%E6%A1%86%E6%9E%B6%E4%B9%8BMybatis/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/11/19/SpringBoot/" rel="prev" title="SpringBoot"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">SpringBoot</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/11/01/SSM%E6%A1%86%E6%9E%B6%E4%B9%8BSpringMVC/" rel="next" title="SSM框架之SpringMVC"><span class="post-nav-text">SSM框架之SpringMVC</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2020 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

@@ -1,0 +1,1466 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Rayucan"><meta name="copyright" content="Rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Redis | Rayの云端小屋</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"Rayの云端小屋","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="一个key-value存储系统，跨平台的非关系型数据库。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis">
+<meta property="og:url" content="http://example.com/2021/02/19/Redis/index.html">
+<meta property="og:site_name" content="Rayの云端小屋">
+<meta property="og:description" content="一个key-value存储系统，跨平台的非关系型数据库。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135239.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135415.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135541.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225140005.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225140057.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225140151.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225141828.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225142251.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225142640.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225142810.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225145118.jpeg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154434.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154818.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154607.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154629.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155214.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155221.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155229.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155254.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155302.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155310.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155329.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155345.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154846.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154853.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154858.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155406.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155418.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155424.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155453.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155506.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155513.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155523.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160249.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155714.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155735.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155749.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155806.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155840.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155850.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155923.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155945.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155956.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160012.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160301.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160048.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160106.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160111.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160143.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160152.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160222.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160310.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160338.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160347.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160418.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160517.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160522.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160612.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160651.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160702.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160712.png">
+<meta property="og:image" content="c:/Users/yinwu/AppData/Roaming/Typora/typora-user-images/image-20210225160721303.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160744.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160801.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160821.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113246.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113307.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113352.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113657.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113829.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113909.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113930.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113952.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114125.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114358.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114703.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114723.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114914.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115022.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115027.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115058.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115528.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115608.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115653.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115823.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115901.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226120048.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226120125.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226120910.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121044.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121106.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121135.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121148.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121159.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121221.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121513.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121526.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121540.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121608.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121941.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122006.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122811.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122947.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123017.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123027.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123145.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123157.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123410.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123422.png">
+<meta property="og:image" content="c:/Users/yinwu/AppData/Roaming/Typora/typora-user-images/image-20210226123436414.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145429.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145449.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145520.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145531.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145542.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145551.png">
+<meta property="article:published_time" content="2021-02-19T05:47:09.000Z">
+<meta property="article:modified_time" content="2021-02-26T07:05:03.772Z">
+<meta property="article:author" content="Rayucan">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135239.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="Rayucan"></a><div class="site-author-name"><a href="/about/">Rayucan</a></div><a class="site-name" href="/about/site.html">Rayの云端小屋</a><sub class="site-subtitle"></sub><div class="site-desciption">Gaze into abyss.</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">37</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">11</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=775972516&amp;site=qq&amp;menu=yes" title="QQ" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:775972516@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=362729060" title="网易云音乐" target="_blank" style="color:#C10D0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/ray-63-72" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/226098990/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#NoSQL%E5%85%A5%E9%97%A8%E4%B8%8E%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">NoSQL入门与概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E6%97%B6%E4%BB%A3%E8%83%8C%E6%99%AF%E4%B8%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8NoSQL"><span class="toc-number">1.1.</span> <span class="toc-text">互联网时代背景下为什么用NoSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E6%9C%BAMySQL"><span class="toc-number">1.1.1.</span> <span class="toc-text">单机MySQL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memcached-%E7%BC%93%E5%AD%98-MySQL-%E5%9E%82%E7%9B%B4%E6%8B%86%E5%88%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">Memcached(缓存)+MySQL+垂直拆分</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql%E4%B8%BB%E4%BB%8E%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="toc-number">1.1.3.</span> <span class="toc-text">Mysql主从读写分离</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E8%A1%A8%E5%88%86%E5%BA%93-%E6%B0%B4%E5%B9%B3%E6%8B%86%E5%88%86-mysql%E9%9B%86%E7%BE%A4"><span class="toc-number">1.1.4.</span> <span class="toc-text">分表分库+水平拆分+mysql集群</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL%E7%9A%84%E6%89%A9%E5%B1%95%E6%80%A7%E7%93%B6%E9%A2%88"><span class="toc-number">1.1.5.</span> <span class="toc-text">MySQL的扩展性瓶颈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%B0%E7%8A%B6"><span class="toc-number">1.1.6.</span> <span class="toc-text">现状</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8NoSQL"><span class="toc-number">1.1.7.</span> <span class="toc-text">为什么用NoSQL</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NoSQL%E7%89%B9%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">NoSQL特点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%93%E6%89%A9%E5%B1%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">易扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E9%AB%98%E6%80%A7%E8%83%BD"><span class="toc-number">1.2.2.</span> <span class="toc-text">大数据量高性能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%A0%B7%E7%81%B5%E6%B4%BB%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">多样灵活的数据模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9FRDBMS-VS-NOSQL"><span class="toc-number">1.2.4.</span> <span class="toc-text">传统RDBMS VS NOSQL</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3V"><span class="toc-number">1.3.</span> <span class="toc-text">3V</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E9%AB%98"><span class="toc-number">1.4.</span> <span class="toc-text">3高</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NoSQL%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B"><span class="toc-number">1.5.</span> <span class="toc-text">NoSQL数据模型简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.5.1.</span> <span class="toc-text">传统的关系型数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NoSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.5.2.</span> <span class="toc-text">NoSQL数据库的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%A4%E8%80%85%E5%AF%B9%E6%AF%94%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8A%E8%BF%B0%E7%9A%84%E6%83%85%E5%86%B5%E5%8F%AF%E4%BB%A5%E7%94%A8%E8%81%9A%E5%90%88%E6%A8%A1%E5%9E%8B%E6%9D%A5%E5%A4%84%E7%90%86"><span class="toc-number">1.5.3.</span> <span class="toc-text">两者对比，为什么上述的情况可以用聚合模型来处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.4.</span> <span class="toc-text">聚合模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NoSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%9B%9B%E5%A4%A7%E5%88%86%E7%B1%BB"><span class="toc-number">1.6.</span> <span class="toc-text">NoSQL数据库的四大分类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#KV%E9%94%AE%E5%80%BC%EF%BC%9A%E5%85%B8%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.6.1.</span> <span class="toc-text">KV键值：典型介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93-bson%E6%A0%BC%E5%BC%8F%E6%AF%94%E8%BE%83%E5%A4%9A-%EF%BC%9A%E5%85%B8%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.6.2.</span> <span class="toc-text">文档型数据库(bson格式比较多)：典型介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.6.3.</span> <span class="toc-text">列存储数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.6.4.</span> <span class="toc-text">图关系数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E8%80%85%E5%AF%B9%E6%AF%94"><span class="toc-number">1.6.5.</span> <span class="toc-text">四者对比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%ADCAP%E5%8E%9F%E7%90%86CAP-BASE"><span class="toc-number">1.7.</span> <span class="toc-text">在分布式数据库中CAP原理CAP+BASE</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84ACID"><span class="toc-number">1.7.1.</span> <span class="toc-text">传统的ACID</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CAP"><span class="toc-number">1.7.2.</span> <span class="toc-text">CAP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CAP%E7%9A%843%E8%BF%9B2"><span class="toc-number">1.7.3.</span> <span class="toc-text">CAP的3进2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BASE"><span class="toc-number">1.7.4.</span> <span class="toc-text">BASE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E7%AE%80%E4%BB%8B"><span class="toc-number">1.7.5.</span> <span class="toc-text">分布式+集群简介</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E5%85%A5%E9%97%A8"><span class="toc-number">2.</span> <span class="toc-text">Redis入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">2.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.</span> <span class="toc-text">能做什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E5%AE%89%E8%A3%85"><span class="toc-number">2.3.</span> <span class="toc-text">Redis安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">2.4.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">Redis数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E7%9A%84%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.</span> <span class="toc-text">Redis的五大数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#String%EF%BC%88%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">String（字符串）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Hash%EF%BC%88%E5%93%88%E5%B8%8C%EF%BC%8C%E7%B1%BB%E4%BC%BCjava%E9%87%8C%E7%9A%84Map%EF%BC%89"><span class="toc-number">3.1.2.</span> <span class="toc-text">Hash（哈希，类似java里的Map）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#List%EF%BC%88%E5%88%97%E8%A1%A8%EF%BC%89"><span class="toc-number">3.1.3.</span> <span class="toc-text">List（列表）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Set%EF%BC%88%E9%9B%86%E5%90%88%EF%BC%89"><span class="toc-number">3.1.4.</span> <span class="toc-text">Set（集合）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Zset-sorted-set%EF%BC%9A%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88"><span class="toc-number">3.1.5.</span> <span class="toc-text">Zset(sorted set：有序集合)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">redis常见数据类型操作命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-%E9%94%AE-key"><span class="toc-number">3.3.</span> <span class="toc-text">Redis 键(key)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E5%AD%97%E7%AC%A6%E4%B8%B2-String"><span class="toc-number">3.4.</span> <span class="toc-text">Redis字符串(String)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E5%88%97%E8%A1%A8-List"><span class="toc-number">3.5.</span> <span class="toc-text">Redis列表(List)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E9%9B%86%E5%90%88-Set"><span class="toc-number">3.6.</span> <span class="toc-text">Redis集合(Set)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E5%93%88%E5%B8%8C-Hash"><span class="toc-number">3.7.</span> <span class="toc-text">Redis哈希(Hash)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88Zset-sorted-set"><span class="toc-number">3.8.</span> <span class="toc-text">Redis有序集合Zset(sorted set)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6redis-conf%E8%A7%A3%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">配置文件redis.conf解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Units%E5%8D%95%E4%BD%8D"><span class="toc-number">4.1.</span> <span class="toc-text">Units单位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#INCLUDES%E5%8C%85%E5%90%AB"><span class="toc-number">4.2.</span> <span class="toc-text">INCLUDES包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GENERAL%E9%80%9A%E7%94%A8"><span class="toc-number">4.3.</span> <span class="toc-text">GENERAL通用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNAPSHOTTING%E5%BF%AB%E7%85%A7"><span class="toc-number">4.4.</span> <span class="toc-text">SNAPSHOTTING快照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#REPLICATION%E5%A4%8D%E5%88%B6"><span class="toc-number">4.5.</span> <span class="toc-text">REPLICATION复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SECURITY%E5%AE%89%E5%85%A8"><span class="toc-number">4.6.</span> <span class="toc-text">SECURITY安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LIMITS%E9%99%90%E5%88%B6"><span class="toc-number">4.7.</span> <span class="toc-text">LIMITS限制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Maxclients"><span class="toc-number">4.7.1.</span> <span class="toc-text">Maxclients</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maxmemory"><span class="toc-number">4.7.2.</span> <span class="toc-text">Maxmemory</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maxmemory-policy"><span class="toc-number">4.7.3.</span> <span class="toc-text">Maxmemory-policy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maxmemory-samples"><span class="toc-number">4.7.4.</span> <span class="toc-text">Maxmemory-samples</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#APPEND-ONLY-MODE%E8%BF%BD%E5%8A%A0"><span class="toc-number">4.8.</span> <span class="toc-text">APPEND ONLY MODE追加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%85%8D%E7%BD%AEredis-conf"><span class="toc-number">4.9.</span> <span class="toc-text">常见配置redis.conf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">Redis的持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB%EF%BC%88Redis-DataBase%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">RDB（Redis DataBase）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Fork"><span class="toc-number">5.1.1.</span> <span class="toc-text">Fork</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%BD%8D%E7%BD%AE"><span class="toc-number">5.1.2.</span> <span class="toc-text">配置位置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91RDB%E5%BF%AB%E7%85%A7"><span class="toc-number">5.1.3.</span> <span class="toc-text">如何触发RDB快照</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D"><span class="toc-number">5.1.4.</span> <span class="toc-text">如何恢复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%81%9C%E6%AD%A2"><span class="toc-number">5.1.5.</span> <span class="toc-text">如何停止</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">5.1.6.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A3%E5%8A%BF"><span class="toc-number">5.1.7.</span> <span class="toc-text">劣势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.1.8.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%EF%BC%88Append-Only-File%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">AOF（Append Only File）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%BD%8D%E7%BD%AE-1"><span class="toc-number">5.2.1.</span> <span class="toc-text">配置位置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF%E5%90%AF%E5%8A%A8-%E4%BF%AE%E5%A4%8D-%E6%81%A2%E5%A4%8D"><span class="toc-number">5.2.2.</span> <span class="toc-text">AOF启动&#x2F;修复&#x2F;恢复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rewrite"><span class="toc-number">5.2.3.</span> <span class="toc-text">Rewrite</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%86%99%E5%8E%9F%E7%90%86"><span class="toc-number">5.2.3.1.</span> <span class="toc-text">重写原理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E6%9C%BA%E5%88%B6"><span class="toc-number">5.2.3.2.</span> <span class="toc-text">触发机制</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF-1"><span class="toc-number">5.2.4.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A3%E5%8A%BF-1"><span class="toc-number">5.2.5.</span> <span class="toc-text">劣势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">5.2.6.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB-Or-AOF"><span class="toc-number">5.3.</span> <span class="toc-text">RDB Or AOF</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E5%BC%80%E5%90%AF%E4%B8%A4%E7%A7%8D%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F"><span class="toc-number">5.3.1.</span> <span class="toc-text">同时开启两种持久化方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%BB%BA%E8%AE%AE"><span class="toc-number">5.3.2.</span> <span class="toc-text">性能建议</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84%E4%BA%8B%E5%8A%A1"><span class="toc-number">6.</span> <span class="toc-text">Redis的事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="toc-number">6.1.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">6.1.1.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Case1%EF%BC%9A%E6%AD%A3%E5%B8%B8%E6%89%A7%E8%A1%8C"><span class="toc-number">6.1.2.</span> <span class="toc-text">Case1：正常执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Case2%EF%BC%9A%E6%94%BE%E5%BC%83%E4%BA%8B%E5%8A%A1"><span class="toc-number">6.1.3.</span> <span class="toc-text">Case2：放弃事务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Case3%EF%BC%9A%E5%85%A8%E4%BD%93%E8%BF%9E%E5%9D%90"><span class="toc-number">6.1.4.</span> <span class="toc-text">Case3：全体连坐</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Case4%EF%BC%9A%E5%86%A4%E5%A4%B4%E5%80%BA%E4%B8%BB"><span class="toc-number">6.1.5.</span> <span class="toc-text">Case4：冤头债主</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Case5%EF%BC%9Awatch%E7%9B%91%E6%8E%A7"><span class="toc-number">6.1.6.</span> <span class="toc-text">Case5：watch监控</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">6.1.6.1.</span> <span class="toc-text">小结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E9%98%B6%E6%AE%B5"><span class="toc-number">6.2.</span> <span class="toc-text">3阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E7%89%B9%E6%80%A7"><span class="toc-number">6.3.</span> <span class="toc-text">3特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85"><span class="toc-number">7.</span> <span class="toc-text">Redis的发布订阅</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A2%E9%98%85-%E5%8F%91%E5%B8%83%E6%B6%88%E6%81%AF%E5%9B%BE"><span class="toc-number">7.1.</span> <span class="toc-text">订阅&#x2F;发布消息图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4"><span class="toc-number">7.2.</span> <span class="toc-text">命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-number">7.3.</span> <span class="toc-text">案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84%E5%A4%8D%E5%88%B6-Master-Slave"><span class="toc-number">8.</span> <span class="toc-text">Redis的复制(Master&#x2F;Slave)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-1"><span class="toc-number">8.1.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E4%BB%8E-%E5%BA%93-%E4%B8%8D%E9%85%8D%E4%B8%BB-%E5%BA%93"><span class="toc-number">8.1.1.</span> <span class="toc-text">配从(库)不配主(库)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8E%E5%BA%93%E9%85%8D%E7%BD%AE%EF%BC%9Aslaveof-%E4%B8%BB%E5%BA%93IP-%E4%B8%BB%E5%BA%93%E7%AB%AF%E5%8F%A3"><span class="toc-number">8.1.2.</span> <span class="toc-text">从库配置：slaveof 主库IP 主库端口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%BB%86%E8%8A%82%E6%93%8D%E4%BD%9C"><span class="toc-number">8.1.3.</span> <span class="toc-text">修改配置文件细节操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A83%E6%8B%9B"><span class="toc-number">8.1.4.</span> <span class="toc-text">常用3招</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%86"><span class="toc-number">8.1.4.1.</span> <span class="toc-text">一主二仆</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%96%AA%E7%81%AB%E7%9B%B8%E4%BC%A0"><span class="toc-number">8.1.4.2.</span> <span class="toc-text">薪火相传</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%8D%E5%AE%A2%E4%B8%BA%E4%B8%BB"><span class="toc-number">8.1.4.3.</span> <span class="toc-text">反客为主</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="toc-number">8.2.</span> <span class="toc-text">复制原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F-sentinel"><span class="toc-number">8.3.</span> <span class="toc-text">哨兵模式(sentinel)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-number">8.3.1.</span> <span class="toc-text">使用步骤</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">8.4.</span> <span class="toc-text">复制的缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84Java%E5%AE%A2%E6%88%B7%E7%AB%AFJedis"><span class="toc-number">9.</span> <span class="toc-text">Redis的Java客户端Jedis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85JDK"><span class="toc-number">9.1.</span> <span class="toc-text">安装JDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85eclipse"><span class="toc-number">9.2.</span> <span class="toc-text">安装eclipse</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jedis%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84jar%E5%8C%85"><span class="toc-number">9.3.</span> <span class="toc-text">Jedis所需要的jar包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jedis%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">9.4.</span> <span class="toc-text">Jedis常用操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="toc-number">9.4.1.</span> <span class="toc-text">测试连通性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1"><span class="toc-number">9.4.2.</span> <span class="toc-text">5+1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%8F%90%E4%BA%A4"><span class="toc-number">9.4.3.</span> <span class="toc-text">事务提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="toc-number">9.4.4.</span> <span class="toc-text">主从复制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JedisPool"><span class="toc-number">9.5.</span> <span class="toc-text">JedisPool</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B-1"><span class="toc-number">9.5.1.</span> <span class="toc-text">案例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93"><span class="toc-number">9.6.</span> <span class="toc-text">配置总结</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2021/02/19/Redis/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rayの云端小屋"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Redis</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2021-02-19 13:47:09" itemprop="dateCreated datePublished" datetime="2021-02-19T13:47:09+08:00">2021-02-19</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-02-26 15:05:03" itemprop="dateModified" datetime="2021-02-26T15:05:03+08:00">2021-02-26</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Web/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Web</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="NoSQL入门与概述"><a href="#NoSQL入门与概述" class="headerlink" title="NoSQL入门与概述"></a>NoSQL入门与概述</h2><blockquote>
+<p>NoSQL(NoSQL = Not Only SQL )，</p>
+<p>意为“不仅仅是SQL”，泛指非关系型的数据库。</p>
+</blockquote>
+<p>随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而<strong>非关系型的数据库</strong>则由于其本身的特点得到了非常迅速的发展。</p>
+<p>NoSQL数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题，包括超大规模数据的存储。</p>
+<p>(例如谷歌或Facebook每天为他们的用户收集万亿比特的数据)</p>
+<p>这些类型的数据存储不需要固定的模式，无需多余操作就可以横向扩展。</p>
+<h3 id="互联网时代背景下为什么用NoSQL"><a href="#互联网时代背景下为什么用NoSQL" class="headerlink" title="互联网时代背景下为什么用NoSQL"></a>互联网时代背景下为什么用NoSQL</h3><h4 id="单机MySQL"><a href="#单机MySQL" class="headerlink" title="单机MySQL"></a>单机MySQL</h4><p>在90年代，一个网站的访问量一般都不大，用单个数据库完全可以轻松应付。<br>在那个时候，更多的都是静态网页，动态交互类型的网站不多。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135239.png" alt="image-20210225135232335" loading="lazy"></p>
+<blockquote>
+<p>上述架构下，我们来看看数据存储的瓶颈是什么？</p>
+</blockquote>
+<ol>
+<li>数据量的总大小 一个机器放不下时</li>
+<li>数据的索引（B+ Tree）一个机器的内存放不下时</li>
+<li>访问量(读写混合)一个实例不能承受</li>
+</ol>
+<h4 id="Memcached-缓存-MySQL-垂直拆分"><a href="#Memcached-缓存-MySQL-垂直拆分" class="headerlink" title="Memcached(缓存)+MySQL+垂直拆分"></a>Memcached(缓存)+MySQL+垂直拆分</h4><p>后来，随着访问量的上升，几乎大部分使用MySQL架构的网站在数据库上都开始出现了性能问题，web程序不再仅仅专注在功能上，同时也在追求性能。</p>
+<p>程序员们开始大量的使用缓存技术来缓解数据库的压力，优化数据库的结构和索引。</p>
+<p>开始比较流行的是通过文件缓存来缓解数据库压力，但是当访问量继续增大的时候，多台web机器通过文件缓存不能共享，大量的小文件缓存也带了了比较高的IO压力。</p>
+<p>在这个时候，<strong>Memcached</strong>就自然的成为一个非常时尚的技术产品。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135415.png" alt="image-20210225135415858" loading="lazy"></p>
+<p>Memcached作为一个<strong>独立的分布式的缓存服务器</strong>，为多个web服务器提供了一个共享的高性能缓存服务，在Memcached服务器上，又发展了根据hash算法来进行多台Memcached缓存服务的扩展，然后又出现了一致性hash来解决增加或减少缓存服务器导致重新hash带来的大量缓存失效的弊端。</p>
+<h4 id="Mysql主从读写分离"><a href="#Mysql主从读写分离" class="headerlink" title="Mysql主从读写分离"></a>Mysql主从读写分离</h4><p>由于数据库的写入压力增加，Memcached只能缓解数据库的读取压力。读写集中在一个数据库上让数据库不堪重负，大部分网站开始使用<strong>主从复制技术</strong>来达到读写分离，以提高读写性能和读库的可扩展性。Mysql的<strong>master-slave模式</strong>成为这个时候的网站标配了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225135541.png" alt="image-20210225135541585" loading="lazy"></p>
+<h4 id="分表分库-水平拆分-mysql集群"><a href="#分表分库-水平拆分-mysql集群" class="headerlink" title="分表分库+水平拆分+mysql集群"></a>分表分库+水平拆分+mysql集群</h4><p>在Memcached的高速缓存，MySQL的主从复制，读写分离的基础之上，这时MySQL主库的写压力开始出现瓶颈，而数据量的持续猛增，由于MyISAM使用表锁，在高并发下会出现严重的锁问题，大量的高并发MySQL应用开始使用InnoDB引擎代替MyISAM。</p>
+<p>同时，开始流行使用分表分库来缓解写压力和数据增长的扩展问题。这个时候，<strong>分表分库</strong>成了一个热门技术，是面试的热门问题也是业界讨论的热门技术问题。</p>
+<p>也就在这个时候，MySQL推出了还不太稳定的表分区，这也给技术实力一般的公司带来了希望。</p>
+<p>虽然MySQL推出了MySQL Cluster集群，但性能也不能很好满足互联网的要求，只是在高可靠性上提供了非常大的保证。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225140005.png" alt="image-20210225140005776" loading="lazy"></p>
+<h4 id="MySQL的扩展性瓶颈"><a href="#MySQL的扩展性瓶颈" class="headerlink" title="MySQL的扩展性瓶颈"></a>MySQL的扩展性瓶颈</h4><p>MySQL数据库也经常存储一些大文本字段，导致数据库表非常的大，在做数据库恢复的时候就导致非常的慢，不容易快速恢复数据库。</p>
+<p>比如1000万4KB大小的文本就接近40GB的大小，如果能把这些数据从MySQL省去，MySQL将变得非常的小。</p>
+<p>关系数据库很强大，但是它并不能很好的应付所有的应用场景。</p>
+<p>MySQL的扩展性差（需要复杂的技术来实现），大数据下IO压力大，表结构更改困难，正是当前使用MySQL的开发人员面临的问题。</p>
+<h4 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225140057.png" alt="image-20210225140057303" loading="lazy"></p>
+<h4 id="为什么用NoSQL"><a href="#为什么用NoSQL" class="headerlink" title="为什么用NoSQL"></a>为什么用NoSQL</h4><p>今天我们可以通过第三方平台（如：Google,Facebook等）可以很容易的访问和抓取数据。</p>
+<p>用户的个人信息，社交网络，地理位置，用户生成的数据和用户操作日志已经成倍的增加。</p>
+<p><strong>我们如果要对这些用户数据进行挖掘，那SQL数据库已经不适合这些应用了</strong>, NoSQL数据库的发展也却能很好的处理这些大的数据。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225140151.png" alt="image-20210225140151333" loading="lazy"></p>
+<h3 id="NoSQL特点"><a href="#NoSQL特点" class="headerlink" title="NoSQL特点"></a>NoSQL特点</h3><h4 id="易扩展"><a href="#易扩展" class="headerlink" title="易扩展"></a>易扩展</h4><p>NoSQL数据库种类繁多，但是一个共同的特点都是去掉关系数据库的关系型特性。</p>
+<p>数据之间无关系，这样就非常容易扩展。</p>
+<p>也无形之间，在架构的层面上带来了可扩展的能力。</p>
+<h4 id="大数据量高性能"><a href="#大数据量高性能" class="headerlink" title="大数据量高性能"></a>大数据量高性能</h4><p>NoSQL数据库都具有非常高的读写性能，尤其在大数据量下，同样表现优秀。</p>
+<p>这得益于它的无关系性，数据库的结构简单。</p>
+<p>一般MySQL使用Query Cache，每次表的更新Cache就失效，是一种大粒度的Cache，在针对web2.0的交互频繁的应用，Cache性能不高。</p>
+<p>而NoSQL的Cache是记录级的，是一种细粒度的Cache，所以NoSQL在这个层面上来说就要性能高很多了</p>
+<h4 id="多样灵活的数据模型"><a href="#多样灵活的数据模型" class="headerlink" title="多样灵活的数据模型"></a>多样灵活的数据模型</h4><p>NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义的数据格式。</p>
+<p>而在关系数据库里，增删字段是一件非常麻烦的事情。如果是非常大数据量的表，增加字段简直就是一个噩梦。</p>
+<h4 id="传统RDBMS-VS-NOSQL"><a href="#传统RDBMS-VS-NOSQL" class="headerlink" title="传统RDBMS VS NOSQL"></a>传统RDBMS VS NOSQL</h4><p>RDBMS</p>
+<ul>
+<li>高度组织化结构化数据</li>
+<li>结构化查询语言（SQL）</li>
+<li>数据和关系都存储在单独的表中。</li>
+<li>数据操纵语言，数据定义语言</li>
+<li>严格的一致性</li>
+<li>基础事务</li>
+</ul>
+<p>NoSQL</p>
+<ul>
+<li>代表着不仅仅是SQL</li>
+<li>没有声明性查询语言</li>
+<li>没有预定义的模式</li>
+<li>键 - 值对存储，列存储，文档存储，图形数据库</li>
+<li>最终一致性，而非ACID属性</li>
+<li>非结构化和不可预知的数据</li>
+<li>CAP定理</li>
+<li>高性能，高可用性和可伸缩性</li>
+</ul>
+<h3 id="3V"><a href="#3V" class="headerlink" title="3V"></a>3V</h3><ul>
+<li>海量Volume</li>
+<li>多样Variety</li>
+<li>实时Velocity</li>
+</ul>
+<h3 id="3高"><a href="#3高" class="headerlink" title="3高"></a>3高</h3><ul>
+<li>高并发</li>
+<li>高可扩</li>
+<li>高性能</li>
+</ul>
+<h3 id="NoSQL数据模型简介"><a href="#NoSQL数据模型简介" class="headerlink" title="NoSQL数据模型简介"></a>NoSQL数据模型简介</h3><blockquote>
+<p>以一个电商客户、订单、订购、地址模型来对比下关系型数据库和非关系型数据库</p>
+</blockquote>
+<h4 id="传统的关系型数据库"><a href="#传统的关系型数据库" class="headerlink" title="传统的关系型数据库"></a>传统的关系型数据库</h4><p>ER图(1:1/1:N/N:N,主外键等常见)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225141828.png" alt="image-20210225141443878" loading="lazy"></p>
+<h4 id="NoSQL数据库的设计"><a href="#NoSQL数据库的设计" class="headerlink" title="NoSQL数据库的设计"></a>NoSQL数据库的设计</h4><blockquote>
+<p>BSON是一种类json的一种二进制形式的存储格式，简称Binary JSON，<br>它和 JSON一样，支持内嵌的文档对象和数组对象</p>
+</blockquote>
+<pre class="language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+ <span class="token property">"customer"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span>
+   <span class="token property">"id"</span><span class="token operator">:</span><span class="token number">1136</span><span class="token punctuation">,</span>
+   <span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Z3"</span><span class="token punctuation">,</span>
+   <span class="token property">"billingAddress"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token punctuation">&#123;</span><span class="token property">"city"</span><span class="token operator">:</span><span class="token string">"beijing"</span><span class="token punctuation">&#125;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+   <span class="token property">"orders"</span><span class="token operator">:</span><span class="token punctuation">[</span>
+    <span class="token punctuation">&#123;</span>
+      <span class="token property">"id"</span><span class="token operator">:</span><span class="token number">17</span><span class="token punctuation">,</span>
+      <span class="token property">"customerId"</span><span class="token operator">:</span><span class="token number">1136</span><span class="token punctuation">,</span>
+      <span class="token property">"orderItems"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token punctuation">&#123;</span><span class="token property">"productId"</span><span class="token operator">:</span><span class="token number">27</span><span class="token punctuation">,</span><span class="token property">"price"</span><span class="token operator">:</span><span class="token number">77.5</span><span class="token punctuation">,</span><span class="token property">"productName"</span><span class="token operator">:</span><span class="token string">"thinking in java"</span><span class="token punctuation">&#125;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"shippingAddress"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token punctuation">&#123;</span><span class="token property">"city"</span><span class="token operator">:</span><span class="token string">"beijing"</span><span class="token punctuation">&#125;</span><span class="token punctuation">]</span>
+      <span class="token property">"orderPayment"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token punctuation">&#123;</span><span class="token property">"ccinfo"</span><span class="token operator">:</span><span class="token string">"111-222-333"</span><span class="token punctuation">,</span><span class="token property">"txnid"</span><span class="token operator">:</span><span class="token string">"asdfadcd334"</span><span class="token punctuation">,</span><span class="token property">"billingAddress"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"city"</span><span class="token operator">:</span><span class="token string">"beijing"</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<h4 id="两者对比，为什么上述的情况可以用聚合模型来处理"><a href="#两者对比，为什么上述的情况可以用聚合模型来处理" class="headerlink" title="两者对比，为什么上述的情况可以用聚合模型来处理"></a>两者对比，为什么上述的情况可以用聚合模型来处理</h4><ul>
+<li>高并发的操作不太建议有关联查询，互联网公司用冗余数据来避免关联查询</li>
+<li>分布式事务支持不了太多并发</li>
+</ul>
+<h4 id="聚合模型"><a href="#聚合模型" class="headerlink" title="聚合模型"></a>聚合模型</h4><ol>
+<li><p>KV键值</p>
+</li>
+<li><p>Bson</p>
+</li>
+<li><p>列族</p>
+<blockquote>
+<p>顾名思义，是按列存储数据的。最大的特点是方便存储结构化和半结构化数据，方便做数据压缩，<br>对针对某一列或者某几列的查询有非常大的IO优势。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225142251.png" alt="image-20210225142251241" loading="lazy"></p>
+</li>
+<li><p>图形</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225142640.png" alt="image-20210225142320023" loading="lazy"></p>
+</li>
+</ol>
+<h3 id="NoSQL数据库的四大分类"><a href="#NoSQL数据库的四大分类" class="headerlink" title="NoSQL数据库的四大分类"></a>NoSQL数据库的四大分类</h3><h4 id="KV键值：典型介绍"><a href="#KV键值：典型介绍" class="headerlink" title="KV键值：典型介绍"></a>KV键值：典型介绍</h4><ul>
+<li>新浪：BerkeleyDB+redis</li>
+<li>美团：redis+tair</li>
+<li>阿里、百度：memcache+redis</li>
+</ul>
+<h4 id="文档型数据库-bson格式比较多-：典型介绍"><a href="#文档型数据库-bson格式比较多-：典型介绍" class="headerlink" title="文档型数据库(bson格式比较多)：典型介绍"></a>文档型数据库(bson格式比较多)：典型介绍</h4><ul>
+<li><p>CouchDB</p>
+</li>
+<li><p>MongoDB</p>
+<blockquote>
+<p>MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="列存储数据库"><a href="#列存储数据库" class="headerlink" title="列存储数据库"></a>列存储数据库</h4><ul>
+<li>Cassandra, HBase</li>
+<li>分布式文件系统</li>
+</ul>
+<h4 id="图关系数据库"><a href="#图关系数据库" class="headerlink" title="图关系数据库"></a>图关系数据库</h4><ul>
+<li>它不是放图形的，放的是关系比如:朋友圈社交网络、广告推荐系统</li>
+<li>社交网络，推荐系统等。专注于构建关系图谱</li>
+<li>Neo4J, InfoGrid</li>
+</ul>
+<h4 id="四者对比"><a href="#四者对比" class="headerlink" title="四者对比"></a>四者对比</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225142810.png" alt="image-20210225142810195" loading="lazy"></p>
+<h3 id="在分布式数据库中CAP原理CAP-BASE"><a href="#在分布式数据库中CAP原理CAP-BASE" class="headerlink" title="在分布式数据库中CAP原理CAP+BASE"></a>在分布式数据库中CAP原理CAP+BASE</h3><h4 id="传统的ACID"><a href="#传统的ACID" class="headerlink" title="传统的ACID"></a>传统的ACID</h4><p>关系型数据库遵循ACID规则</p>
+<p>事务在英文中是transaction，和现实世界中的交易很类似，它有如下四个特性：</p>
+<p><strong>A (Atomicity) 原子性</strong><br>原子性很容易理解，也就是说事务里的所有操作要么全部做完，要么都不做，事务成功的条件是事务里的所有操作都成功，只要有一个操作失败，整个事务就失败，需要回滚。比如银行转账，从A账户转100元至B账户，分为两个步骤：1）从A账户取100元；2）存入100元至B账户。这两步要么一起完成，要么一起不完成，如果只完成第一步，第二步失败，钱会莫名其妙少了100元。</p>
+<p><strong>C (Consistency) 一致性</strong><br>一致性也比较容易理解，也就是说数据库要一直处于一致的状态，事务的运行不会改变数据库原本的一致性约束。</p>
+<p><strong>I (Isolation) 独立性</strong><br>所谓的独立性是指并发的事务之间不会互相影响，如果一个事务要访问的数据正在被另外一个事务修改，只要另外一个事务未提交，它所访问的数据就不受未提交事务的影响。比如现有有个交易是从A账户转100元至B账户，在这个交易还未完成的情况下，如果此时B查询自己的账户，是看不到新增加的100元的</p>
+<p><strong>D (Durability) 持久性</strong><br>持久性是指一旦事务提交后，它所做的修改将会永久的保存在数据库上，即使出现宕机也不会丢失。</p>
+<h4 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h4><blockquote>
+<p>C: Consistency（强一致性）</p>
+<p>A: Availability（可用性）</p>
+<p>P: Partition tolerance（分区容错性）</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225145118.jpeg" alt="Image" loading="lazy"></p>
+<h4 id="CAP的3进2"><a href="#CAP的3进2" class="headerlink" title="CAP的3进2"></a>CAP的3进2</h4><p>CAP理论就是说在分布式存储系统中，最多只能实现上面的两点。</p>
+<p>而由于当前的网络硬件肯定会出现延迟丢包等问题，所以<strong>分区容忍性是我们必须需要实现的</strong>。</p>
+<p>所以我们只能在<strong>一致性</strong>和<strong>可用性</strong>之间进行权衡，没有NoSQL系统能同时保证这三点。</p>
+<blockquote>
+<p>CA - 单点集群，满足一致性，可用性的系统，通常在可扩展性上不太强大。</p>
+<p>CP - 满足一致性，分区容忍必的系统，通常性能不是特别高。</p>
+<p>AP - 满足可用性，分区容忍性的系统，通常可能对一致性要求低一些。</p>
+</blockquote>
+<blockquote>
+<p>CA 传统Oracle数据库</p>
+<p>CP Redis、Mongodb</p>
+<p><strong>AP 大多数网站架构的选择</strong></p>
+</blockquote>
+<p> 注意：分布式架构的时候必须做出取舍。</p>
+<p>一致性和可用性之间取一个平衡。</p>
+<p>多余大多数web应用，其实并不需要强一致性。</p>
+<p>因此<strong>牺牲C换取P</strong>，这是目前分布式数据库产品的方向。</p>
+<ul>
+<li><p>一致性与可用性的决择</p>
+<p>对于web2.0网站来说，关系数据库的很多主要特性却往往无用武之地</p>
+</li>
+<li><p>数据库事务一致性需求 </p>
+<p>很多web实时系统并不要求严格的数据库事务，对读一致性的要求很低， 有些场合对写一致性要求并不高。允许实现最终一致性。</p>
+</li>
+<li><p>数据库的写实时性和读实时性需求</p>
+<p>对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多web应用来说，并不要求这么高的实时性，比方说发一条消息之 后，过几秒乃至十几秒之后，我的订阅者才看到这条动态是完全可以接受的。</p>
+</li>
+<li><p>对复杂的SQL查询，特别是多表关联查询的需求 </p>
+<p>任何大数据量的web系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的报表查询，特别是SNS类型的网站，从需求以及产品设计角 度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL的功能被极大的弱化了。</p>
+</li>
+</ul>
+<h4 id="BASE"><a href="#BASE" class="headerlink" title="BASE"></a>BASE</h4><p>BASE就是为了解决关系数据库强一致性引起的问题而引起的可用性降低而提出的解决方案。</p>
+<p>BASE其实是下面三个术语的缩写：</p>
+<blockquote>
+<p>基本可用（Basically Available）<br>软状态（Soft state）<br>最终一致（Eventually consistent）</p>
+</blockquote>
+<p>它的思想是通过让系统放松对某一时刻数据一致性的要求来换取系统整体伸缩性和性能上改观。</p>
+<p>为什么这么说呢，缘由就在于大型系统往往由于地域分布和极高性能的要求，不可能采用分布式事务来完成这些指标，要想获得这些指标，我们必须采用另外一种方式来完成，这里BASE就是解决这个问题的办法。</p>
+<h4 id="分布式-集群简介"><a href="#分布式-集群简介" class="headerlink" title="分布式+集群简介"></a>分布式+集群简介</h4><p><strong>分布式系统（distributed system）</strong>由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成。</p>
+<p>分布式系统是建立在网络之上的软件系统。</p>
+<p>正是因为软件的特性，所以分布式系统具有高度的内聚性和透明性。</p>
+<p>因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统），而不是硬件。</p>
+<p>分布式系统可以应用在在不同的平台上如：Pc、工作站、局域网和广域网上等。</p>
+<blockquote>
+<p>简单来讲：</p>
+<ol>
+<li>分布式：不同的多台服务器上面部署不同的服务模块（工程），他们之间通过Rpc/Rmi之间通信和调用，对外提供服务和组内协作。</li>
+<li>集群：不同的多台服务器上面部署相同的服务模块，通过分布式调度软件进行统一的调度，对外提供服务和访问。</li>
+</ol>
+</blockquote>
+<h2 id="Redis入门"><a href="#Redis入门" class="headerlink" title="Redis入门"></a>Redis入门</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><blockquote>
+<p>Redis:<strong>RE</strong>mote <strong>DI</strong>ctionary <strong>S</strong>erver(远程字典服务器)</p>
+</blockquote>
+<p>是完全开源免费的，用C语言编写的，遵守BSD协议，一个高性能的(key/value)分布式内存数据库，基于内存运行并支持持久化的NoSQL数据库，是当前最热门的NoSql数据库之一,也被人们称为数据结构服务器。</p>
+<p>Redis 与其他 key - value 缓存产品有以下三个特点：</p>
+<ol>
+<li>Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加载进行使用</li>
+<li>Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储</li>
+<li>Redis支持数据的备份，即master-slave模式的数据备份</li>
+</ol>
+<h3 id="能做什么"><a href="#能做什么" class="headerlink" title="能做什么"></a>能做什么</h3><ul>
+<li>内存存储和持久化：redis支持异步将内存中的数据写到硬盘上，同时不影响继续服务</li>
+<li>取最新N个数据的操作，如：可以将最新的10条评论的ID放在Redis的List集合里面</li>
+<li>模拟类似于HttpSession这种需要设定过期时间的功能</li>
+<li>发布、订阅消息系统</li>
+<li>定时器、计数器</li>
+</ul>
+<h3 id="Redis安装"><a href="#Redis安装" class="headerlink" title="Redis安装"></a>Redis安装</h3><p><a target="_blank" rel="noopener" href="https://www.runoob.com/redis/redis-install.html">https://www.runoob.com/redis/redis-install.html</a></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>单进程<ul>
+<li>单进程模型来处理客户端的请求。对读写等事件的响应是通过对epoll函数的包装来做到的。Redis的实际处理速度完全依靠主进程的执行效率</li>
+<li>Epoll是Linux内核为处理大批量文件描述符而作了改进的epoll，是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。</li>
+</ul>
+</li>
+<li>默认16个数据库，类似数组下表从零开始，初始默认使用零号库</li>
+<li>Select命令切换数据库</li>
+<li>Dbsize查看当前数据库的key的数量</li>
+<li>Flushdb：清空当前库</li>
+<li>Flushall：通杀全部库</li>
+<li>统一密码管理，16个库都是同样密码，要么都OK要么一个也连接不上</li>
+<li>Redis索引都是从零开始</li>
+</ul>
+<h2 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h2><h3 id="Redis的五大数据类型"><a href="#Redis的五大数据类型" class="headerlink" title="Redis的五大数据类型"></a>Redis的五大数据类型</h3><h4 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h4><p>string是redis最基本的类型，你可以理解成与Memcached一模一样的类型，一个key对应一个value。</p>
+<p>string类型是二进制安全的。意思是redis的string可以包含任何数据。比如jpg图片或者序列化的对象 。</p>
+<p>string类型是Redis最基本的数据类型，一个redis中字符串value最多可以是512M。</p>
+<h4 id="Hash（哈希，类似java里的Map）"><a href="#Hash（哈希，类似java里的Map）" class="headerlink" title="Hash（哈希，类似java里的Map）"></a>Hash（哈希，类似java里的Map）</h4><p>Redis hash 是一个键值对集合。</p>
+<p>Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象。</p>
+<p>类似Java里面的Map&lt;String,Object&gt;。</p>
+<h4 id="List（列表）"><a href="#List（列表）" class="headerlink" title="List（列表）"></a>List（列表）</h4><p>Redis 列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素导列表的头部（左边）或者尾部（右边）。</p>
+<p>它的底层实际是个链表。</p>
+<h4 id="Set（集合）"><a href="#Set（集合）" class="headerlink" title="Set（集合）"></a>Set（集合）</h4><p>Redis的Set是string类型的无序集合。它是通过HashTable实现实现的。</p>
+<h4 id="Zset-sorted-set：有序集合"><a href="#Zset-sorted-set：有序集合" class="headerlink" title="Zset(sorted set：有序集合)"></a>Zset(sorted set：有序集合)</h4><p>Redis zset 和 set 一样也是string类型元素的集合,且不允许重复的成员。</p>
+<p>不同的是每个元素都会关联一个double类型的分数。</p>
+<p>redis正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<p>zset的成员是唯一的,但分数(score)却可以重复。</p>
+<h3 id="redis常见数据类型操作命令"><a href="#redis常见数据类型操作命令" class="headerlink" title="redis常见数据类型操作命令"></a>redis常见数据类型操作命令</h3><p><a target="_blank" rel="noopener" href="http://redisdoc.com/">http://redisdoc.com/</a></p>
+<h3 id="Redis-键-key"><a href="#Redis-键-key" class="headerlink" title="Redis 键(key)"></a>Redis 键(key)</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154434.png" alt="image-20210225150029861" loading="lazy"></p>
+<ul>
+<li>keys *</li>
+<li>exists key的名字，判断某个key是否存在</li>
+<li>move key db   —&gt;当前库就没有了，被移除了</li>
+<li>expire key 秒钟：为给定的key设置过期时间</li>
+<li>ttl key 查看还有多少秒过期，-1表示永不过期，-2表示已过期</li>
+<li>type key 查看你的key是什么类型</li>
+</ul>
+<h3 id="Redis字符串-String"><a href="#Redis字符串-String" class="headerlink" title="Redis字符串(String)"></a>Redis字符串(String)</h3><blockquote>
+<p>单值单value</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154818.png" alt="image-20210225154817986" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154607.png" alt="image-20210225154607419" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154629.png" alt="image-20210225154629075" loading="lazy"></p>
+<ul>
+<li><p>set/get/del/append/strlen</p>
+</li>
+<li><p>Incr/decr/incrby/decrby,一定要是数字才能进行加减</p>
+</li>
+<li><p>getrange/setrange</p>
+<blockquote>
+<p>getrange:获取指定区间范围内的值，类似between……and的关系<br>从零到负一表示全部</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155214.png" alt="image-20210225155214254" loading="lazy"></p>
+<blockquote>
+<p>setrange设置指定区间范围内的值，格式是setrange key值 具体值</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155221.png" alt="image-20210225155221185" loading="lazy"></p>
+</li>
+<li><p> setex(set with expire)键秒值/setnx(set if not exist)</p>
+</li>
+</ul>
+<blockquote>
+<p>setex:设置带过期时间的key，动态设置。<br>setex 键 秒值 真实值</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155229.png" alt="image-20210225155229059" loading="lazy"></p>
+<blockquote>
+<p>setnx:只有在 key 不存在时设置 key 的值</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155254.png" alt="image-20210225155254788" loading="lazy"></p>
+<ul>
+<li><p>mset/mget/msetnx</p>
+<blockquote>
+<p>mset:同时设置一个或多个 key-value 对。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155302.png" alt="image-20210225155302131" loading="lazy"></p>
+<blockquote>
+<p>mget:获取所有(一个或多个)给定 key 的值。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155310.png" alt="image-20210225155310230" loading="lazy"></p>
+<blockquote>
+<p>msetnx:同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155329.png" alt="image-20210225155329622" loading="lazy"></p>
+</li>
+<li><p>getset(先get再set)</p>
+<blockquote>
+<p>getset:将给定 key 的值设为 value ，并返回 key 的旧值(old value)。<br>简单一句话，先get然后立即set</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155345.png" alt="image-20210225155345651" loading="lazy"></p>
+</li>
+</ul>
+<h3 id="Redis列表-List"><a href="#Redis列表-List" class="headerlink" title="Redis列表(List)"></a>Redis列表(List)</h3><blockquote>
+<p>单值多value</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154846.png" alt="image-20210225154846586" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154853.png" alt="image-20210225154853390" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225154858.png" alt="image-20210225154858103" loading="lazy"></p>
+<ul>
+<li><p>lpush/rpush/lrange</p>
+<blockquote>
+<p>LPUSH 可类比栈，先进后出</p>
+<p>RPUSH 可类比队列，先进先出</p>
+</blockquote>
+</li>
+<li><p>lpop/rpop</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155406.png" alt="image-20210225155406817" loading="lazy"></p>
+</li>
+<li><p>lindex，按照索引下标获得元素(从上到下)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155418.png" alt="image-20210225155417983" loading="lazy"></p>
+</li>
+<li><p>llen</p>
+</li>
+<li><p>lrem key 删N个value</p>
+<blockquote>
+<p>从left往right删除2个值等于v1的元素，返回的值为实际删除的数量</p>
+<p>LREM list3 0 值，表示删除全部给定的值。零个就是全部值</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155424.png" alt="image-20210225155424436" loading="lazy"></p>
+</li>
+<li><p> ltrim key 开始index 结束index，截取指定范围的值后再赋值给key</p>
+</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155453.png" alt="image-20210225155442726" loading="lazy"></p>
+<ul>
+<li> rpoplpush 源列表 目的列表</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155506.png" alt="image-20210225155505969" loading="lazy"></p>
+<ul>
+<li> lset key index value</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155513.png" alt="image-20210225155513637" loading="lazy"></p>
+<ul>
+<li> linsert key  before/after 值1 值2</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155523.png" alt="image-20210225155523320" loading="lazy"></p>
+<blockquote>
+<p>性能总结</p>
+</blockquote>
+<p>它是一个字符串链表，left、right都可以插入添加；<br>如果键不存在，创建新的链表；<br>如果键已存在，新增内容；<br>如果值全移除，对应的键也就消失了。<br>链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就很惨淡了。</p>
+<h3 id="Redis集合-Set"><a href="#Redis集合-Set" class="headerlink" title="Redis集合(Set)"></a>Redis集合(Set)</h3><blockquote>
+<p>单值多value</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160249.png" alt="image-20210225160249409" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155714.png" alt="image-20210225155714274" loading="lazy"></p>
+<ul>
+<li><p>sadd/smembers/sismember</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155735.png" alt="image-20210225155735089" loading="lazy"></p>
+</li>
+<li><p>scard，获取集合里面的元素个数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155749.png" alt="image-20210225155749015" loading="lazy"></p>
+</li>
+<li><p> srem key value 删除集合中元素</p>
+</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155806.png" alt="image-20210225155806223" loading="lazy"></p>
+<ul>
+<li> srandmember key 某个整数(随机出几个数)</li>
+</ul>
+<blockquote>
+<p>从set集合里面随机取出2个</p>
+<p>如果超过最大数量就全部取出，</p>
+<p>如果写的值是负数，比如-3 ，表示需要取出3个，但是可能会有重复值。</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155840.png" alt="image-20210225155840774" loading="lazy"></p>
+<ul>
+<li> spop key 随机出栈</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155850.png" alt="image-20210225155850534" loading="lazy"></p>
+<ul>
+<li> smove key1 key2 在key1里某个值</li>
+</ul>
+<blockquote>
+<p>作用是将key1里的某个值赋给key2</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155923.png" alt="image-20210225155923580" loading="lazy"></p>
+<ul>
+<li><p>数学集合类</p>
+<ul>
+<li><p>差集：sdiff</p>
+<blockquote>
+<p>在第一个set里面而不在后面任何一个set里面的项</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155945.png" alt="image-20210225155945357" loading="lazy"></p>
+</li>
+<li><p>交集：sinter</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225155956.png" alt="image-20210225155956565" loading="lazy"></p>
+</li>
+<li><p>并集：sunion</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160012.png" alt="image-20210225160012716" loading="lazy"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Redis哈希-Hash"><a href="#Redis哈希-Hash" class="headerlink" title="Redis哈希(Hash)"></a>Redis哈希(Hash)</h3><blockquote>
+<p>KV模式不变，但<strong>V自身是一个键值对</strong>(套娃)</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160301.png" alt="image-20210225160301666" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160048.png" alt="image-20210225160048490" loading="lazy"></p>
+<ul>
+<li><p>hset/hget/hmset/hmget/hgetall/hdel</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160106.png" alt="image-20210225160105975" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160111.png" alt="image-20210225160111641" loading="lazy"></p>
+</li>
+<li><p>hlen</p>
+</li>
+<li><p>hexists key 在key里面的某个值的key</p>
+</li>
+<li><p>hkeys/hvals</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160143.png" loading="lazy"></p>
+</li>
+<li><p>hincrby/hincrbyfloat</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160152.png" alt="image-20210225160152424" loading="lazy"></p>
+</li>
+<li><p>hsetnx</p>
+<blockquote>
+<p>不存在赋值，存在了无效。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160222.png" alt="image-20210225160222198" loading="lazy"></p>
+</li>
+</ul>
+<h3 id="Redis有序集合Zset-sorted-set"><a href="#Redis有序集合Zset-sorted-set" class="headerlink" title="Redis有序集合Zset(sorted set)"></a>Redis有序集合Zset(sorted set)</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160310.png" alt="image-20210225160310130" loading="lazy"></p>
+<blockquote>
+<p>在set基础上，加一个score值。<br>之前set是k1 v1 v2 v3，<br>现在zset是k1 score1 v1 score2 v2</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160338.png" alt="image-20210225160338605" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160347.png" alt="image-20210225160347359" loading="lazy"></p>
+<ul>
+<li><p>zadd/zrange</p>
+<blockquote>
+<p>Withscores</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160418.png" alt="image-20210225160418011" loading="lazy"></p>
+</li>
+<li><p> zrangebyscore key 开始score 结束score</p>
+</li>
+</ul>
+<blockquote>
+<p>withscores</p>
+<p> (   不包含</p>
+<p>Limit 作用是返回限制，limit 开始下标步 多少步</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160517.png" alt="image-20210225160516967" loading="lazy"></p>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160522.png" alt="image-20210225160522237" loading="lazy"></p>
+<ul>
+<li> zrem key 某score下对应的value值</li>
+</ul>
+<blockquote>
+<p>删除元素</p>
+<p>格式是zrem zset的key 项的值，项的值可以是多个</p>
+<p>zrem key score某个对应值，可以是多个值</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160612.png" alt="image-20210225160612860" loading="lazy"></p>
+<ul>
+<li> zcard/zcount key score区间/zrank key values值</li>
+</ul>
+<blockquote>
+<p>作用是获得下标值/zscore key 对应值,获得分数</p>
+</blockquote>
+<ul>
+<li><p>zcard ：获取集合中元素个数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160651.png" alt="image-20210225160651805" loading="lazy"></p>
+</li>
+<li><p>zcount ：获取分数区间内元素个数，zcount key 开始分数区间 结束分数区间</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160702.png" alt="image-20210225160702194" loading="lazy"></p>
+</li>
+<li><p>zrank： 获取value在zset中的下标位置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160712.png" alt="image-20210225160712410" loading="lazy"></p>
+</li>
+<li><p>zscore：按照值获得对应的分数</p>
+<p><img src="C:\Users\yinwu\AppData\Roaming\Typora\typora-user-images\image-20210225160721303.png" alt="image-20210225160721303" loading="lazy"></p>
+</li>
+<li><p> zrevrank key values值，作用是逆序获得下标值</p>
+</li>
+</ul>
+<blockquote>
+<p>正序、逆序获得下标索引值</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160744.png" alt="image-20210225160744292" loading="lazy"></p>
+<ul>
+<li><p>zrevrange</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160801.png" alt="image-20210225160801820" loading="lazy"></p>
+</li>
+<li><p> zrevrangebyscore  key 结束score 开始score</p>
+</li>
+</ul>
+<blockquote>
+<p>zrevrangebyscore zset1 90 60 withscores    分数是反着来的</p>
+</blockquote>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210225160821.png" alt="image-20210225160821771" loading="lazy"></p>
+<h2 id="配置文件redis-conf解析"><a href="#配置文件redis-conf解析" class="headerlink" title="配置文件redis.conf解析"></a>配置文件redis.conf解析</h2><blockquote>
+<p>更改配置文件前，<strong>一定要先把初始配置文件备份</strong>，这是linux系统下开发的好习惯</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113246.png" alt="image-20210226113238928" loading="lazy"></p>
+<h3 id="Units单位"><a href="#Units单位" class="headerlink" title="Units单位"></a>Units单位</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113307.png" alt="image-20210226113307691" loading="lazy"></p>
+<ol>
+<li>配置大小单位,开头定义了一些基本的度量单位，只支持bytes，不支持bit</li>
+<li>对大小写不敏感</li>
+</ol>
+<h3 id="INCLUDES包含"><a href="#INCLUDES包含" class="headerlink" title="INCLUDES包含"></a>INCLUDES包含</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113352.png" alt="image-20210226113352123" loading="lazy"></p>
+<p>和我们的Struts2配置文件类似，可以通过includes包含，redis.conf可以作为总闸，包含其他</p>
+<h3 id="GENERAL通用"><a href="#GENERAL通用" class="headerlink" title="GENERAL通用"></a>GENERAL通用</h3><ol>
+<li><p><strong>Daemonize</strong></p>
+</li>
+<li><p><strong>Pidfile</strong></p>
+</li>
+<li><p><strong>Port</strong></p>
+</li>
+<li><p><strong>Tcp-backlog</strong></p>
+<p>设置tcp的backlog，backlog其实是一个连接队列，backlog队列总和=未完成三次握手队列 + 已经完成三次握手队列。</p>
+<p>在高并发环境下你需要一个高backlog值来避免慢客户端连接问题。</p>
+<p>注意Linux内核会将这个值减到/proc/sys/net/core/somaxconn的值，所以需要确认增大somaxconn和tcp_max_syn_backlog两个值来达到想要的效果。</p>
+</li>
+<li><p><strong>Timeout</strong></p>
+</li>
+<li><p><strong>Bind</strong> </p>
+</li>
+<li><p><strong>Tcp-keepalive</strong></p>
+<p>单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60 </p>
+</li>
+<li><p><strong>Loglevel</strong></p>
+</li>
+<li><p><strong>Logfile</strong></p>
+</li>
+<li><p><strong>Syslog-enabled</strong></p>
+<p>是否把日志输出到syslog中</p>
+</li>
+<li><p><strong>Syslog-ident</strong></p>
+<p>指定syslog里的日志标志</p>
+</li>
+<li><p><strong>Syslog-facility</strong></p>
+<p> 指定syslog设备，值可以是USER或LOCAL0-LOCAL7</p>
+</li>
+<li><p><strong>Databases</strong></p>
+</li>
+</ol>
+<h3 id="SNAPSHOTTING快照"><a href="#SNAPSHOTTING快照" class="headerlink" title="SNAPSHOTTING快照"></a>SNAPSHOTTING快照</h3><ol>
+<li><p><strong>Save</strong></p>
+<ul>
+<li> <strong>save 秒钟 写操作次数</strong></li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113657.png" alt="image-20210226113657716" loading="lazy"></p>
+<p>  RDB是整个内存的压缩过的Snapshot，RDB的数据结构，可以配置复合的快照触发条件</p>
+<p>  默认是1分钟内改了1万次，或5分钟内改了10次，或15分钟内改了1次。</p>
+<ul>
+<li><p><strong>禁用</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113829.png" alt="image-20210226113829172" loading="lazy"></p>
+<p>如果想禁用RDB持久化的策略，只要不设置任何save指令，或者给save传入一个空字符串参数也可以</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Stop-writes-on-bgsave-error</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113909.png" alt="image-20210226113909055" loading="lazy"></p>
+<p>如果配置成no，表示你不在乎数据不一致或者有其他的手段发现和控制</p>
+</li>
+<li><p><strong>rdbcompression</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113930.png" alt="image-20210226113930150" loading="lazy"></p>
+<p>rdbcompression：对于存储到磁盘中的快照，可以设置是否进行压缩存储。如果是的话，redis会采用LZF算法进行压缩。</p>
+<p>如果不想消耗CPU来进行压缩的话，可以设置为关闭此功能。</p>
+</li>
+<li><p><strong>rdbchecksum</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226113952.png" alt="image-20210226113952734" loading="lazy"></p>
+<p>rdbchecksum：在存储快照后，还可以让redis使用CRC64算法来进行数据校验，但是这样做会增加大约10%的性能消耗，如果希望获取到最大的性能提升，可以关闭此功能。</p>
+</li>
+<li><p><strong>dbfilename</strong></p>
+</li>
+<li><p><strong>dir</strong></p>
+</li>
+</ol>
+<h3 id="REPLICATION复制"><a href="#REPLICATION复制" class="headerlink" title="REPLICATION复制"></a>REPLICATION复制</h3><h3 id="SECURITY安全"><a href="#SECURITY安全" class="headerlink" title="SECURITY安全"></a>SECURITY安全</h3><blockquote>
+<p>访问密码的查看、设置和取消</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114125.png" alt="image-20210226114125457" loading="lazy"></p>
+<h3 id="LIMITS限制"><a href="#LIMITS限制" class="headerlink" title="LIMITS限制"></a>LIMITS限制</h3><h4 id="Maxclients"><a href="#Maxclients" class="headerlink" title="Maxclients"></a>Maxclients</h4><p>设置redis同时可以与多少个客户端进行连接。默认情况下为10000个客户端。当你无法设置进程文件句柄限制时，redis会设置为当前的文件句柄限制值减去32，因为redis会为自身内部处理逻辑留一些句柄出来。如果达到了此限制，redis则会拒绝新的连接请求，并且向这些连接请求方发出“max number of clients reached”以作回应。</p>
+<h4 id="Maxmemory"><a href="#Maxmemory" class="headerlink" title="Maxmemory"></a>Maxmemory</h4><p>设置redis可以使用的内存量。一旦到达内存使用上限，redis将会试图移除内部数据，移除规则可以通过maxmemory-policy来指定。如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信息，比如SET、LPUSH等。</p>
+<p>但是对于无内存申请的指令，仍然会正常响应，比如GET等。如果你的redis是主redis（说明你的redis有从redis），那么在设置内存使用上限时，需要在系统中留出一些内存空间给同步队列缓存，只有在你设置的是“不移除”的情况下，才不用考虑这个因素。</p>
+<h4 id="Maxmemory-policy"><a href="#Maxmemory-policy" class="headerlink" title="Maxmemory-policy"></a>Maxmemory-policy</h4><ol>
+<li>volatile-lru：使用LRU算法移除key，只对设置了过期时间的键</li>
+<li>allkeys-lru：使用LRU算法移除key</li>
+<li>volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键</li>
+<li>allkeys-random：移除随机的key</li>
+<li>volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key</li>
+<li>noeviction：不进行移除。针对写操作，只是返回错误信息</li>
+</ol>
+<h4 id="Maxmemory-samples"><a href="#Maxmemory-samples" class="headerlink" title="Maxmemory-samples"></a>Maxmemory-samples</h4><p>设置样本数量，LRU算法和最小TTL算法都并非是精确的算法，而是估算值，所以你可以设置样本的大小，redis默认会检查这么多个key并选择其中LRU的那个。</p>
+<h3 id="APPEND-ONLY-MODE追加"><a href="#APPEND-ONLY-MODE追加" class="headerlink" title="APPEND ONLY MODE追加"></a>APPEND ONLY MODE追加</h3><ol>
+<li><p>appendonly</p>
+</li>
+<li><p>appendfilename</p>
+</li>
+<li><p>Appendfsync</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114358.png" alt="image-20210226114358888" loading="lazy"></p>
+<ul>
+<li>Always：同步持久化 每次发生数据变更会被立即记录到磁盘  性能较差但数据完整性比较好</li>
+<li>Everysec：出厂默认推荐，异步操作，每秒记录   如果一秒内宕机，有数据丢失</li>
+<li>No</li>
+</ul>
+</li>
+<li><p>No-appendfsync-on-rewrite：重写时是否可以运用Appendfsync，用默认no即可，保证数据安全性。</p>
+</li>
+<li><p>Auto-aof-rewrite-min-size：设置重写的基准值</p>
+</li>
+<li><p>Auto-aof-rewrite-percentage：设置重写的基准值</p>
+</li>
+</ol>
+<h3 id="常见配置redis-conf"><a href="#常见配置redis-conf" class="headerlink" title="常见配置redis.conf"></a>常见配置redis.conf</h3><p>参数说明<br>redis.conf 配置项说明如下：</p>
+<ol>
+<li>Redis默认不是以守护进程的方式运行，可以通过该配置项修改，使用yes启用守护进程<br> daemonize no</li>
+<li>当Redis以守护进程方式运行时，Redis默认会把pid写入/var/run/redis.pid文件，可以通过pidfile指定<br> pidfile /var/run/redis.pid</li>
+<li>指定Redis监听端口，默认端口为6379，作者在自己的一篇博文中解释了为什么选用6379作为默认端口，因为6379在手机按键上MERZ对应的号码，而MERZ取自意大利歌女Alessia Merz的名字<br> port 6379</li>
+<li>绑定的主机地址<br> bind 127.0.0.1</li>
+<li>当 客户端闲置多长时间后关闭连接，如果指定为0，表示关闭该功能<pre><code>timeout 300
+</code></pre>
+</li>
+<li>指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为verbose<br>  loglevel verbose</li>
+<li>日志记录方式，默认为标准输出，如果配置Redis为守护进程方式运行，而这里又配置为日志记录方式为标准输出，则日志将会发送给/dev/null<br>  logfile stdout</li>
+<li>设置数据库的数量，默认数据库为0，可以使用SELECT <dbid>命令在连接上指定数据库id<br>  databases 16</li>
+<li>指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合<br>  save <seconds> <changes><pre><code>Redis默认配置文件中提供了三个条件：
+save 900 1
+save 300 10
+save 60 10000
+分别表示900秒（15分钟）内有1个更改，300秒（5分钟）内有10个更改以及60秒内有10000个更改。
+</code></pre>
+</li>
+<li>指定存储至本地数据库时是否压缩数据，默认为yes，Redis采用LZF压缩，如果为了节省CPU时间，可以关闭该选项，但会导致数据库文件变的巨大<br>   rdbcompression yes</li>
+<li>指定本地数据库文件名，默认值为dump.rdb<pre><code>dbfilename dump.rdb
+</code></pre>
+</li>
+<li>指定本地数据库存放目录<pre><code>dir ./
+</code></pre>
+</li>
+<li>设置当本机为slav服务时，设置master服务的IP地址及端口，在Redis启动时，它会自动从master进行数据同步<pre><code>slaveof &lt;masterip&gt; &lt;masterport&gt;
+</code></pre>
+</li>
+<li>当master服务设置了密码保护时，slav服务连接master的密码<pre><code>masterauth &lt;master-password&gt;
+</code></pre>
+</li>
+<li>设置Redis连接密码，如果配置了连接密码，客户端在连接Redis时需要通过AUTH <password>命令提供密码，默认关闭<pre><code>requirepass foobared
+</code></pre>
+</li>
+<li>设置同一时间最大客户端连接数，默认无限制，Redis可以同时打开的客户端连接数为Redis进程可以打开的最大文件描述符数，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis会关闭新的连接并向客户端返回max number of clients reached错误信息<pre><code>maxclients 128
+</code></pre>
+</li>
+<li>指定Redis最大内存限制，Redis在启动时会把数据加载到内存中，达到最大内存后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理 后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis新的vm机制，会把Key存放内存，Value会存放在swap区<pre><code>maxmemory &lt;bytes&gt;
+</code></pre>
+</li>
+<li>指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为 redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为no<pre><code>appendonly no
+</code></pre>
+</li>
+<li>指定更新日志文件名，默认为appendonly.aof<pre><code> appendfilename appendonly.aof
+</code></pre>
+</li>
+<li>指定更新日志条件，共有3个可选值： <pre><code>no：表示等操作系统进行数据缓存同步到磁盘（快） 
+always：表示每次更新操作后手动调用fsync()将数据写到磁盘（慢，安全） 
+everysec：表示每秒同步一次（折衷，默认值）
+appendfsync everysec
+</code></pre>
+</li>
+<li>指定是否启用虚拟内存机制，默认值为no，简单的介绍一下，VM机制将数据分页存放，由Redis将访问量较少的页即冷数据swap到磁盘上，访问多的页面由磁盘自动换出到内存中（在后面的文章我会仔细分析Redis的VM机制）<pre><code> vm-enabled no
+</code></pre>
+</li>
+<li>虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享<pre><code> vm-swap-file /tmp/redis.swap
+</code></pre>
+</li>
+<li>将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的(Redis的索引数据 就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0<pre><code> vm-max-memory 0
+</code></pre>
+</li>
+<li>Redis swap文件分成了很多的page，一个对象可以保存在多个page上面，但一个page上不能被多个对象共享，vm-page-size是要根据存储的 数据大小来设定的，作者建议如果存储很多小对象，page大小最好设置为32或者64bytes；如果存储很大大对象，则可以使用更大的page，如果不 确定，就使用默认值<pre><code> vm-page-size 32
+</code></pre>
+</li>
+<li>设置swap文件中的page数量，由于页表（一种表示页面空闲或使用的bitmap）是在放在内存中的，，在磁盘上每8个pages将消耗1byte的内存。<pre><code> vm-pages 134217728
+</code></pre>
+</li>
+<li>设置访问swap文件的线程数,最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的，可能会造成比较长时间的延迟。默认值为4<pre><code> vm-max-threads 4
+</code></pre>
+</li>
+<li>设置在向客户端应答时，是否把较小的包合并为一个包发送，默认为开启<pre><code>glueoutputbuf yes
+</code></pre>
+</li>
+<li>指定在超过一定的数量或者最大的元素超过某一临界值时，采用一种特殊的哈希算法<pre><code>hash-max-zipmap-entries 64
+hash-max-zipmap-value 512
+</code></pre>
+</li>
+<li>指定是否激活重置哈希，默认为开启（后面在介绍Redis的哈希算法时具体介绍）<pre><code>activerehashing yes
+</code></pre>
+</li>
+<li>指定包含其它的配置文件，可以在同一主机上多个Redis实例之间使用同一份配置文件，而同时各个实例又拥有自己的特定配置文件<pre><code>include /path/to/local.conf
+</code></pre>
+</li>
+</ol>
+<h2 id="Redis的持久化"><a href="#Redis的持久化" class="headerlink" title="Redis的持久化"></a>Redis的持久化</h2><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114703.png" alt="image-20210226114703115" loading="lazy"></p>
+<h3 id="RDB（Redis-DataBase）"><a href="#RDB（Redis-DataBase）" class="headerlink" title="RDB（Redis DataBase）"></a>RDB（Redis DataBase）</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114723.png" alt="image-20210226114723214" loading="lazy"></p>
+<blockquote>
+<p>在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里</p>
+</blockquote>
+<blockquote>
+<p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。</p>
+<p>整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能。</p>
+<p>如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。</p>
+<p>RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+</blockquote>
+<blockquote>
+<p>Rdb 保存的是dump.rdb文件</p>
+</blockquote>
+<h4 id="Fork"><a href="#Fork" class="headerlink" title="Fork"></a>Fork</h4><p>Fork的作用是复制一个与当前进程一样的进程。</p>
+<p>新进程的所有数据（变量、环境变量、程序计数器等）数值都和原进程一致，但是是一个全新的进程，并作为原进程的子进程。</p>
+<h4 id="配置位置"><a href="#配置位置" class="headerlink" title="配置位置"></a>配置位置</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226114914.png" loading="lazy"></p>
+<h4 id="如何触发RDB快照"><a href="#如何触发RDB快照" class="headerlink" title="如何触发RDB快照"></a>如何触发RDB快照</h4><blockquote>
+<p>配置文件中默认的快照配置</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115022.png" alt="image-20210226115022137" loading="lazy"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115027.png" alt="image-20210226115027140" loading="lazy"></p>
+<blockquote>
+<p>冷拷贝后重新使用</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115058.png" alt="image-20210226115058579" loading="lazy"></p>
+<blockquote>
+<p>可以<code>cp dump.rdb dump_new.rdb</code></p>
+</blockquote>
+<blockquote>
+<p>命令save或者是bgsave</p>
+</blockquote>
+<ul>
+<li>Save：save时只管保存，其它不管，全部阻塞</li>
+<li>BGSAVE：Redis会在后台异步进行快照操作，快照同时还可以响应客户端请求。可以通过lastsave命令获取最后一次成功执行快照的时间</li>
+</ul>
+<blockquote>
+<p>执行flushall命令，也会产生dump.rdb文件，但里面是空的，无意义</p>
+</blockquote>
+<h4 id="如何恢复"><a href="#如何恢复" class="headerlink" title="如何恢复"></a>如何恢复</h4><ul>
+<li>将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可。</li>
+<li>CONFIG GET dir获取目录。</li>
+</ul>
+<h4 id="如何停止"><a href="#如何停止" class="headerlink" title="如何停止"></a>如何停止</h4><p>动态所有停止RDB保存规则的方法：</p>
+<p><code>redis-cli config set save &quot;&quot;</code></p>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ul>
+<li>适合大规模的数据恢复</li>
+<li>对数据完整性和一致性要求不高</li>
+</ul>
+<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ul>
+<li>在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改</li>
+<li>Fork的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115528.png" alt="image-20210226115528243" loading="lazy"></p>
+<h3 id="AOF（Append-Only-File）"><a href="#AOF（Append-Only-File）" class="headerlink" title="AOF（Append Only File）"></a>AOF（Append Only File）</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115608.png" alt="image-20210226115608490" loading="lazy"></p>
+<blockquote>
+<p>以日志的形式来记录每个写操作，将Redis执行过的所有写指令记录下来(读操作不记录)，只许追加文件但不可以改写文件，redis启动之初会读取该文件重新构建数据</p>
+<p>换言之，redis重启的话就根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作</p>
+</blockquote>
+<blockquote>
+<p>Aof保存的是appendonly.aof文件</p>
+</blockquote>
+<h4 id="配置位置-1"><a href="#配置位置-1" class="headerlink" title="配置位置"></a>配置位置</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115653.png" alt="image-20210226115653578" loading="lazy"></p>
+<h4 id="AOF启动-修复-恢复"><a href="#AOF启动-修复-恢复" class="headerlink" title="AOF启动/修复/恢复"></a>AOF启动/修复/恢复</h4><ul>
+<li><p>正常恢复</p>
+<ul>
+<li><p>启动：设置Yes</p>
+<p>修改默认的appendonly no，改为yes</p>
+</li>
+<li><p>将有数据的aof文件复制一份保存到对应目录(config get dir)</p>
+</li>
+<li><p>恢复：重启redis然后重新加载</p>
+</li>
+</ul>
+</li>
+<li><p>异常恢复</p>
+<ul>
+<li><p>启动：设置Yes</p>
+<p>修改默认的appendonly no，改为yes</p>
+</li>
+<li><p>备份被写坏的AOF文件</p>
+</li>
+<li><p>修复：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115823.png" alt="image-20210226115823396" loading="lazy"></p>
+<p><code>Redis-check-aof --fix</code>进行修复</p>
+</li>
+<li><p>恢复：重启redis然后重新加载</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Rewrite"><a href="#Rewrite" class="headerlink" title="Rewrite"></a>Rewrite</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226115901.png" alt="image-20210226115901311" loading="lazy"></p>
+<blockquote>
+<p>AOF采用文件追加方式，文件会越来越大为避免出现此种情况，新增了重写机制,当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集.可以使用命令bgrewriteaof</p>
+</blockquote>
+<h5 id="重写原理"><a href="#重写原理" class="headerlink" title="重写原理"></a>重写原理</h5><p>AOF文件持续增长而过大时，会fork出一条新进程来将文件重写(也是先写临时文件最后再rename)，遍历新进程的内存中数据，每条记录有一条的Set语句。</p>
+<p>重写aof文件的操作，并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似。</p>
+<h5 id="触发机制"><a href="#触发机制" class="headerlink" title="触发机制"></a>触发机制</h5><p>Redis会记录上次重写时的AOF大小，默认配置是当AOF文件大小是上次rewrite后大小的一倍且文件大于64M时触发</p>
+<h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h4><ul>
+<li>每修改同步：appendfsync always   同步持久化 每次发生数据变更会被立即记录到磁盘  性能较差但数据完整性比较好</li>
+<li>每秒同步：appendfsync everysec    异步操作，每秒记录   如果一秒内宕机，有数据丢失</li>
+<li>不同步：appendfsync no   从不同步</li>
+</ul>
+<h4 id="劣势-1"><a href="#劣势-1" class="headerlink" title="劣势"></a>劣势</h4><ul>
+<li>相同数据集的数据而言aof文件要远大于rdb文件，恢复速度慢于rdb</li>
+<li>Aof运行效率要慢于rdb,每秒同步策略效率较好，不同步效率和rdb相同</li>
+</ul>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226120048.png" alt="image-20210226120048546" loading="lazy"></p>
+<h3 id="RDB-Or-AOF"><a href="#RDB-Or-AOF" class="headerlink" title="RDB Or AOF"></a>RDB Or AOF</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226120125.png" alt="image-20210226120125642" loading="lazy"></p>
+<blockquote>
+<p>RDB持久化方式能够在指定的时间间隔能对你的数据进行快照存储</p>
+</blockquote>
+<blockquote>
+<p>AOF持久化方式记录每次对服务器写的操作,当服务器重启的时候会重新执行这些命令来恢复原始的数据,AOF命令以redis协议追加保存每次写的操作到文件末尾.Redis还能对AOF文件进行后台重写,使得AOF文件的体积不至于过大</p>
+</blockquote>
+<blockquote>
+<p>只做缓存：如果你只希望你的数据在服务器运行的时候存在,你也可以不使用任何持久化方式.</p>
+</blockquote>
+<h4 id="同时开启两种持久化方式"><a href="#同时开启两种持久化方式" class="headerlink" title="同时开启两种持久化方式"></a>同时开启两种持久化方式</h4><p>在这种情况下,<strong>当redis重启的时候会优先载入AOF文件来恢复原始的数据</strong>,因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整。</p>
+<p>RDB的数据不实时，同时使用两者时服务器重启也只会找AOF文件。</p>
+<p><strong>那要不要只使用AOF呢？</strong></p>
+<p><strong>作者建议不要</strong>，因为RDB更适合用于备份数据库(AOF在不断变化不好备份)，快速重启，而且不会有AOF可能潜在的bug，留着作为一个万一的手段。</p>
+<h4 id="性能建议"><a href="#性能建议" class="headerlink" title="性能建议"></a>性能建议</h4><p>因为RDB文件只用作后备用途，建议只在Slave上持久化RDB文件，而且只要15分钟备份一次就够了，只保留save 900 1这条规则。</p>
+<p>如果Enalbe AOF，好处是在最恶劣情况下也只会丢失不超过两秒数据，启动脚本较简单只load自己的AOF文件就可以了。代价一是带来了持续的IO，二是AOF rewrite的最后将rewrite过程中产生的新数据写到新文件造成的阻塞几乎是不可避免的。只要硬盘许可，应该尽量减少AOF rewrite的频率，AOF重写的基础大小默认值64M太小了，可以设到5G以上。默认超过原大小100%大小时重写可以改到适当的数值。</p>
+<p>如果不Enable AOF ，仅靠Master-Slave Replication 实现高可用性也可以。能省掉一大笔IO也减少了rewrite时带来的系统波动。代价是如果Master/Slave同时倒掉，会丢失十几分钟的数据，启动脚本也要比较两个Master/Slave中的RDB文件，载入较新的那个。新浪微博就选用了这种架构。</p>
+<h2 id="Redis的事务"><a href="#Redis的事务" class="headerlink" title="Redis的事务"></a>Redis的事务</h2><blockquote>
+<p>一个队列中，一次性、顺序性、排他性的执行一系列命令。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226120910.png" alt="image-20210226120910154" loading="lazy"></p>
+<blockquote>
+<p>可以一次执行多个命令，本质是一组命令的集合。</p>
+<p>一个事务中的所有命令都会序列化，按顺序地串行化执行而不会被其它命令插入，不许加塞。</p>
+</blockquote>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121044.png" alt="image-20210226121044645" loading="lazy"></p>
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121106.png" alt="image-20210226121106260" loading="lazy">、</p>
+<h4 id="Case1：正常执行"><a href="#Case1：正常执行" class="headerlink" title="Case1：正常执行"></a>Case1：正常执行</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121135.png" alt="image-20210226121135451" loading="lazy"></p>
+<h4 id="Case2：放弃事务"><a href="#Case2：放弃事务" class="headerlink" title="Case2：放弃事务"></a>Case2：放弃事务</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121148.png" alt="image-20210226121147966" loading="lazy"></p>
+<h4 id="Case3：全体连坐"><a href="#Case3：全体连坐" class="headerlink" title="Case3：全体连坐"></a>Case3：全体连坐</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121159.png" alt="image-20210226121159392" loading="lazy"> </p>
+<h4 id="Case4：冤头债主"><a href="#Case4：冤头债主" class="headerlink" title="Case4：冤头债主"></a>Case4：冤头债主</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121221.png" alt="image-20210226121221641" loading="lazy"></p>
+<h4 id="Case5：watch监控"><a href="#Case5：watch监控" class="headerlink" title="Case5：watch监控"></a>Case5：watch监控</h4><blockquote>
+<p>悲观锁/乐观锁/CAS(Check And Set)</p>
+</blockquote>
+<ul>
+<li><p><strong>悲观锁</strong></p>
+<p>悲观锁(Pessimistic Lock), 顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。</p>
+<p>传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。</p>
+</li>
+<li><p><strong>乐观锁</strong></p>
+<p>乐观锁(Optimistic Lock), 顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，可以使用版本号等机制。</p>
+<p>乐观锁适用于多读的应用类型，这样可以提高吞吐量。</p>
+<p>乐观锁策略：提交版本必须大于记录当前版本才能执行更新。</p>
+</li>
+<li><p><strong>CAS</strong></p>
+<p>CAS（Compare and swap）比较和替换是设计并发算法时用到的一种技术。</p>
+<p>简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。</p>
+</li>
+</ul>
+<blockquote>
+<p>初始化信用卡可用余额和欠额</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121513.png" alt="image-20210226121513171" loading="lazy"></p>
+<blockquote>
+<p>无加塞篡改</p>
+<p>先监控再开启multi，保证两笔金额变动在同一个事务内</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121526.png" alt="image-20210226121526607" loading="lazy"></p>
+<blockquote>
+<p>有加塞篡改</p>
+<p>监控了key，如果key被修改了，后面一个事务的执行失效</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121540.png" alt="image-20210226121540911" loading="lazy"></p>
+<blockquote>
+<p>unwatch</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121608.png" alt="image-20210226121607977" loading="lazy"></p>
+<blockquote>
+<p>一旦执行了exec之前加的监控锁都会被取消掉了</p>
+</blockquote>
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ul>
+<li>Watch指令，类似乐观锁，事务提交时，如果Key的值已被别的客户端改变，比如某个list已被别的客户端push/pop过了，整个事务队列都不会被执行</li>
+<li>通过WATCH命令在事务执行之前监控了多个Keys，倘若在WATCH之后有任何Key的值发生了变化，EXEC命令执行的事务都将被放弃，同时返回Nullmulti-bulk应答以通知调用者事务执行失败</li>
+</ul>
+<h3 id="3阶段"><a href="#3阶段" class="headerlink" title="3阶段"></a>3阶段</h3><ul>
+<li>开启：以MULTI开始一个事务</li>
+<li>入队：将多个命令入队到事务中，接到这些命令并不会立即执行，而是放到等待执行的事务队列里面</li>
+<li>执行：由EXEC命令触发事务</li>
+</ul>
+<h3 id="3特性"><a href="#3特性" class="headerlink" title="3特性"></a>3特性</h3><ul>
+<li>单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。</li>
+<li>没有隔离级别的概念：队列中的命令没有提交之前都不会实际的被执行，因为事务提交前任何指令都不会被实际执行，也就不存在”事务内的查询要看到事务里的更新，在事务外查询不能看到”这个让人万分头痛的问题。</li>
+<li>不保证原子性：redis同一个事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚。</li>
+</ul>
+<h2 id="Redis的发布订阅"><a href="#Redis的发布订阅" class="headerlink" title="Redis的发布订阅"></a>Redis的发布订阅</h2><blockquote>
+<p>进程间的一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。</p>
+</blockquote>
+<h3 id="订阅-发布消息图"><a href="#订阅-发布消息图" class="headerlink" title="订阅/发布消息图"></a>订阅/发布消息图</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226121941.png" alt="image-20210226121941504" loading="lazy"></p>
+<h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122006.png" alt="image-20210226122006503" loading="lazy"></p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><blockquote>
+<p>先订阅后发布后才能收到消息</p>
+</blockquote>
+<ol>
+<li>可以一次性订阅多个，SUBSCRIBE c1 c2 c3</li>
+<li>消息发布，PUBLISH c2 hello-redis</li>
+<li>订阅多个，通配符*， PSUBSCRIBE new*</li>
+<li>收取消息， PUBLISH new1 redis2015</li>
+</ol>
+<h2 id="Redis的复制-Master-Slave"><a href="#Redis的复制-Master-Slave" class="headerlink" title="Redis的复制(Master/Slave)"></a>Redis的复制(Master/Slave)</h2><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122811.png" alt="image-20210226122811190" loading="lazy"></p>
+<blockquote>
+<p>行话：也就是我们所说的主从复制，主机数据更新后根据配置和策略，自动同步到备机的master/slaver机制，Master以写为主，Slave以读为主</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>读写分离</li>
+<li>容灾恢复</li>
+</ul>
+</blockquote>
+<h3 id="如何使用-1"><a href="#如何使用-1" class="headerlink" title="如何使用"></a>如何使用</h3><h4 id="配从-库-不配主-库"><a href="#配从-库-不配主-库" class="headerlink" title="配从(库)不配主(库)"></a>配从(库)不配主(库)</h4><h4 id="从库配置：slaveof-主库IP-主库端口"><a href="#从库配置：slaveof-主库IP-主库端口" class="headerlink" title="从库配置：slaveof 主库IP 主库端口"></a>从库配置：slaveof 主库IP 主库端口</h4><ul>
+<li>每次与master断开之后，都需要重新连接，除非你配置进redis.conf文件</li>
+<li>Info replication</li>
+</ul>
+<h4 id="修改配置文件细节操作"><a href="#修改配置文件细节操作" class="headerlink" title="修改配置文件细节操作"></a>修改配置文件细节操作</h4><ul>
+<li><p>拷贝多个redis.conf文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122947.png" alt="image-20210226122947742" loading="lazy"></p>
+</li>
+<li><p>开启daemonize yes</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226122957.png" alt="image-20210226122957540" loading="lazy"></p>
+</li>
+<li><p>Pid文件名字</p>
+</li>
+<li><p>指定端口</p>
+</li>
+<li><p>Log文件名字</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123017.png" alt="image-20210226123017063" loading="lazy"></p>
+</li>
+<li><p>Dump.rdb名字</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123027.png" alt="image-20210226123027065" loading="lazy"></p>
+</li>
+</ul>
+<h4 id="常用3招"><a href="#常用3招" class="headerlink" title="常用3招"></a>常用3招</h4><h5 id="一主二仆"><a href="#一主二仆" class="headerlink" title="一主二仆"></a>一主二仆</h5><ul>
+<li><p>Init</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123145.png" alt="image-20210226123145378" loading="lazy"></p>
+</li>
+<li><p>一个Master两个Slave</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123157.png" alt="image-20210226123157819" loading="lazy"></p>
+</li>
+<li><p>日志查看</p>
+<blockquote>
+<p>主机日志</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123410.png" alt="image-20210226123410761" loading="lazy"></p>
+<blockquote>
+<p>备机日志</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226123422.png" alt="image-20210226123422658" loading="lazy"></p>
+<blockquote>
+<p>info replication</p>
+</blockquote>
+<p><img src="C:\Users\yinwu\AppData\Roaming\Typora\typora-user-images\image-20210226123436414.png" alt="image-20210226123436414" loading="lazy"></p>
+</li>
+</ul>
+<h5 id="薪火相传"><a href="#薪火相传" class="headerlink" title="薪火相传"></a>薪火相传</h5><ul>
+<li>上一个Slave可以是下一个slave的Master，Slave同样可以接收其他slaves的连接和同步请求，那么该slave作为了链条中下一个的master,可以有效减轻master的写压力</li>
+<li>中途变更转向:会清除之前的数据，重新建立拷贝最新的</li>
+<li>Slaveof 新主库IP 新主库端口</li>
+</ul>
+<h5 id="反客为主"><a href="#反客为主" class="headerlink" title="反客为主"></a>反客为主</h5><p>SLAVEOF no one</p>
+<p>使当前数据库停止与其他数据库的同步，转成主数据库</p>
+<h3 id="复制原理"><a href="#复制原理" class="headerlink" title="复制原理"></a>复制原理</h3><ul>
+<li>Slave启动成功连接到master后会发送一个sync命令</li>
+<li>Master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令，在后台进程执行完毕之后，master将传送整个数据文件到slave,以完成一次完全同步</li>
+<li>全量复制：而slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</li>
+<li>增量复制：Master继续将新的所有收集到的修改命令依次传给slave,完成同步</li>
+<li>但是只要是重新连接master,一次完全同步（全量复制)将被自动执行</li>
+</ul>
+<h3 id="哨兵模式-sentinel"><a href="#哨兵模式-sentinel" class="headerlink" title="哨兵模式(sentinel)"></a>哨兵模式(sentinel)</h3><blockquote>
+<p>反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库</p>
+</blockquote>
+<h4 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h4><blockquote>
+<p>一组sentinel能同时监控多个Master</p>
+</blockquote>
+<ol>
+<li><p>调整结构，6379带着80、81</p>
+</li>
+<li><p>自定义的/myredis目录下新建sentinel.conf文件，名字绝不能错</p>
+</li>
+<li><p>配置哨兵,填写内容</p>
+<ul>
+<li> sentinel monitor 被监控数据库名字(自己起名字) 127.0.0.1 6379 1</li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145429.png" alt="image-20210226145429345" loading="lazy"></p>
+<ul>
+<li>上面最后一个数字1，表示主机挂掉后salve投票看让谁接替成为主机，得票数多少后成为主机</li>
+</ul>
+</li>
+<li><p>启动哨兵</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145449.png" alt="image-20210226145449619" loading="lazy"></p>
+<p>Redis-sentinel /myredis/sentinel.conf </p>
+<p>上述目录依照各自的实际情况配置，可能目录不同</p>
+</li>
+<li><p>正常主从演示</p>
+</li>
+<li><p>原有的master挂了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145520.png" alt="image-20210226145519938" loading="lazy"></p>
+</li>
+<li><p>投票新选</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145531.png" alt="image-20210226145531093" loading="lazy"></p>
+</li>
+<li><p>重新主从继续开工,info replication查查看</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145542.png" alt="image-20210226145542819" loading="lazy"></p>
+</li>
+<li><p>问题：如果之前的master重启回来，会不会双master冲突？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210226145551.png" alt="image-20210226145551503" loading="lazy"></p>
+</li>
+</ol>
+<h3 id="复制的缺点"><a href="#复制的缺点" class="headerlink" title="复制的缺点"></a>复制的缺点</h3><p>复制延时：</p>
+<p>由于所有的写操作都是先在Master上操作，然后同步更新到Slave上，所以从Master同步到Slave机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave机器数量的增加也会使这个问题更加严重。</p>
+<h2 id="Redis的Java客户端Jedis"><a href="#Redis的Java客户端Jedis" class="headerlink" title="Redis的Java客户端Jedis"></a>Redis的Java客户端Jedis</h2><h3 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h3><ol>
+<li> tar -zxvf jdk-7u67-linux-i586.tar.gz</li>
+<li> vi /etc/profile</li>
+<li>重启一次Centos</li>
+<li>编码验证</li>
+</ol>
+<h3 id="安装eclipse"><a href="#安装eclipse" class="headerlink" title="安装eclipse"></a>安装eclipse</h3><h3 id="Jedis所需要的jar包"><a href="#Jedis所需要的jar包" class="headerlink" title="Jedis所需要的jar包"></a>Jedis所需要的jar包</h3><p>Commons-pool-1.6.jar</p>
+<p>Jedis-2.1.0.jar</p>
+<h3 id="Jedis常用操作"><a href="#Jedis常用操作" class="headerlink" title="Jedis常用操作"></a>Jedis常用操作</h3><h4 id="测试连通性"><a href="#测试连通性" class="headerlink" title="测试连通性"></a>测试连通性</h4><pre class="language-java" data-language="java"><code class="language-java"> <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Demo01</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//连接本地的 Redis 服务</span>
+    <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span><span class="token number">6379</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//查看服务是否运行，打出pong表示OK</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"connection is OK==========>: "</span><span class="token operator">+</span>jedis<span class="token punctuation">.</span><span class="token function">ping</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h4 id="5-1"><a href="#5-1" class="headerlink" title="5+1"></a>5+1</h4><blockquote>
+<p>一个key</p>
+<p>五大数据类型</p>
+</blockquote>
+<pre class="language-java" data-language="java"><code class="language-java"> <span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>atguigu<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token operator">*</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">Jedis</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Test02</span> 
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> 
+  <span class="token punctuation">&#123;</span>
+ 
+     <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span><span class="token number">6379</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//key</span>
+     <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> keys <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Iterator</span> iterator <span class="token operator">=</span> keys<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span> iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"jedis.exists====>"</span><span class="token operator">+</span>jedis<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token string">"k2"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">ttl</span><span class="token punctuation">(</span><span class="token string">"k1"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//String</span>
+     <span class="token comment">//jedis.append("k1","myreids");</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"k1"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"k4"</span><span class="token punctuation">,</span><span class="token string">"k4_redis"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"----------------------------------------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">mset</span><span class="token punctuation">(</span><span class="token string">"str1"</span><span class="token punctuation">,</span><span class="token string">"v1"</span><span class="token punctuation">,</span><span class="token string">"str2"</span><span class="token punctuation">,</span><span class="token string">"v2"</span><span class="token punctuation">,</span><span class="token string">"str3"</span><span class="token punctuation">,</span><span class="token string">"v3"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">mget</span><span class="token punctuation">(</span><span class="token string">"str1"</span><span class="token punctuation">,</span><span class="token string">"str2"</span><span class="token punctuation">,</span><span class="token string">"str3"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//list</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"----------------------------------------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//jedis.lpush("mylist","v1","v2","v3","v4","v5");</span>
+     <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">lrange</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> element <span class="token operator">:</span> list<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+     <span class="token comment">//set</span>
+     jedis<span class="token punctuation">.</span><span class="token function">sadd</span><span class="token punctuation">(</span><span class="token string">"orders"</span><span class="token punctuation">,</span><span class="token string">"jd001"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">sadd</span><span class="token punctuation">(</span><span class="token string">"orders"</span><span class="token punctuation">,</span><span class="token string">"jd002"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">sadd</span><span class="token punctuation">(</span><span class="token string">"orders"</span><span class="token punctuation">,</span><span class="token string">"jd003"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> set1 <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">smembers</span><span class="token punctuation">(</span><span class="token string">"orders"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Iterator</span> iterator <span class="token operator">=</span> set1<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token class-name">String</span> string <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span> iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">srem</span><span class="token punctuation">(</span><span class="token string">"orders"</span><span class="token punctuation">,</span><span class="token string">"jd002"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">smembers</span><span class="token punctuation">(</span><span class="token string">"orders"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//hash</span>
+     jedis<span class="token punctuation">.</span><span class="token function">hset</span><span class="token punctuation">(</span><span class="token string">"hash1"</span><span class="token punctuation">,</span><span class="token string">"userName"</span><span class="token punctuation">,</span><span class="token string">"lisi"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">hget</span><span class="token punctuation">(</span><span class="token string">"hash1"</span><span class="token punctuation">,</span><span class="token string">"userName"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span><span class="token class-name">String</span><span class="token punctuation">></span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span><span class="token class-name">String</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"telphone"</span><span class="token punctuation">,</span><span class="token string">"13811814763"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"address"</span><span class="token punctuation">,</span><span class="token string">"atguigu"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"email"</span><span class="token punctuation">,</span><span class="token string">"abc@163.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">hmset</span><span class="token punctuation">(</span><span class="token string">"hash2"</span><span class="token punctuation">,</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> result <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">hmget</span><span class="token punctuation">(</span><span class="token string">"hash2"</span><span class="token punctuation">,</span> <span class="token string">"telphone"</span><span class="token punctuation">,</span><span class="token string">"email"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> element <span class="token operator">:</span> result<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+     <span class="token comment">//zset</span>
+     jedis<span class="token punctuation">.</span><span class="token function">zadd</span><span class="token punctuation">(</span><span class="token string">"zset01"</span><span class="token punctuation">,</span><span class="token number">60d</span><span class="token punctuation">,</span><span class="token string">"v1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">zadd</span><span class="token punctuation">(</span><span class="token string">"zset01"</span><span class="token punctuation">,</span><span class="token number">70d</span><span class="token punctuation">,</span><span class="token string">"v2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">zadd</span><span class="token punctuation">(</span><span class="token string">"zset01"</span><span class="token punctuation">,</span><span class="token number">80d</span><span class="token punctuation">,</span><span class="token string">"v3"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     jedis<span class="token punctuation">.</span><span class="token function">zadd</span><span class="token punctuation">(</span><span class="token string">"zset01"</span><span class="token punctuation">,</span><span class="token number">90d</span><span class="token punctuation">,</span><span class="token string">"v4"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     
+     <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> s1 <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">zrange</span><span class="token punctuation">(</span><span class="token string">"zset01"</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Iterator</span> iterator <span class="token operator">=</span> s1<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token class-name">String</span> string <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span> iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+ 
+          
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h4 id="事务提交"><a href="#事务提交" class="headerlink" title="事务提交"></a>事务提交</h4><ul>
+<li><p>日常</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>atguigu<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">Jedis</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">Response</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">Transaction</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Test03</span> 
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> 
+  <span class="token punctuation">&#123;</span>
+     <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span><span class="token number">6379</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     
+     <span class="token comment">//监控key，如果该动了事务就被放弃</span>
+     <span class="token comment">/*3
+     jedis.watch("serialNum");
+     jedis.set("serialNum","s#####################");
+     jedis.unwatch();*/</span>
+     
+     <span class="token class-name">Transaction</span> transaction <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">multi</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//被当作一个命令进行执行</span>
+     <span class="token class-name">Response</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> response <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"serialNum"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     transaction<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"serialNum"</span><span class="token punctuation">,</span><span class="token string">"s002"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     response <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"serialNum"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     transaction<span class="token punctuation">.</span><span class="token function">lpush</span><span class="token punctuation">(</span><span class="token string">"list3"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     transaction<span class="token punctuation">.</span><span class="token function">lpush</span><span class="token punctuation">(</span><span class="token string">"list3"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     transaction<span class="token punctuation">.</span><span class="token function">lpush</span><span class="token punctuation">(</span><span class="token string">"list3"</span><span class="token punctuation">,</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     
+     transaction<span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//2 transaction.discard();</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"serialNum***********"</span><span class="token operator">+</span>response<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre></li>
+<li><p>加锁</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestTransaction</span> <span class="token punctuation">&#123;</span>
+ 
+  <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">transMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span> <span class="token number">6379</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">int</span> balance<span class="token punctuation">;</span><span class="token comment">// 可用余额</span>
+     <span class="token keyword">int</span> debt<span class="token punctuation">;</span><span class="token comment">// 欠额</span>
+     <span class="token keyword">int</span> amtToSubtract <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span><span class="token comment">// 实刷额度</span>
+ 
+     jedis<span class="token punctuation">.</span><span class="token function">watch</span><span class="token punctuation">(</span><span class="token string">"balance"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//jedis.set("balance","5");//此句不该出现，讲课方便。模拟其他程序已经修改了该条目</span>
+     balance <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"balance"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">if</span> <span class="token punctuation">(</span>balance <span class="token operator">&lt;</span> amtToSubtract<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       jedis<span class="token punctuation">.</span><span class="token function">unwatch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"modify"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"***********transaction"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token class-name">Transaction</span> transaction <span class="token operator">=</span> jedis<span class="token punctuation">.</span><span class="token function">multi</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       transaction<span class="token punctuation">.</span><span class="token function">decrBy</span><span class="token punctuation">(</span><span class="token string">"balance"</span><span class="token punctuation">,</span> amtToSubtract<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       transaction<span class="token punctuation">.</span><span class="token function">incrBy</span><span class="token punctuation">(</span><span class="token string">"debt"</span><span class="token punctuation">,</span> amtToSubtract<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       transaction<span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       balance <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"balance"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       debt <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>jedis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"debt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"*******"</span> <span class="token operator">+</span> balance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"*******"</span> <span class="token operator">+</span> debt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+ 
+  <span class="token comment">/**
+   * 通俗点讲，watch命令就是标记一个键，如果标记了一个键， 在提交事务前如果该键被别人修改过，那事务就会失败，这种情况通常可以在程序中
+   * 重新再尝试一次。
+   * 首先标记了键balance，然后检查余额是否足够，不足就取消标记，并不做扣减； 足够的话，就启动事务进行更新操作，
+   * 如果在此期间键balance被其它人修改， 那在提交事务（执行exec）时就会报错， 程序中通常可以捕获这类错误再重新执行一次，直到成功。
+   */</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token class-name">TestTransaction</span> test <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TestTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">boolean</span> retValue <span class="token operator">=</span> test<span class="token punctuation">.</span><span class="token function">transMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"main retValue-------: "</span> <span class="token operator">+</span> retValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre></li>
+</ul>
+<h4 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h4><blockquote>
+<p>6379,6380启动，先各自先独立</p>
+<p>主写</p>
+<p>从读</p>
+</blockquote>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> 
+  <span class="token punctuation">&#123;</span>
+     <span class="token class-name">Jedis</span> jedis_M <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span><span class="token number">6379</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">Jedis</span> jedis_S <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Jedis</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span><span class="token number">6380</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     
+     jedis_S<span class="token punctuation">.</span><span class="token function">slaveof</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span><span class="token number">6379</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     
+     jedis_M<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"k6"</span><span class="token punctuation">,</span><span class="token string">"v6"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>jedis_S<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"k6"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span></code></pre>
+
+<h3 id="JedisPool"><a href="#JedisPool" class="headerlink" title="JedisPool"></a>JedisPool</h3><ul>
+<li>获取Jedis实例需要从JedisPool中获取</li>
+<li>用完Jedis实例需要返还给JedisPool</li>
+<li>如果Jedis在使用过程中出错，则也需要还给JedisPool</li>
+</ul>
+<h4 id="案例-1"><a href="#案例-1" class="headerlink" title="案例"></a>案例</h4><ul>
+<li><p>JedisPoolUtil</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>atguigu<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">Jedis</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">JedisPool</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">JedisPoolConfig</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">JedisPoolUtil</span> <span class="token punctuation">&#123;</span>
+  
+ <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">volatile</span> <span class="token class-name">JedisPool</span> jedisPool <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span><span class="token comment">//被volatile修饰的变量不会被本地线程缓存，对该变量的读写都是直接操作共享内存。</span>
+  
+  <span class="token keyword">private</span> <span class="token class-name">JedisPoolUtil</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+  
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">JedisPool</span> <span class="token function">getJedisPoolInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+ <span class="token punctuation">&#123;</span>
+     <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">==</span> jedisPool<span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+       <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token class-name">JedisPoolUtil</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+      <span class="token punctuation">&#123;</span>
+          <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">==</span> jedisPool<span class="token punctuation">)</span>
+         <span class="token punctuation">&#123;</span>
+           <span class="token class-name">JedisPoolConfig</span> poolConfig <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JedisPoolConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           poolConfig<span class="token punctuation">.</span><span class="token function">setMaxActive</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           poolConfig<span class="token punctuation">.</span><span class="token function">setMaxIdle</span><span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           poolConfig<span class="token punctuation">.</span><span class="token function">setMaxWait</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+           poolConfig<span class="token punctuation">.</span><span class="token function">setTestOnBorrow</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            
+            jedisPool <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JedisPool</span><span class="token punctuation">(</span>poolConfig<span class="token punctuation">,</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+     <span class="token keyword">return</span> jedisPool<span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+  
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">release</span><span class="token punctuation">(</span><span class="token class-name">JedisPool</span> jedisPool<span class="token punctuation">,</span><span class="token class-name">Jedis</span> jedis<span class="token punctuation">)</span>
+ <span class="token punctuation">&#123;</span>
+     <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">!=</span> jedis<span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+      jedisPool<span class="token punctuation">.</span><span class="token function">returnResourceObject</span><span class="token punctuation">(</span>jedis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+ <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre></li>
+<li><p>Demo5</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>atguigu<span class="token punctuation">.</span>redis<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">Jedis</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">redis<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>jedis<span class="token punctuation">.</span></span><span class="token class-name">JedisPool</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Test01</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token class-name">JedisPool</span> jedisPool <span class="token operator">=</span> <span class="token class-name">JedisPoolUtil</span><span class="token punctuation">.</span><span class="token function">getJedisPoolInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">Jedis</span> jedis <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+     
+     <span class="token keyword">try</span> 
+     <span class="token punctuation">&#123;</span>
+       jedis <span class="token operator">=</span> jedisPool<span class="token punctuation">.</span><span class="token function">getResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       jedis<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"k18"</span><span class="token punctuation">,</span><span class="token string">"v183"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       
+     <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span><span class="token keyword">finally</span><span class="token punctuation">&#123;</span>
+       <span class="token class-name">JedisPoolUtil</span><span class="token punctuation">.</span><span class="token function">release</span><span class="token punctuation">(</span>jedisPool<span class="token punctuation">,</span> jedis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre></li>
+</ul>
+<h3 id="配置总结"><a href="#配置总结" class="headerlink" title="配置总结"></a>配置总结</h3><blockquote>
+<p>JedisPool的配置参数大部分是由JedisPoolConfig的对应项来赋值的。</p>
+</blockquote>
+<ul>
+<li><p><strong>maxActive</strong>：控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted。</p>
+</li>
+<li><p><strong>maxIdle</strong>：控制一个pool最多有多少个状态为idle(空闲)的jedis实例；</p>
+</li>
+<li><p><strong>whenExhaustedAction</strong>：表示当pool中的jedis实例都被allocated完时，pool要采取的操作；默认有三种。<br> WHEN_EXHAUSTED_FAIL –&gt; 表示无jedis实例时，直接抛出NoSuchElementException；<br> WHEN_EXHAUSTED_BLOCK –&gt; 则表示阻塞住，或者达到maxWait时抛出JedisConnectionException；<br> WHEN_EXHAUSTED_GROW –&gt; 则表示新建一个jedis实例，也就说设置的maxActive无用；</p>
+</li>
+<li><p><strong>maxWait</strong>：表示当borrow一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛JedisConnectionException；</p>
+</li>
+<li><p><strong>testOnBorrow</strong>：获得一个jedis实例的时候是否检查连接可用性（ping()）；如果为true，则得到的jedis实例均是可用的；</p>
+</li>
+<li><p><strong>testOnReturn</strong>：return 一个jedis实例给pool时，是否检查连接可用性（ping()）；</p>
+</li>
+<li><p><strong>testWhileIdle</strong>：如果为true，表示有一个idle object evitor线程对idle object进行扫描，如果validate失败，此object会被从pool中drop掉；这一项只有在timeBetweenEvictionRunsMillis大于0时才有意义；</p>
+</li>
+<li><p><strong>timeBetweenEvictionRunsMillis</strong>：表示idle object evitor两次扫描之间要sleep的毫秒数；</p>
+</li>
+<li><p><strong>numTestsPerEvictionRun</strong>：表示idle object evitor每次扫描的最多的对象数；</p>
+</li>
+<li><p><strong>minEvictableIdleTimeMillis</strong>：表示一个对象至少停留在idle状态的最短时间，然后才能被idle object evitor扫描并驱逐；这一项只有在timeBetweenEvictionRunsMillis大于0时才有意义；</p>
+</li>
+<li><p><strong>softMinEvictableIdleTimeMillis</strong>：在minEvictableIdleTimeMillis基础上，加入了至少minIdle个对象已经在pool里面了。</p>
+<p>如果为-1，evicted不会根据idle time驱逐任何对象。</p>
+<p>如果minEvictableIdleTimeMillis&gt;0，则此项设置无意义，且只有在timeBetweenEvictionRunsMillis大于0时才有意义；</p>
+</li>
+<li><p><strong>lifo</strong>：borrowObject返回对象时，是采用DEFAULT_LIFO（last in first out，即类似cache的最频繁使用队列），如果为False，则表示FIFO队列；</p>
+</li>
+</ul>
+<blockquote>
+<p>其中JedisPoolConfig对一些参数的默认设置如下：<br>testWhileIdle=true<br>minEvictableIdleTimeMills=60000<br>timeBetweenEvictionRunsMillis=30000<br>numTestsPerEvictionRun=-1</p>
+</blockquote>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>Rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2021/02/19/Redis/" title="Redis">http://example.com/2021/02/19/Redis/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/02/19/Nacos%E6%8C%81%E4%B9%85%E5%8C%96%E9%85%8D%E7%BD%AE%E5%88%87%E6%8D%A2Mysql%E6%97%B6%E6%97%A0%E6%B3%95%E6%AD%A3%E5%B8%B8%E5%90%AF%E5%8A%A8/" rel="prev" title="Nacos持久化配置切换Mysql时无法正常启动"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Nacos持久化配置切换Mysql时无法正常启动</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/02/18/hexo%E9%83%A8%E7%BD%B2%E6%97%B6%E9%81%87%E5%88%B0nodejs%E9%94%99%E8%AF%AF%E6%8F%90%E7%A4%BA/" rel="next" title="hexo部署时遇到nodejs错误提示"><span class="post-nav-text">hexo部署时遇到nodejs错误提示</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2020 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
