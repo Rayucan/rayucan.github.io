@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Rayucan"><meta name="copyright" content="Rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Cookie 和 Session | Rayの云端小屋</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"Rayの云端小屋","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="会话跟踪是 Web 程序中常用的技术，用来跟踪用户的整个会话。 常用的会话跟踪技术是 Cookie 和 Session。 Cookie 在客户端记录信息来确定用户身份，Session 在服务器记录信息来确定用户身份。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cookie 和 Session">
+<meta property="og:url" content="http://example.com/2021/10/31/Cookie%20%E5%92%8C%20Session/index.html">
+<meta property="og:site_name" content="Rayの云端小屋">
+<meta property="og:description" content="会话跟踪是 Web 程序中常用的技术，用来跟踪用户的整个会话。 常用的会话跟踪技术是 Cookie 和 Session。 Cookie 在客户端记录信息来确定用户身份，Session 在服务器记录信息来确定用户身份。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-10-30T16:05:56.000Z">
+<meta property="article:modified_time" content="2021-11-05T03:17:52.870Z">
+<meta property="article:author" content="Rayucan">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="Rayucan"></a><div class="site-author-name"><a href="/about/">Rayucan</a></div><a class="site-name" href="/about/site.html">Rayの云端小屋</a><sub class="site-subtitle"></sub><div class="site-desciption">Gaze into abyss.</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">45</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">13</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=775972516&amp;site=qq&amp;menu=yes" title="QQ" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:775972516@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=362729060" title="网易云音乐" target="_blank" style="color:#C10D0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/ray-63-72" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/226098990/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cookie"><span class="toc-number">1.</span> <span class="toc-text">Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Cookie"><span class="toc-number">1.1.</span> <span class="toc-text">什么是 Cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E4%B8%AD%E7%9A%84-Cookie"><span class="toc-number">1.2.</span> <span class="toc-text">Java 中的 Cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E4%B8%8D%E5%8F%AF%E8%B7%A8%E5%9F%9F%E5%90%8D%E6%80%A7"><span class="toc-number">1.3.</span> <span class="toc-text">Cookie 的不可跨域名性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7"><span class="toc-number">1.4.</span> <span class="toc-text">Cookie 的常用属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E6%9C%89%E6%95%88%E6%9C%9F"><span class="toc-number">1.5.</span> <span class="toc-text">Cookie 的有效期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E4%BF%AE%E6%94%B9%E5%92%8C%E5%88%A0%E9%99%A4"><span class="toc-number">1.6.</span> <span class="toc-text">Cookie 的修改和删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E5%9F%9F%E5%90%8D"><span class="toc-number">1.7.</span> <span class="toc-text">Cookie 的域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E8%B7%AF%E5%BE%84"><span class="toc-number">1.8.</span> <span class="toc-text">Cookie 的路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-%E7%9A%84%E5%AE%89%E5%85%A8%E5%B1%9E%E6%80%A7"><span class="toc-number">1.9.</span> <span class="toc-text">Cookie 的安全属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%B8%E4%B9%85%E7%99%BB%E5%BD%95"><span class="toc-number">1.10.</span> <span class="toc-text">永久登录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Session"><span class="toc-number">2.</span> <span class="toc-text">Session</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Session"><span class="toc-number">2.1.</span> <span class="toc-text">什么是 Session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E4%B8%AD%E7%9A%84-Session"><span class="toc-number">2.2.</span> <span class="toc-text">Java 中的 Session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">2.3.</span> <span class="toc-text">Session 的生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-%E7%9A%84%E6%9C%89%E6%95%88%E6%9C%9F"><span class="toc-number">2.4.</span> <span class="toc-text">Session 的有效期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.5.</span> <span class="toc-text">Session 的常用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-%E5%AF%B9%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E8%A6%81%E6%B1%82"><span class="toc-number">2.6.</span> <span class="toc-text">Session 对浏览器的要求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#URL-%E5%9C%B0%E5%9D%80%E9%87%8D%E5%86%99"><span class="toc-number">2.6.1.</span> <span class="toc-text">URL 地址重写</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2021/10/31/Cookie%20%E5%92%8C%20Session/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rayの云端小屋"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Cookie 和 Session</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2021-10-31 00:05:56" itemprop="dateCreated datePublished" datetime="2021-10-31T00:05:56+08:00">2021-10-31</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-11-05 11:17:52" itemprop="dateModified" datetime="2021-11-05T11:17:52+08:00">2021-11-05</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Web/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Web</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p><strong>会话跟踪</strong>是 Web 程序中常用的技术，用来跟踪用户的整个会话。</p>
+<p>常用的会话跟踪技术是 Cookie 和 Session。</p>
+<p>Cookie 在<strong>客户端</strong>记录信息来确定用户身份，Session 在<strong>服务器</strong>记录信息来确定用户身份。</p>
+<span id="more"></span>
+
+<h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><p>理论上，一个用户的所用请求操作都应该属于同一个会话，另一用户的所有请求操作则应该属于另一会话，二者不能混淆。</p>
+<p>Web 应用程序一般使用 HTTP 协议进行数据传输，而 <strong>HTTP 协议是无状态的协议</strong>，一旦数据交换完成，客户端与服务器的连接就会关闭，若再次请求，就需要建立新的连接，这意味着<strong>服务器无法从连接上跟踪会话</strong>。</p>
+<p>Cookie 机制可以弥补 HTTP 协议无状态的缺点。</p>
+<h3 id="什么是-Cookie"><a href="#什么是-Cookie" class="headerlink" title="什么是 Cookie"></a>什么是 Cookie</h3><p>Cookie 是由 W3C 组织提出的一种机制，目前已成为标准，几乎所有主流浏览器都支持 Cookie。</p>
+<p>由于 HTTP 是一种无状态的协议，服务器单从网络连接上无法知道用户的身份，于是<strong>就给客户端颁发一种通行证，每人一个，无论谁访问都必须携带自己的通行证，服务器就可以确认其身份</strong>，这就是 Cookie 大致的工作原理。</p>
+<p>Cookie 实际上是一小段文本信息。如果客户端请求服务器，服务器需要记录用户状态，就通过 Response 向客户端发送一个 Cookie，客户端会把 Cookie 保存起来。当浏览器（即客户端）再次请求该网站时，浏览器把本次请求连同 Cookie 一同提交给服务器。服务器检查该 Cookie，以此辨认用户信息。</p>
+<h3 id="Java-中的-Cookie"><a href="#Java-中的-Cookie" class="headerlink" title="Java 中的 Cookie"></a>Java 中的 Cookie</h3><p>Java 把 Cookie 封装成了 <code>javax.servlet.http.Cookie</code> 类，每个 Cookie 对应一个 Cookie 类对象。</p>
+<p>服务器通过 Cookie 对象来对客户端的 Cookie 进行操作：</p>
+<ul>
+<li><code>request.getCookie()</code>可以获取客户端提交的所有 Cookie，以 <code>Cookie[]</code> 数组的形式返回</li>
+<li><code>request.addCookie(Cookie cookie)</code> 可以向客户端设置 Cookie</li>
+</ul>
+<p>Cookie 对象使用 k-v 属性对的形式保存用户状态，一个 Cookie 对象保存一个属性对，一个 Request 或 Response 包含多个 Cookie。</p>
+<h3 id="Cookie-的不可跨域名性"><a href="#Cookie-的不可跨域名性" class="headerlink" title="Cookie 的不可跨域名性"></a>Cookie 的不可跨域名性</h3><p>Google 会向客户端颁发 Cookie，Baidu 也会向客户端颁发 Cookie，当浏览器访问 Google 是否会携带 Baidu 颁发的 Cookie？或者 Google 是否能修改 Baidu 颁发的 Cookie？</p>
+<p><strong>答案是否定的</strong>。<strong>Cookie 具有不可跨域名性</strong>。根据 Cookie 规范，浏览器访问 Google 只会携带 Google 的 Cookie，而不会携带 Baidu 的Cookie。Google 也只能操作自己Cookie，而不能操作 Baidu 的 Cookie。</p>
+<p>Cookie 在客户端由浏览器进行管理，而浏览器判断一个网站能否操作另一网站 Cookie 的方式是域名。</p>
+<p>值得注意的是，虽然 <code>images.google.com</code> 与 <code>www.google.com</code> 同属于 Google，但二者域名不一样，不能操作彼此的 Cookie。</p>
+<p>另一方面，登录 <code>www.google.com</code> 后，访问 <code>images.google.com</code> 登录信息仍然有效，是因为 Google 的 Cookie 经过了特殊处理，后文将会介绍。</p>
+<h3 id="Cookie-的常用属性"><a href="#Cookie-的常用属性" class="headerlink" title="Cookie 的常用属性"></a>Cookie 的常用属性</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String name</td>
+<td>该Cookie的名称。Cookie一旦创建，名称便不可更改。</td>
+</tr>
+<tr>
+<td>Object value</td>
+<td>该Cookie的值。如果值为Unicode字符，需要为字符编码。如果值为二进制数据，则需要使用BASE64编码。</td>
+</tr>
+<tr>
+<td><strong>int maxAge</strong></td>
+<td><strong>该Cookie失效的时间，单位秒。如果为正数，则该Cookie在maxAge秒之后失效。如果为负数，该Cookie为临时Cookie，关闭浏览器即失效，浏览器也不会以任何形式保存该Cookie。如果为0，表示删除该Cookie。默认为–1</strong>。</td>
+</tr>
+<tr>
+<td>boolean secure</td>
+<td>该Cookie是否仅被使用安全协议传输。安全协议。安全协议有HTTPS，SSL等，在网络上传输数据之前先将数据加密。默认为false。</td>
+</tr>
+<tr>
+<td>String path</td>
+<td>该Cookie的使用路径。如果设置为“/sessionWeb/”，则只有contextPath为“/sessionWeb”的程序可以访问该Cookie。如果设置为“/”，则本域名下contextPath都可以访问该Cookie。注意最后一个字符必须为“/”。</td>
+</tr>
+<tr>
+<td>String domain</td>
+<td>可以访问该Cookie的域名。如果设置为“.google.com”，则所有以“google.com”结尾的域名都可以访问该Cookie。注意第一个字符必须为“.”。</td>
+</tr>
+<tr>
+<td>String comment</td>
+<td>该Cookie的用处说明。浏览器显示Cookie信息的时候显示该说明。</td>
+</tr>
+<tr>
+<td>int version</td>
+<td>该Cookie使用的版本号。0表示遵循Netscape的Cookie规范，1表示遵循W3C的RFC 2109规范。</td>
+</tr>
+</tbody></table>
+<h3 id="Cookie-的有效期"><a href="#Cookie-的有效期" class="headerlink" title="Cookie 的有效期"></a>Cookie 的有效期</h3><p>Cookie 的 maxAge 为 Cookie 的有效期，单位为秒（Second）。</p>
+<p>Cookie 中通过 <code>getMaxAge()</code> 方法与 <code>setMaxAge(int maxAge)</code> 方法来读写 maxAge 属性。</p>
+<ul>
+<li><p><strong>若 maxAge 为正数，则 Cookie 经过此时间后自动失效</strong>。浏览器会将 maxAge 为正数的 Cookie 持久化到对应的 Cookie 文件中。无论关闭浏览器还是电脑，在 maxAge 有效时间内，该 Cookie 仍然有效。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">Cookie</span> cookie <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cookie</span><span class="token punctuation">(</span><span class="token string">"username"</span><span class="token punctuation">,</span><span class="token string">"rayucan"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 新建Cookie</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setMaxAge</span><span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token punctuation">.</span>MAX_VALUE<span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 设置生命周期为MAX_VALUE</span>
+
+response<span class="token punctuation">.</span><span class="token function">addCookie</span><span class="token punctuation">(</span>cookie<span class="token punctuation">)</span><span class="token punctuation">;</span>                    <span class="token comment">// 输出到客户端</span></code></pre></li>
+<li><p><strong>若 maxAge 为负数，则 Cookie 仅在本浏览器窗口及其子窗口有效，关闭窗口后 Cookie 即失效</strong>。负数 maxAge 的 Cookie 为临时性 Cookie ，不会被持久化到文件中，Cookie 信息保存在浏览器内存中，因此关闭浏览器该 Cookie 就消失了。</p>
+<p><strong>Cookie 默认 maxAge 为 -1</strong>。</p>
+</li>
+<li><p><strong>若 maxAge 为 0，则表示该 Cookie 将被删除</strong>。Cookie 机制没有提供直接删除 Cookie 的方法，因此通过设置 maxAge 来实现删除 Cookie 的效果。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">Cookie</span> cookie <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cookie</span><span class="token punctuation">(</span><span class="token string">"username"</span><span class="token punctuation">,</span><span class="token string">"rayucan"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 新建Cookie</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setMaxAge</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                          <span class="token comment">// 设置生命周期为0，不能为负数</span>
+
+response<span class="token punctuation">.</span><span class="token function">addCookie</span><span class="token punctuation">(</span>cookie<span class="token punctuation">)</span><span class="token punctuation">;</span>                    <span class="token comment">// 必须执行这一句</span></code></pre></li>
+</ul>
+<p>另外，从客户端读取 Cookie 时，包括 maxAge 在内的其他属性都是不可读的，也不会被提交，浏览器提交 Cookie 时只会提交 name 和 value 属性，maxAge 只被浏览器用来判断 Cookie 是否过期。</p>
+<h3 id="Cookie-的修改和删除"><a href="#Cookie-的修改和删除" class="headerlink" title="Cookie 的修改和删除"></a>Cookie 的修改和删除</h3><p>Response 对象提供操作 Cookie 的方法只有一个添加操作 <code>add(Cookie cookie)</code>。</p>
+<p>要想修改 Cookie，需要新建一个同名 Cookie 添加到 response 中，覆盖原有的 Cookie。</p>
+<p>要想删除 Cookie，需要新建一个同名 Cookie，并将 maxAge 设置为 0 添加到 response 中，覆盖原有的 Cookie。</p>
+<h3 id="Cookie-的域名"><a href="#Cookie-的域名" class="headerlink" title="Cookie 的域名"></a>Cookie 的域名</h3><p>Cookie 是不可跨域名的。域名 <code>www.google.com</code> 颁发的Cookie不会被提交到域名 <code>www.baidu.com</code> 。这是由Cookie的隐私安全机制决定的。隐私安全机制能够禁止网站非法获取其他网站的Cookie。</p>
+<p>正常情况下，同一个一级域名下的两个二级域名如 <code>www.google.com</code> 和 <code>images.google.com</code> 也不能交互使用Cookie，因为二者的域名并不严格相同。如果想所有二级域名都可以使用该 Cookie，需要设置 Cookie 的 domain 参数：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">Cookie</span> cookie <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cookie</span><span class="token punctuation">(</span><span class="token string">"time"</span><span class="token punctuation">,</span><span class="token string">"20080808"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 新建Cookie</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setDomain</span><span class="token punctuation">(</span><span class="token string">".google.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 设置域名</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setPath</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                              <span class="token comment">// 设置路径</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setMaxAge</span><span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token punctuation">.</span>MAX_VALUE<span class="token punctuation">)</span><span class="token punctuation">;</span>               <span class="token comment">// 设置有效期</span>
+
+response<span class="token punctuation">.</span><span class="token function">addCookie</span><span class="token punctuation">(</span>cookie<span class="token punctuation">)</span><span class="token punctuation">;</span>                       <span class="token comment">// 输出到客户端</span></code></pre>
+
+<h3 id="Cookie-的路径"><a href="#Cookie-的路径" class="headerlink" title="Cookie 的路径"></a>Cookie 的路径</h3><p>domain 属性决定域名能使用的 Cookie，而 path 属性决定允许使用 Cookie 的路径（ContextPath）。</p>
+<p>例如，如果只允许 <code>/SessionWeb/</code> 下的程序使用 Cookie：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">Cookie</span> cookie <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cookie</span><span class="token punctuation">(</span><span class="token string">"time"</span><span class="token punctuation">,</span><span class="token string">"20080808"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 新建Cookie</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setPath</span><span class="token punctuation">(</span><span class="token string">"/session/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                          <span class="token comment">// 设置路径</span>
+
+response<span class="token punctuation">.</span><span class="token function">addCookie</span><span class="token punctuation">(</span>cookie<span class="token punctuation">)</span><span class="token punctuation">;</span>                           <span class="token comment">// 输出到客户端</span></code></pre>
+
+<p>设置为 <code>/</code> 时允许所有路径使用 Cookie。path属性需要使用符号 <code>/</code> 结尾。</p>
+<p>name 相同但 domain 不同，也是两个不同的 Cookie 。</p>
+<h3 id="Cookie-的安全属性"><a href="#Cookie-的安全属性" class="headerlink" title="Cookie 的安全属性"></a>Cookie 的安全属性</h3><p>HTTP 协议不仅是无状态的，而且是不安全的。使用 HTTP 协议的数据不经任何加密就直接在网络上传播，有被截获的可能。使用 HTTP 协议传输私密信息是一种安全隐患。</p>
+<p>如果不希望 Cookie 在 HTTP 等非安全协议中传输，可以设置 Cookie 的 secure 属性为 true，此时浏览器只会在 HTTPS 或 SSL 等安全协议中传输此类 Cookie：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">Cookie</span> cookie <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cookie</span><span class="token punctuation">(</span><span class="token string">"time"</span><span class="token punctuation">,</span> <span class="token string">"20080808"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 新建Cookie</span>
+
+cookie<span class="token punctuation">.</span><span class="token function">setSecure</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                           <span class="token comment">// 设置安全属性</span>
+
+response<span class="token punctuation">.</span><span class="token function">addCookie</span><span class="token punctuation">(</span>cookie<span class="token punctuation">)</span><span class="token punctuation">;</span>                        <span class="token comment">// 输出到客户端</span></code></pre>
+
+<p>值得注意的是，secure 属性并不能对 Cookie 内容加密，因而不能保证绝对的安全性。如果需要高安全性，<strong>需要在程序中对Cookie内容加密、解密，以防泄密。</strong></p>
+<h3 id="永久登录"><a href="#永久登录" class="headerlink" title="永久登录"></a>永久登录</h3><p>如果用户是在自己家的电脑上上网，登录时就可以记住他的登录信息，下次访问时不需要再次登录，直接访问即可。</p>
+<p>实现方法是<strong>把登录信息如账号、密码等保存在 Cookie 中，并控制 Cookie 的有效期，下次访问时再验证 Cookie 中的登录信息即可。</strong></p>
+<p>保存登录信息有多种方案。</p>
+<ul>
+<li>把用户名与密码直接保存到 Cookie 中，下次访问时检查 Cookie 中的用户名与密码，与数据库比较。这是一种比较危险的选择，一般不把密码等重要信息保存到 Cookie 中。</li>
+<li>把密码加密后保存到 Cookie 中，下次访问时解密并与数据库比较，这种方案略微安全一些。</li>
+<li>如果不希望保存密码，还可以把登录的时间戳保存到 Cookie 与数据库中，到时只验证用户名与登录时间戳就可以了。</li>
+</ul>
+<p>这三种方案验证账号时都要查询数据库。</p>
+<p>还有一种方案只在登录时查询一次数据库，以后访问验证登录信息时不再查询数据库：</p>
+<ul>
+<li>把账号按照一定的规则加密后，连同秘钥一块保存到Cookie中。下次访问时只需要判断账号的加密规则是否正确即可。例如，把账号保存到名为 account 的 Cookie 中，把账号连同密钥用 MD1 算法加密后保存到名为 ssid 的 Cookie 中。验证时验证 Cookie 中的账号与密钥加密后是否与 Cookie 中的 ssid 相等。</li>
+</ul>
+<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><p>除了 Cookie，Web 应用程序中还经常用到 Session 来记录客户端状态。</p>
+<h3 id="什么是-Session"><a href="#什么是-Session" class="headerlink" title="什么是 Session"></a>什么是 Session</h3><p>Session 是另一种记录用户状态的机制，不同于 Cookie 保存在客户端（浏览器），Session 保存在服务器上。</p>
+<p>当客户端（浏览器）访问服务器时，服务器把客户端信息以某种形式记录在服务器上，客户端（浏览器）再次访问时只需要通过 Session 查找用户信息即可。</p>
+<p>假如 Cookie 机制是通过”通行证”来确定用户身份，那么 Session 机制就是检查服务器上的”客户明细表”来确认客户身份。</p>
+<h3 id="Java-中的-Session"><a href="#Java-中的-Session" class="headerlink" title="Java 中的 Session"></a>Java 中的 Session</h3><p>Session 对应的类为 <code>javax.servlet.http.HttpSession</code>，每个访问者对应一个 Session 对象，且 <strong>Session 对象是客户端第一次请求服务器时创建的</strong>。Session 也是一种 k-v 属性对，通过 <code>getAttribute(String key)</code> 和 <code>setAttribute(String key, Object value)</code> 方法读写用户信息。</p>
+<p>Servlet 中通过 <code>request.getSession()</code> 方法获取该用户 Session：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">HttpSession</span> session <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getSession</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">// 获取Session对象</span>
+
+session<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">"loginTime"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 设置Session中的属性</span>
+
+out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"登录时间为："</span> <span class="token operator">+</span><span class="token punctuation">(</span><span class="token class-name">Date</span><span class="token punctuation">)</span>session<span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span><span class="token string">"loginTime"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 获取Session属性</span></code></pre>
+
+<p>当多个客户端执行程序时，服务器会保存多个客户端 Session，获取 Session 时也不需要声明获取谁的 Session。Session 机制决定了当前用户只会获取到自己的 Session，各用户的 Session 也彼此独立，互不可见。</p>
+<p>虽然 Session 使用上比 Cookie 方便，但过多的 Session 存储在服务器内存中，会对服务器造成压力。</p>
+<h3 id="Session-的生命周期"><a href="#Session-的生命周期" class="headerlink" title="Session 的生命周期"></a>Session 的生命周期</h3><p>Session 在用户第一次访问服务器时自动创建，生成后，只要用户继续访问，服务器就会更新最后的访问时间，并更新该 Session。用户每访问一次服务器，无论是否读写 Session，服务器都会认为该用户 Session “活跃 (active) “了一次。</p>
+<h3 id="Session-的有效期"><a href="#Session-的有效期" class="headerlink" title="Session 的有效期"></a>Session 的有效期</h3><p>为了防止内存溢出，服务器会把长时间未活跃的 Session 从内存中删除，这个时间就是 Session 的超时时间。</p>
+<p>Session 的超时时间为 <code>maxInactiveInterval</code> 属性，可以通过 <code>getMaxInactiveInterval()</code> 方法获取，通过 <code>setMaxInactiveInterval(long interval)</code> 修改，另外，通过调用 <code>invalidate()</code> 方法也可以使 Session 失效。</p>
+<h3 id="Session-的常用方法"><a href="#Session-的常用方法" class="headerlink" title="Session 的常用方法"></a>Session 的常用方法</h3><table>
+<thead>
+<tr>
+<th align="center">方法名</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">void setAttribute(String attribute, Object value)</td>
+<td align="center">设置Session属性。value参数可以为任何Java Object。通常为Java Bean。value信息不宜过大。</td>
+</tr>
+<tr>
+<td align="center">String getAttribute(String attribute)</td>
+<td align="center">返回Session属性。</td>
+</tr>
+<tr>
+<td align="center">Enumeration getAttributeNames()</td>
+<td align="center">返回Session中存在的属性名。</td>
+</tr>
+<tr>
+<td align="center">void removeAttribute(String attribute)</td>
+<td align="center">移除Session属性。</td>
+</tr>
+<tr>
+<td align="center">String getId()</td>
+<td align="center">返回Session的ID。该ID由服务器自动创建，不会重复。</td>
+</tr>
+<tr>
+<td align="center">long getCreationTime()</td>
+<td align="center">返回Session的创建日期。返回类型为long，常被转化为Date类型，例如：<code>Date createTime = new Date(session.get CreationTime())</code>。</td>
+</tr>
+<tr>
+<td align="center">long getLastAccessedTime()</td>
+<td align="center">返回Session的最后活跃时间。</td>
+</tr>
+<tr>
+<td align="center">int getMaxInactiveInterval()</td>
+<td align="center">返回Session的超时时间。单位为秒。超过该时间没有访问，服务器认为该Session失效。</td>
+</tr>
+<tr>
+<td align="center">void setMaxInactiveInterval(int second)</td>
+<td align="center">设置Session的超时时间。</td>
+</tr>
+<tr>
+<td align="center">boolean isNew()</td>
+<td align="center">返回该Session是否是新创建的。</td>
+</tr>
+<tr>
+<td align="center">void invalidate()</td>
+<td align="center">使该Session失效。</td>
+</tr>
+</tbody></table>
+<h3 id="Session-对浏览器的要求"><a href="#Session-对浏览器的要求" class="headerlink" title="Session 对浏览器的要求"></a>Session 对浏览器的要求</h3><p>虽然 Session 保存在服务器，但它的正常运行仍然需要客户端（浏览器）的支持，因为 Session 需要使用 Cookie 作为标识。HTTP 协议是无状态的，Session 不能依据 HTTP 连接来判断是否为同一用户，因此服务器向客户端（浏览器）发送一个名为 <code>JSESSIONID</code> 的 Cookie，其值为该 Session 的 id (即 <code>HttpSession.getId()</code> 的返回值)，Session 根据该 Cookie 识别是否为同一用户。</p>
+<p>如果客户端（浏览器）将 Cookie 禁用，则需要另外一种解决方案：URL 地址重写。</p>
+<h4 id="URL-地址重写"><a href="#URL-地址重写" class="headerlink" title="URL 地址重写"></a>URL 地址重写</h4><p>URL 地址重写是对客户端不支持 Cookie 的解决方案，其原理是将该用户 Session 的 id 重写到 URL 地址中，服务器解析 URL 获取 Session 的 id。</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>Rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2021/10/31/Cookie%20%E5%92%8C%20Session/" title="Cookie 和 Session">http://example.com/2021/10/31/Cookie%20%E5%92%8C%20Session/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/10/31/JWT/" rel="prev" title="JWT"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">JWT</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/10/07/IDEA%E5%AE%9E%E7%94%A8%E6%8F%92%E4%BB%B6/" rel="next" title="IDEA实用插件"><span class="post-nav-text">IDEA实用插件</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2020 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
