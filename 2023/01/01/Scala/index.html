@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Rayucan"><meta name="copyright" content="Rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Scala | Rayの云端小屋</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"Rayの云端小屋","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="C —&gt; C++ Scala —&gt; Java++   Scala 是面向对象、函数式的编程语言  Scala 基于 JVM，与 Java 完全兼容，具有跨平台、可移植性、垃圾回收等特性  Scala 更适合大数据的处理，对集合类型有非常好的支持   Scala 与 Java 与 JVM Scala 代码的执行过程与 Java 非常类似，先编译，后运行 .scala —&gt; .cl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala">
+<meta property="og:url" content="http://example.com/2023/01/01/Scala/index.html">
+<meta property="og:site_name" content="Rayの云端小屋">
+<meta property="og:description" content="C —&gt; C++ Scala —&gt; Java++   Scala 是面向对象、函数式的编程语言  Scala 基于 JVM，与 Java 完全兼容，具有跨平台、可移植性、垃圾回收等特性  Scala 更适合大数据的处理，对集合类型有非常好的支持   Scala 与 Java 与 JVM Scala 代码的执行过程与 Java 非常类似，先编译，后运行 .scala —&gt; .cl">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301072326601.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301121646664.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301152252426.png">
+<meta property="article:published_time" content="2023-01-01T15:07:51.000Z">
+<meta property="article:modified_time" content="2023-01-15T15:03:35.949Z">
+<meta property="article:author" content="Rayucan">
+<meta property="article:tag" content="BigData">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301072326601.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="Rayucan"></a><div class="site-author-name"><a href="/about/">Rayucan</a></div><a class="site-name" href="/about/site.html">Rayの云端小屋</a><sub class="site-subtitle"></sub><div class="site-desciption">Gaze into abyss.</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">49</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">14</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=775972516&amp;site=qq&amp;menu=yes" title="QQ" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:775972516@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=362729060" title="网易云音乐" target="_blank" style="color:#C10D0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/ray-63-72" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/226098990/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Scala-%E4%B8%8E-Java-%E4%B8%8E-JVM"><span class="toc-number">1.</span> <span class="toc-text">Scala 与 Java 与 JVM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello-World"><span class="toc-number">2.</span> <span class="toc-text">Hello World</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java"><span class="toc-number">2.1.</span> <span class="toc-text">Java</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scala"><span class="toc-number">2.2.</span> <span class="toc-text">Scala</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91-Hello-World"><span class="toc-number">3.</span> <span class="toc-text">反编译 Hello World</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HelloWorld-class"><span class="toc-number">3.1.</span> <span class="toc-text">HelloWorld$.class</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HelloWorld-class-1"><span class="toc-number">3.2.</span> <span class="toc-text">HelloWorld.class</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E5%92%8C%E5%B8%B8%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">变量和常量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java-1"><span class="toc-number">4.1.</span> <span class="toc-text">Java</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scala-1"><span class="toc-number">4.2.</span> <span class="toc-text">Scala</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">5.</span> <span class="toc-text">标识符命名规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">6.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%BE%93%E5%85%A5"><span class="toc-number">7.</span> <span class="toc-text">控制台输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6"><span class="toc-number">8.</span> <span class="toc-text">读写文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">9.</span> <span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java-2"><span class="toc-number">9.1.</span> <span class="toc-text">Java</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scala-2"><span class="toc-number">9.2.</span> <span class="toc-text">Scala</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2023/01/01/Scala/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rayの云端小屋"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Scala</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2023-01-01 23:07:51" itemprop="dateCreated datePublished" datetime="2023-01-01T23:07:51+08:00">2023-01-01</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2023-01-15 23:03:35" itemprop="dateModified" datetime="2023-01-15T23:03:35+08:00">2023-01-15</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/BigData/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">BigData</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><blockquote>
+<p>C —&gt; C++</p>
+<p>Scala —&gt; Java++</p>
+</blockquote>
+<ul>
+<li><p>Scala 是面向对象、函数式的编程语言</p>
+</li>
+<li><p>Scala 基于 JVM，与 Java 完全兼容，具有跨平台、可移植性、垃圾回收等特性</p>
+</li>
+<li><p>Scala 更适合大数据的处理，对集合类型有非常好的支持</p>
+</li>
+</ul>
+<h3 id="Scala-与-Java-与-JVM"><a href="#Scala-与-Java-与-JVM" class="headerlink" title="Scala 与 Java 与 JVM"></a>Scala 与 Java 与 JVM</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301072326601.png" alt="image-20230107232645499" loading="lazy"></p>
+<p>Scala 代码的执行过程与 Java 非常类似，先编译，后运行</p>
+<p>.scala —&gt; .class 字节码 —&gt; 执行</p>
+<h3 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h3><h4 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h4><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloWorld</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello world!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h4 id="Scala"><a href="#Scala" class="headerlink" title="Scala"></a>Scala</h4><pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token keyword">object</span> HelloWorld <span class="token punctuation">&#123;</span>
+  <span class="token keyword">def</span> main<span class="token punctuation">(</span>args<span class="token operator">:</span> Array<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Unit</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+    println<span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<ul>
+<li><p>object 关键字，声明一个单例对象/伴生对象</p>
+</li>
+<li><p>main 方法，从外部可以直接调用执行的方法</p>
+</li>
+<li><p>def 方法名(参数名: 参数类型): 返回值类型 = {</p>
+<p>​    方法体</p>
+<p>}</p>
+</li>
+<li><p>不需要分号</p>
+</li>
+</ul>
+<h3 id="反编译-Hello-World"><a href="#反编译-Hello-World" class="headerlink" title="反编译 Hello World"></a>反编译 Hello World</h3><p>target 目录中一共生成了两份 .class 文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301121646664.png" alt="image-20230112164535555" loading="lazy"></p>
+<h4 id="HelloWorld-class"><a href="#HelloWorld-class" class="headerlink" title="HelloWorld$.class"></a>HelloWorld$.class</h4><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">HelloWorld</span>$ <span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">HelloWorld</span>$ MODULE$<span class="token punctuation">;</span>
+  
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name"><span class="token namespace">scala<span class="token punctuation">.</span></span>Predef</span>$<span class="token punctuation">.</span>MODULE$<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"hello from scala"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  
+  <span class="token keyword">private</span> <span class="token class-name">HelloWorld</span>$<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    MODULE$ <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h4 id="HelloWorld-class-1"><a href="#HelloWorld-class-1" class="headerlink" title="HelloWorld.class"></a>HelloWorld.class</h4><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">scala<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">ScalaSignature</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@ScalaSignature</span><span class="token punctuation">(</span>bytes <span class="token operator">=</span> <span class="token string">"\006\001%:Q\001B\003\t\002!1QAC\003\t\002-AQAE\001\005\002MAQ\001F\001\005\002U\t!\002S3mY>&lt;vN\0357e\025\0051\021A\002;fgR\004\024g\001\001\021\005%\tQ\"A\003\003\025!+G\016\\8X_JdGm\005\002\002\031A\021Q\002E\007\002\035)\tq\"A\003tG\006d\027-\003\002\022\035\t1\021I\\=SK\032\fa\001P5oSRtD#\001\005\002\t5\f\027N\034\013\003-e\001\"!D\f\n\005aq!\001B+oSRDQAG\002A\002m\tA!\031:hgB\031Q\002\b\020\n\005uq!!B!se\006L\bCA\020'\035\t\001C\005\005\002\"\0355\t!E\003\002$\017\0051AH]8pizJ!!\n\b\002\rA\023X\rZ3g\023\t9\003F\001\004TiJLgn\032\006\003K9\001"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">HelloWorld</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> paramArrayOfString<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">HelloWorld</span>$<span class="token punctuation">.</span>MODULE$<span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span>paramArrayOfString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<p>可见，Scala 代码编译时，实际上被编译回了 Java 代码</p>
+<p>另外，此处使用了单例模式</p>
+<h3 id="变量和常量"><a href="#变量和常量" class="headerlink" title="变量和常量"></a>变量和常量</h3><h4 id="Java-1"><a href="#Java-1" class="headerlink" title="Java"></a>Java</h4><pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">// 变量</span>
+<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 常量</span>
+<span class="token keyword">final</span> <span class="token keyword">int</span> b <span class="token operator">=</span> <span class="token number">666</span><span class="token punctuation">;</span></code></pre>
+
+<h4 id="Scala-1"><a href="#Scala-1" class="headerlink" title="Scala"></a>Scala</h4><pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token comment">// 变量</span>
+<span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> i <span class="token operator">:</span> <span class="token builtin">Int</span> <span class="token operator">=</span> <span class="token number">1</span>
+
+<span class="token comment">// 常量</span>
+<span class="token keyword">val</span> j <span class="token operator">=</span> <span class="token number">666</span>
+
+<span class="token keyword">val</span> j <span class="token operator">:</span> <span class="token builtin">Int</span> <span class="token operator">=</span> <span class="token number">666</span></code></pre>
+
+<ul>
+<li><p>变量类型可省略</p>
+<p>Scala 编译器可对当前变量类型作自动推断</p>
+</li>
+<li><p>变量类型确定后，不可修改</p>
+<p>Scala 是强数据类型语言</p>
+</li>
+<li><p>变量声明时，必须有初始值</p>
+</li>
+<li><p>区别 var 变量 和 val 常量</p>
+</li>
+</ul>
+<h3 id="标识符命名规范"><a href="#标识符命名规范" class="headerlink" title="标识符命名规范"></a>标识符命名规范</h3><ul>
+<li>以字母或下划线开头，后接字母、数字、下划线</li>
+<li><strong>以操作符开头，且仅包含操作符</strong> <code>+ - * / # !</code></li>
+<li><strong>用反引号包括的任意字符串，即使是 Scala 关键字也可以</strong></li>
+</ul>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><ul>
+<li><p><code>+</code>号拼接</p>
+<pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token keyword">val</span> name <span class="token operator">=</span> <span class="token string">"alice"</span><span class="token punctuation">;</span>
+<span class="token keyword">val</span> age <span class="token operator">=</span> <span class="token number">18</span><span class="token punctuation">;</span>
+println<span class="token punctuation">(</span>name <span class="token operator">+</span> age<span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala">alice18</code></pre></li>
+<li><p><code>*</code>号多次复制和拼接</p>
+<pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token keyword">val</span> name <span class="token operator">=</span> <span class="token string">"alice"</span><span class="token punctuation">;</span>
+println<span class="token punctuation">(</span>name <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala">alicealicealice</code></pre></li>
+<li><p>printf 通过<code>%</code>传值</p>
+<pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token keyword">val</span> name <span class="token operator">=</span> <span class="token string">"alice"</span><span class="token punctuation">;</span>
+<span class="token keyword">val</span> age <span class="token operator">=</span> <span class="token number">18</span>
+printf<span class="token punctuation">(</span><span class="token string">"%s is %d years old"</span><span class="token punctuation">,</span> name<span class="token punctuation">,</span> age<span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala">alice is <span class="token number">18</span> years old</code></pre></li>
+<li><p>字符串模板（插值字符串），通过<code>$</code>取值</p>
+<pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token comment">// 模板字符串格式</span>
+println<span class="token punctuation">(</span>s<span class="token string">""</span><span class="token punctuation">)</span>
+println<span class="token punctuation">(</span>f<span class="token string">""</span><span class="token punctuation">)</span>
+println<span class="token punctuation">(</span>raw<span class="token string">""</span><span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token keyword">val</span> name <span class="token operator">=</span> <span class="token string">"alice"</span><span class="token punctuation">;</span>
+<span class="token keyword">val</span> age <span class="token operator">=</span> <span class="token number">18</span>
+println<span class="token punctuation">(</span>s<span class="token string">"$&#123;name&#125; is $&#123;age&#125; years old"</span><span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala">alice is <span class="token number">18</span> years old</code></pre></li>
+<li><p>三引号，保留多行字符串原格式</p>
+<pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token keyword">val</span> sql <span class="token operator">=</span> s<span class="token triple-quoted-string string">"""
+			|select *
+            |from
+            | student
+            |where
+            | name = $&#123;name&#125;
+            |"""</span><span class="token punctuation">.</span>stripMargin
+
+println<span class="token punctuation">(</span>sql<span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala">select <span class="token operator">*</span>
+from
+ student
+where
+ name <span class="token operator">=</span> alice</code></pre></li>
+</ul>
+<h3 id="控制台输入"><a href="#控制台输入" class="headerlink" title="控制台输入"></a>控制台输入</h3><pre class="language-scala" data-language="scala"><code class="language-scala">println<span class="token punctuation">(</span><span class="token string">"input:"</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> str <span class="token operator">=</span> StdIn<span class="token punctuation">.</span>readLine<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+println<span class="token punctuation">(</span><span class="token string">"output:"</span><span class="token punctuation">)</span>
+println<span class="token punctuation">(</span>str<span class="token punctuation">)</span></code></pre>
+
+<pre class="language-scala" data-language="scala"><code class="language-scala">input<span class="token operator">:</span>
+<span class="token number">123</span>
+output<span class="token operator">:</span>
+<span class="token number">123</span></code></pre>
+
+<h3 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h3><pre class="language-scala" data-language="scala"><code class="language-scala"><span class="token comment">// 读取文件</span>
+Source<span class="token punctuation">.</span>fromFile<span class="token punctuation">(</span><span class="token string">"D:\\IdeaProjects\\ScalaTest\\src\\main\\resources\\test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>foreach<span class="token punctuation">(</span>print<span class="token punctuation">)</span>
+<span class="token comment">// 写入文件</span>
+<span class="token keyword">val</span> writer <span class="token operator">=</span> <span class="token keyword">new</span> PrintWriter<span class="token punctuation">(</span><span class="token keyword">new</span> File<span class="token punctuation">(</span><span class="token string">"D:\\IdeaProjects\\ScalaTest\\src\\main\\resources\\output.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+writer<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">"123456"</span><span class="token punctuation">)</span>
+writer<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><h4 id="Java-2"><a href="#Java-2" class="headerlink" title="Java"></a>Java</h4><ul>
+<li><p>基本类型：</p>
+<p>byte short int long float double char boolean</p>
+</li>
+<li><p>引用类型：</p>
+<p>对象</p>
+<p>基本类型对应的包装类 Byte Short Integer Long Float Double Character Boolean</p>
+</li>
+</ul>
+<h4 id="Scala-2"><a href="#Scala-2" class="headerlink" title="Scala"></a>Scala</h4><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202301152252426.png" alt="image-20230115224941042" loading="lazy"></p>
+<ul>
+<li><p>Scala 中的一切数据都是对象，都是 Any 的子类</p>
+</li>
+<li><p>Scala 中的数据类型分为数值类型<code>AnyVal</code>和引用类型<code>AnyRef</code>，且两者都是对象</p>
+</li>
+<li><p>Unit 对应 Java 中的 void</p>
+<p>用于作为一种特殊的返回值类型，表示方法没有返回值</p>
+<p>Unit 是一种数据类型，只有一个对象<code>()</code></p>
+</li>
+<li><p>Null 是一种数据类型，只有一个对象<code>null</code>，是所有引用类型<code>AnyRef</code>的子类</p>
+</li>
+<li><p>Nothing 位于 Scala 类型层次中的最低层，是任何类型的子类</p>
+<p>用于作为一种特殊的返回值类型，可将异常返回值抛给其他函数</p>
+</li>
+</ul>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>Rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2023/01/01/Scala/" title="Scala">http://example.com/2023/01/01/Scala/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2023/01/07/Spark/" rel="prev" title="Spark"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Spark</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/05/01/WebSocket/" rel="next" title="WebSocket"><span class="post-nav-text">WebSocket</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2020 – 2023 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
