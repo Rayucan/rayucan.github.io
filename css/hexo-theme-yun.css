@@ -2017,7 +2017,7 @@ body {
   color: var(--hty-text-color);
 }
 body::before {
-  background-image: url("https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/Snipaste_2023-07-20_20-53-59.png");
+  background-image: url("https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/dark.png");
 }
 .char {
   background-color: rgba(0,0,0,0.5);
