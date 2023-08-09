@@ -1,0 +1,598 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="rayucan"><meta name="copyright" content="rayucan"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Spring | null</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":null,"version":"1.6.1","mode":"dark","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="一个开源的全栈应用程序框架和控制反转容器实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring">
+<meta property="og:url" content="http://example.com/2020/10/25/Spring/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="一个开源的全栈应用程序框架和控制反转容器实现。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202151027.jpeg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202151626.png">
+<meta property="article:published_time" content="2020-10-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T03:26:15.679Z">
+<meta property="article:author" content="rayucan">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202151027.jpeg"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="rayucan"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210515231431.jpg" alt="rayucan"><span class="site-author-status" title="网上冲浪">🏄</span></a><div class="site-author-name"><a href="/about/">rayucan</a></div><a class="site-name" href="/about/site.html"></a><sub class="site-subtitle">山而</sub><div class="site-desciption">山海悠悠，而人在漫步行走</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">53</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Rayucan" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Spring简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring%E7%9A%84%E4%BC%98%E8%89%AF%E7%89%B9%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">Spring的优良特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.</span> <span class="toc-text">Spring模块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IOC%E5%AE%B9%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">IOC容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8EIOC%E5%92%8CDI"><span class="toc-number">2.1.</span> <span class="toc-text">关于IOC和DI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E7%B1%BB%E5%9E%8B%E8%8E%B7%E5%8F%96bean"><span class="toc-number">2.2.</span> <span class="toc-text">通过类型获取bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%99bean%E7%9A%84%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC"><span class="toc-number">2.3.</span> <span class="toc-text">给bean的属性赋值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC%E7%9A%84%E9%80%94%E5%BE%84"><span class="toc-number">2.3.1.</span> <span class="toc-text">赋值的途径</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84%E5%80%BC"><span class="toc-number">2.3.2.</span> <span class="toc-text">可以使用的值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E5%B1%9E%E6%80%A7"><span class="toc-number">2.3.3.</span> <span class="toc-text">集合属性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%B7%A5%E5%8E%82%E5%88%9B%E5%BB%BAbean"><span class="toc-number">2.4.</span> <span class="toc-text">通过工厂创建bean</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%B7%A5%E5%8E%82"><span class="toc-number">2.4.1.</span> <span class="toc-text">静态工厂</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%B7%A5%E5%8E%82"><span class="toc-number">2.4.2.</span> <span class="toc-text">实例工厂</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FactoryBean"><span class="toc-number">2.4.3.</span> <span class="toc-text">FactoryBean</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bean%E7%9A%84%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE"><span class="toc-number">2.5.</span> <span class="toc-text">bean的高级配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E7%9A%84%E7%BB%A7%E6%89%BF"><span class="toc-number">2.5.1.</span> <span class="toc-text">配置信息的继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bean%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BE%9D%E8%B5%96"><span class="toc-number">2.5.2.</span> <span class="toc-text">bean之间的依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bean%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">2.5.3.</span> <span class="toc-text">bean的作用域</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">2.5.4.</span> <span class="toc-text">bean的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E5%A4%96%E9%83%A8%E5%B1%9E%E6%80%A7%E6%96%87%E4%BB%B6"><span class="toc-number">2.5.5.</span> <span class="toc-text">引用外部属性文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D"><span class="toc-number">2.5.6.</span> <span class="toc-text">自动装配</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E9%85%8D%E7%BD%AEbean"><span class="toc-number">2.6.</span> <span class="toc-text">通过注解配置bean</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3%E6%A0%87%E8%AF%86%E7%BB%84%E4%BB%B6"><span class="toc-number">2.6.1.</span> <span class="toc-text">使用注解标识组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%AB%E6%8F%8F%E7%BB%84%E4%BB%B6"><span class="toc-number">2.6.2.</span> <span class="toc-text">扫描组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E8%A3%85%E9%85%8D"><span class="toc-number">2.6.3.</span> <span class="toc-text">组件装配</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5"><span class="toc-number">2.7.</span> <span class="toc-text">泛型依赖注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.7.1.</span> <span class="toc-text">实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AOP"><span class="toc-number">3.</span> <span class="toc-text">AOP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">3.2.</span> <span class="toc-text">相关术语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%BB%86%E8%8A%82"><span class="toc-number">3.3.</span> <span class="toc-text">相关细节</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E5%85%A5%E7%82%B9%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">3.3.1.</span> <span class="toc-text">切入点表达式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E8%BF%9E%E6%8E%A5%E7%82%B9"><span class="toc-number">3.4.</span> <span class="toc-text">当前连接点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%9F%A5"><span class="toc-number">3.5.</span> <span class="toc-text">通知</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E9%80%9A%E7%9F%A5"><span class="toc-number">3.5.1.</span> <span class="toc-text">前置通知</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8E%E7%BD%AE%E9%80%9A%E7%9F%A5"><span class="toc-number">3.5.2.</span> <span class="toc-text">后置通知</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E9%80%9A%E7%9F%A5"><span class="toc-number">3.5.3.</span> <span class="toc-text">返回通知</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E9%80%9A%E7%9F%A5"><span class="toc-number">3.5.4.</span> <span class="toc-text">异常通知</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E7%BB%95%E9%80%9A%E7%9F%A5"><span class="toc-number">3.5.5.</span> <span class="toc-text">环绕通知</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2020/10/25/Spring/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="rayucan"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Spring</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-10-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-10-25T00:00:00+08:00">2020-10-25</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2023-07-17 11:26:15" itemprop="dateModified" datetime="2023-07-17T11:26:15+08:00">2023-07-17</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%94%E8%AE%B0/" style="--text-color:dimgray" itemprop="url" rel="index"><span itemprop="text">笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Java/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="Spring简介"><a href="#Spring简介" class="headerlink" title="Spring简介"></a>Spring简介</h2><p>①Spring是一个开源框架。</p>
+<p>②Spring是一个<strong>IOC</strong>(DI)和<strong>AOP</strong>容器框架。</p>
+<p>③Spring为简化企业级开发而生。</p>
+<h3 id="Spring的优良特性"><a href="#Spring的优良特性" class="headerlink" title="Spring的优良特性"></a>Spring的优良特性</h3><p>[1]<strong>非侵入式</strong>：基于Spring开发的应用中的对象可以不依赖于Spring的API</p>
+<p>[2]<strong>依赖注入</strong>：DI——Dependency Injection，反转控制(IOC)最经典的实现。</p>
+<p>[3]<strong>面向切面编程</strong>：Aspect Oriented Programming——AOP</p>
+<p>[4]<strong>容器</strong>：Spring是一个容器，因为它包含并且管理应用对象的生命周期</p>
+<p>[5]<strong>组件化</strong>：Spring实现了使用简单的组件配置组合成一个复杂的应用。在 Spring 中可以使用XML和Java注解组合这些对象。</p>
+<p>[6]<strong>一站式</strong>：在IOC和AOP的基础上可以整合各种企业应用的开源框架和优秀的第三方类库（实际上Spring 自身也提供了表述层的SpringMVC和持久层的Spring JDBC）。</p>
+<h3 id="Spring模块"><a href="#Spring模块" class="headerlink" title="Spring模块"></a>Spring模块</h3><p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202151027.jpeg" alt="BmlzGD.jpg" loading="lazy"></p>
+<h2 id="IOC容器"><a href="#IOC容器" class="headerlink" title="IOC容器"></a>IOC容器</h2><h3 id="关于IOC和DI"><a href="#关于IOC和DI" class="headerlink" title="关于IOC和DI"></a>关于IOC和DI</h3><p>①IOC(<strong>Inversion of Control</strong>)：<strong>反转控制</strong>。</p>
+<p>在应用程序中的组件需要获取资源时，传统的方式是组件主动的从容器中获取所需要的资源，在这样的模式下开发人员往往需要知道在具体容器中特定资源的获取方式，增加了学习成本，同时降低了开发效率。</p>
+<p>反转控制的思想完全颠覆了应用程序组件获取资源的传统方式：反转了资源的获取方向——改由容器主动的将资源推送给需要的组件，开发人员不需要知道容器是如何创建资源对象的，只需要提供接收资源的方式即可，极大的降低了学习成本，提高了开发的效率。这种行为也称为查找的被动形式。</p>
+<p>②DI(<strong>Dependency Injection</strong>)：<strong>依赖注入</strong>。</p>
+<p>IOC的另一种表述方式：即组件以一些预先定义好的方式(例如：setter 方法)接受来自于容器的资源注入。相对于IOC而言，这种表述更直接。</p>
+<p>③IOC容器在Spring中的实现</p>
+<p>[1]在通过IOC容器读取Bean的实例之前，需要先将IOC容器本身实例化。</p>
+<p>[2]Spring提供了IOC容器的两种实现方式</p>
+<p>​        (1)BeanFactory：IOC容器的基本实现，是Spring内部的基础设施，是面向Spring本身的，不是提供给开发人员使用的。</p>
+<p>​        (2)ApplicationContext：BeanFactory的子接口，提供了更多高级特性。面向Spring的使用者，几乎所有场合都使用ApplicationContext而不是底层的BeanFactory。</p>
+<p>④ApplicationContext的主要实现类</p>
+<p>[1]ClassPathXmlApplicationContext：对应类路径下的XML格式的配置文件</p>
+<p>[2]FileSystemXmlApplicationContext：对应文件系统中的XML格式的配置文件</p>
+<p>[3]在初始化时就创建单例的bean，也可以通过配置的方式指定创建的Bean是多实例的。</p>
+<p>⑤ConfigurableApplicationContext</p>
+<p>[1]是ApplicationContext的子接口，包含一些扩展方法</p>
+<p>[2]refresh()和close()让ApplicationContext具有启动、关闭和刷新上下文的能力。</p>
+<p>⑥WebApplicationContext</p>
+<p>专门为WEB应用而准备的，它允许从相对于WEB根目录的路径中完成初始化工作</p>
+<h3 id="通过类型获取bean"><a href="#通过类型获取bean" class="headerlink" title="通过类型获取bean"></a>通过类型获取bean</h3><p>从IOC容器中获取bean时，除了通过id值获取，还可以通过bean的类型获取。但如果同一个类型的bean在XML文件中配置了多个，则获取时会抛出异常，所以同一个类型的bean在容器中必须是唯一的。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">HelloWorld</span> helloWorld <span class="token operator">=</span> cxt<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">HelloWorld</span><span class="token punctuation">.</span> <span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+
+
+<h3 id="给bean的属性赋值"><a href="#给bean的属性赋值" class="headerlink" title="给bean的属性赋值"></a>给bean的属性赋值</h3><h4 id="赋值的途径"><a href="#赋值的途径" class="headerlink" title="赋值的途径"></a>赋值的途径</h4><p>①通过bean的setxxx()方法赋值</p>
+<p>②通过bean的构造器赋值</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"book"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Book"</span> <span class="token operator">></span>
+         <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"10010"</span><span class="token operator">/</span><span class="token operator">></span>
+         <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"Book01"</span><span class="token operator">/</span><span class="token operator">></span>
+         <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"Author01"</span><span class="token operator">/</span><span class="token operator">></span>
+         <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"20.2"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean <span class="token operator">></span></code></pre>
+
+<p>通过索引值指定参数位置</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"book"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Book"</span> <span class="token operator">></span>
+      <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"10010"</span> index <span class="token operator">=</span><span class="token string">"0"</span><span class="token operator">/</span><span class="token operator">></span>
+      <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"Book01"</span> index <span class="token operator">=</span><span class="token string">"1"</span><span class="token operator">/</span><span class="token operator">></span>
+      <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"Author01"</span> index <span class="token operator">=</span><span class="token string">"2"</span><span class="token operator">/</span><span class="token operator">></span>
+      <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"20.2"</span> index <span class="token operator">=</span><span class="token string">"3"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean <span class="token operator">></span></code></pre>
+
+<p>通过类型不同区分重载的构造器</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"book"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Book"</span> <span class="token operator">></span>
+    <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"10010"</span> index <span class="token operator">=</span><span class="token string">"0"</span> type<span class="token operator">=</span><span class="token string">"java.lang.Integer"</span> <span class="token operator">/</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"Book01"</span> index <span class="token operator">=</span><span class="token string">"1"</span> type<span class="token operator">=</span><span class="token string">"java.lang.String"</span> <span class="token operator">/</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"Author01"</span> index <span class="token operator">=</span><span class="token string">"2"</span> type<span class="token operator">=</span><span class="token string">"java.lang.String"</span> <span class="token operator">/</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span>constructor<span class="token operator">-</span>arg value<span class="token operator">=</span> <span class="token string">"20.2"</span> index <span class="token operator">=</span><span class="token string">"3"</span> type<span class="token operator">=</span><span class="token string">"java.lang.Double"</span> <span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean <span class="token operator">></span></code></pre>
+
+
+
+<p>③给bean的级联属性赋值</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"action"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.ref.Action"</span><span class="token operator">></span>
+     <span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"service"</span> ref<span class="token operator">=</span><span class="token string">"service"</span><span class="token operator">/</span><span class="token operator">></span>
+     <span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 设置级联属性<span class="token punctuation">(</span>了解<span class="token punctuation">)</span> <span class="token operator">--</span><span class="token operator">></span>
+     <span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"service.dao.dataSource"</span> value<span class="token operator">=</span><span class="token string">"DBCP"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+
+
+<p>④p名称空间</p>
+<p>为了简化XML文件的配置，越来越多的XML文件采用属性而非子元素配置信息。</p>
+<p>Spring从2.5版本开始引入了一个新的p命名空间，可以通过<bean>元素属性的方式配置Bean的属性。</p>
+<p>使用p命名空间后，基于XML的配置方式将进一步简化。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean 
+	id<span class="token operator">=</span><span class="token string">"studentSuper"</span> 
+	<span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.helloworld.bean.Student"</span>
+	p<span class="token operator">:</span>studentId<span class="token operator">=</span><span class="token string">"2002"</span> p<span class="token operator">:</span>stuName<span class="token operator">=</span><span class="token string">"Jerry2016"</span> p<span class="token operator">:</span>age<span class="token operator">=</span><span class="token string">"18"</span> <span class="token operator">/</span><span class="token operator">></span></code></pre>
+
+
+
+<h4 id="可以使用的值"><a href="#可以使用的值" class="headerlink" title="可以使用的值"></a>可以使用的值</h4><p>①字面量</p>
+<p>[1]可以使用字符串表示的值，可以通过value属性或value子节点的方式指定</p>
+<p>[2]基本数据类型及其封装类、String等类型都可以采取字面值注入的方式</p>
+<p>[3]若字面值中包含特殊字符，可以使用<![CDATA[]]>把字面值包裹起来</p>
+<p>②null值</p>
+<p>③外部已声明的bean</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"shop"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Shop"</span> <span class="token operator">></span>
+      <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"book"</span> ref <span class="token operator">=</span><span class="token string">"book"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean <span class="token operator">></span></code></pre>
+
+<p>④内部bean</p>
+<p>当bean实例仅仅给一个特定的属性使用时，可以将其声明为内部bean。内部bean声明直接包含在<property>或<constructor-arg>元素里，不需要设置任何id或name属性。</p>
+<p>内部bean不能使用在任何其他地方。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"shop2"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Shop"</span> <span class="token operator">></span>
+    <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"book"</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span>bean <span class="token keyword">class</span><span class="token operator">=</span> <span class="token string">"com.atguigu.spring.bean.Book"</span> <span class="token operator">></span>
+           <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"bookId"</span> value <span class="token operator">=</span><span class="token string">"1000"</span><span class="token operator">/</span><span class="token operator">></span>
+           <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"bookName"</span> value<span class="token operator">=</span><span class="token string">"innerBook"</span> <span class="token operator">/</span><span class="token operator">></span>
+           <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"author"</span> value<span class="token operator">=</span><span class="token string">"innerAuthor"</span> <span class="token operator">/</span><span class="token operator">></span>
+           <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"price"</span> value <span class="token operator">=</span><span class="token string">"50"</span><span class="token operator">/</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean <span class="token operator">></span></code></pre>
+
+
+
+<h4 id="集合属性"><a href="#集合属性" class="headerlink" title="集合属性"></a>集合属性</h4><p>在Spring中可以通过一组内置的XML标签来配置集合属性，例如：<list>，<set>或<map>。</p>
+<p><strong>①数组和List</strong></p>
+<p>配置java.util.List类型的属性，需要指定<list>标签，在标签里包含一些元素。这些标签可以通过<value>指定简单的常量值，通过<ref>指定对其他Bean的引用。通过<bean>指定内置bean定义。通过<null/>指定空元素。甚至可以内嵌其他集合。</p>
+<p>数组的定义和List一样，都使用<list>元素。</p>
+<p>配置java.util.Set需要使用<set>标签，定义的方法与List一样。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"shop"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Shop"</span> <span class="token operator">></span>
+      <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"categoryList"</span><span class="token operator">></span>
+          <span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 以字面量为值的<span class="token class-name">List</span>集合 <span class="token operator">--</span><span class="token operator">></span>
+          <span class="token generics"><span class="token punctuation">&lt;</span>list<span class="token punctuation">></span></span>
+               <span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span> 历史<span class="token operator">&lt;</span><span class="token operator">/</span>value <span class="token operator">></span>
+               <span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span> 军事<span class="token operator">&lt;</span><span class="token operator">/</span>value <span class="token operator">></span>
+          <span class="token operator">&lt;</span><span class="token operator">/</span>list<span class="token operator">></span>
+      <span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+      <span class="token operator">&lt;</span>property name<span class="token operator">=</span> <span class="token string">"bookList"</span><span class="token operator">></span>
+          <span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 以bean的引用为值的<span class="token class-name">List</span>集合 <span class="token operator">--</span><span class="token operator">></span>
+          <span class="token generics"><span class="token punctuation">&lt;</span>list<span class="token punctuation">></span></span>
+               <span class="token operator">&lt;</span>ref bean<span class="token operator">=</span> <span class="token string">"book01"</span><span class="token operator">/</span><span class="token operator">></span>
+               <span class="token operator">&lt;</span>ref bean<span class="token operator">=</span> <span class="token string">"book02"</span><span class="token operator">/</span><span class="token operator">></span>
+          <span class="token operator">&lt;</span><span class="token operator">/</span>list<span class="token operator">></span>
+      <span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean <span class="token operator">></span></code></pre>
+
+<p><strong>②Map</strong></p>
+<p>Java.util.Map通过<map>标签定义，<map>标签里可以使用多个<entry>作为子标签。每个条目包含一个键和一个值。</p>
+<p>必须在<key>标签里定义键。</p>
+<p>因为键和值的类型没有限制，所以可以自由地为它们指定<value>、<ref>、<bean>或<null/>元素。</p>
+<p>可以将Map的键和值作为<entry>的属性定义：简单常量使用key和value来定义；bean引用通过key-ref和value-ref属性定义。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"cup"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.Cup"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"bookMap"</span><span class="token operator">></span>
+		<span class="token generics"><span class="token punctuation">&lt;</span>map<span class="token punctuation">></span></span>
+			<span class="token generics"><span class="token punctuation">&lt;</span>entry<span class="token punctuation">></span></span>
+				<span class="token generics"><span class="token punctuation">&lt;</span>key<span class="token punctuation">></span></span>
+					<span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span>bookKey01<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+				<span class="token operator">&lt;</span><span class="token operator">/</span>key<span class="token operator">></span>
+				<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book01"</span><span class="token operator">/</span><span class="token operator">></span>
+			<span class="token operator">&lt;</span><span class="token operator">/</span>entry<span class="token operator">></span>
+			<span class="token generics"><span class="token punctuation">&lt;</span>entry<span class="token punctuation">></span></span>
+				<span class="token generics"><span class="token punctuation">&lt;</span>key<span class="token punctuation">></span></span>
+					<span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span>bookKey02<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+				<span class="token operator">&lt;</span><span class="token operator">/</span>key<span class="token operator">></span>
+				<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book02"</span><span class="token operator">/</span><span class="token operator">></span>
+			<span class="token operator">&lt;</span><span class="token operator">/</span>entry<span class="token operator">></span>
+		<span class="token operator">&lt;</span><span class="token operator">/</span>map<span class="token operator">></span>
+	<span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<p><strong>③Properties</strong></p>
+<p>使用<props>定义java.util.Properties，该标签使用多个<prop>作为子标签。每个<prop>标签必须定义key属性</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.DataSource"</span> id<span class="token operator">=</span><span class="token string">"dataSource"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"properties"</span><span class="token operator">></span>
+		<span class="token generics"><span class="token punctuation">&lt;</span>props<span class="token punctuation">></span></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"userName"</span><span class="token operator">></span>root<span class="token operator">&lt;</span><span class="token operator">/</span>prop<span class="token operator">></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"password"</span><span class="token operator">></span>root<span class="token operator">&lt;</span><span class="token operator">/</span>prop<span class="token operator">></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"url"</span><span class="token operator">></span>jdbc<span class="token operator">:</span>mysql<span class="token operator">:</span><span class="token operator">/</span><span class="token comment">//test&lt;/prop></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"driverClass"</span><span class="token operator">></span><span class="token class-name"><span class="token namespace">com<span class="token punctuation">.</span>mysql<span class="token punctuation">.</span>jdbc<span class="token punctuation">.</span></span>Driver</span><span class="token operator">&lt;</span><span class="token operator">/</span>prop<span class="token operator">></span>
+		<span class="token operator">&lt;</span><span class="token operator">/</span>props<span class="token operator">></span>
+	<span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span>
+<span class="token operator">&lt;</span>bean <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.DataSource"</span> id<span class="token operator">=</span><span class="token string">"dataSource"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"properties"</span><span class="token operator">></span>
+		<span class="token generics"><span class="token punctuation">&lt;</span>props<span class="token punctuation">></span></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"userName"</span><span class="token operator">></span>root<span class="token operator">&lt;</span><span class="token operator">/</span>prop<span class="token operator">></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"password"</span><span class="token operator">></span>root<span class="token operator">&lt;</span><span class="token operator">/</span>prop<span class="token operator">></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"url"</span><span class="token operator">></span>jdbc<span class="token operator">:</span>mysql<span class="token operator">:</span><span class="token operator">/</span><span class="token comment">//test&lt;/prop></span>
+			<span class="token operator">&lt;</span>prop key<span class="token operator">=</span><span class="token string">"driverClass"</span><span class="token operator">></span><span class="token class-name"><span class="token namespace">com<span class="token punctuation">.</span>mysql<span class="token punctuation">.</span>jdbc<span class="token punctuation">.</span></span>Driver</span><span class="token operator">&lt;</span><span class="token operator">/</span>prop<span class="token operator">></span>
+		<span class="token operator">&lt;</span><span class="token operator">/</span>props<span class="token operator">></span>
+	<span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<p><strong>④集合类型的bean</strong></p>
+<p>如果只能将集合对象配置在某个bean内部，则这个集合的配置将不能重用。我们需要将集合bean的配置拿到外面，供其他bean引用。</p>
+<p>配置集合类型的bean需要引入util名称空间</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>util<span class="token operator">:</span>list id<span class="token operator">=</span><span class="token string">"bookList"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book01"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book02"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book03"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book04"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>ref bean<span class="token operator">=</span><span class="token string">"book05"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>util<span class="token operator">:</span>list<span class="token operator">></span>
+
+<span class="token operator">&lt;</span>util<span class="token operator">:</span>list id<span class="token operator">=</span><span class="token string">"categoryList"</span><span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span>编程<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span>极客<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span>相声<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+	<span class="token generics"><span class="token punctuation">&lt;</span>value<span class="token punctuation">></span></span>评书<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>util<span class="token operator">:</span>list<span class="token operator">></span></code></pre>
+
+
+
+<h3 id="通过工厂创建bean"><a href="#通过工厂创建bean" class="headerlink" title="通过工厂创建bean"></a>通过工厂创建bean</h3><h4 id="静态工厂"><a href="#静态工厂" class="headerlink" title="静态工厂"></a>静态工厂</h4><p>调用静态工厂方法创建bean是将对象创建的过程封装到静态方法中。当客户端需要对象时，只需要简单地调用静态方法，而不用关心创建对象的细节。</p>
+<p>声明通过静态方法创建的bean需要在bean的class属性里指定静态工厂类的全类名，同时在factory-method属性里指定工厂方法的名称。最后使用<constrctor-arg>元素为该方法传递方法参数。</p>
+<h4 id="实例工厂"><a href="#实例工厂" class="headerlink" title="实例工厂"></a>实例工厂</h4><p>实例工厂方法：将对象的创建过程封装到另外一个对象实例的方法里。当客户端需要请求对象时，只需要简单的调用该实例方法而不需要关心对象的创建细节。</p>
+<p>实现方式</p>
+<p><strong>①配置工厂类实例的bean</strong></p>
+<p><strong>②在factory-method属性里指定该工厂方法的名称</strong></p>
+<p><strong>③使用 construtor-arg 元素为工厂方法传递方法参数</strong></p>
+<h4 id="FactoryBean"><a href="#FactoryBean" class="headerlink" title="FactoryBean"></a>FactoryBean</h4><p>Spring中有两种类型的bean，一种是普通bean，另一种是工厂bean，即FactoryBean。</p>
+<p>工厂bean跟普通bean不同，其返回的对象不是指定类的一个实例，其返回的是该工厂bean的getObject方法所返回的对象。</p>
+<p>工厂bean必须实现<em><strong>org.springframework.beans.factory.FactoryBean</strong></em>接口。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"product"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.spring.bean.ProductFactory"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"productName"</span> value<span class="token operator">=</span><span class="token string">"Mp3"</span> <span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<h3 id="bean的高级配置"><a href="#bean的高级配置" class="headerlink" title="bean的高级配置"></a>bean的高级配置</h3><h4 id="配置信息的继承"><a href="#配置信息的继承" class="headerlink" title="配置信息的继承"></a>配置信息的继承</h4><p><strong>①背景</strong></p>
+<p>查看下面两个Employee的配置，其中dept属性是重复的。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"dept"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.parent.bean.Department"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"deptId"</span> value<span class="token operator">=</span><span class="token string">"100"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"deptName"</span> value<span class="token operator">=</span><span class="token string">"IT"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span>
+
+<span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"emp01"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.parent.bean.Employee"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empId"</span> value<span class="token operator">=</span><span class="token string">"1001"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empName"</span> value<span class="token operator">=</span><span class="token string">"Tom"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"age"</span> value<span class="token operator">=</span><span class="token string">"20"</span><span class="token operator">/</span><span class="token operator">></span>
+
+	<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 重复的属性值 <span class="token operator">--</span><span class="token operator">></span>	
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"detp"</span> ref<span class="token operator">=</span><span class="token string">"dept"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span>
+
+<span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"emp02"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.parent.bean.Employee"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empId"</span> value<span class="token operator">=</span><span class="token string">"1002"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empName"</span> value<span class="token operator">=</span><span class="token string">"Jerry"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"age"</span> value<span class="token operator">=</span><span class="token string">"25"</span><span class="token operator">/</span><span class="token operator">></span>
+
+	<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 重复的属性值 <span class="token operator">--</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"detp"</span> ref<span class="token operator">=</span><span class="token string">"dept"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<p><strong>②配置信息的继承</strong></p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 以emp01作为父bean，继承后可以省略公共属性值的配置 <span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"emp02"</span> parent<span class="token operator">=</span><span class="token string">"emp01"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empId"</span> value<span class="token operator">=</span><span class="token string">"1002"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empName"</span> value<span class="token operator">=</span><span class="token string">"Jerry"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"age"</span> value<span class="token operator">=</span><span class="token string">"25"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<p>Spring允许继承bean的配置，被继承的bean称为父bean。继承这个父bean的bean称为子bean</p>
+<p>子bean从父bean中继承配置，包括bean的属性配置</p>
+<p>子bean也可以覆盖从父bean继承过来的配置</p>
+<p><strong>③补充说明</strong></p>
+<p>父bean可以作为配置模板，也可以作为bean实例。若只想把父bean作为模板，可以设置<bean>的abstract 属性为true，这样Spring将不会实例化这个bean</p>
+<p>如果一个bean的class属性没有指定，则必须是抽象bean</p>
+<p>并不是<bean>元素里的所有属性都会被继承。比如：autowire，abstract等。</p>
+<p>也可以忽略父bean的class属性，让子bean指定自己的类，而共享相同的属性配置。但此时abstract必须设为true。</p>
+<h4 id="bean之间的依赖"><a href="#bean之间的依赖" class="headerlink" title="bean之间的依赖"></a>bean之间的依赖</h4><p>有的时候创建一个bean的时候需要保证另外一个bean也被创建，这时我们称前面的bean对后面的bean有依赖。例如：要求创建Employee对象的时候必须创建Department。这里需要注意的是依赖关系不等于引用关系，Employee即使依赖Department也可以不引用它。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"emp03"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.atguigu.parent.bean.Employee"</span> depends<span class="token operator">-</span>on<span class="token operator">=</span><span class="token string">"dept"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empId"</span> value<span class="token operator">=</span><span class="token string">"1003"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"empName"</span> value<span class="token operator">=</span><span class="token string">"Kate"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"age"</span> value<span class="token operator">=</span><span class="token string">"21"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<h4 id="bean的作用域"><a href="#bean的作用域" class="headerlink" title="bean的作用域"></a>bean的作用域</h4><p>在Spring中，可以在<bean>元素的scope属性里设置bean的作用域，以决定这个bean是单实例的还是多实例的。</p>
+<p>默认情况下，Spring只为每个在IOC容器里声明的bean创建唯一一个实例，整个IOC容器范围内都能共享该实例：所有后续的getBean()调用和bean引用都将返回这个唯一的bean实例。该作用域被称为singleton，它是所有bean的默认作用域。</p>
+<p>当bean的作用域为单例时，Spring会在IOC容器对象创建时就创建bean的对象实例。而当bean的作用域为prototype时，IOC容器在获取bean的实例时创建bean的实例对象。</p>
+<h4 id="bean的生命周期"><a href="#bean的生命周期" class="headerlink" title="bean的生命周期"></a>bean的生命周期</h4><p>①Spring IOC容器可以管理bean的生命周期，Spring允许在bean生命周期内特定的时间点执行指定的任务。</p>
+<p>②Spring IOC容器对bean的生命周期进行管理的过程：</p>
+<p>​        [1]通过构造器或工厂方法创建bean实例</p>
+<p>​        [2]为bean的属性设置值和对其他bean的引用</p>
+<p>​        [3]调用bean的初始化方法</p>
+<p>​        [4]bean可以使用了</p>
+<p>​        [5]当容器关闭时，调用bean的销毁方法</p>
+<p>③在配置bean时，通过init-method和destroy-method 属性为bean指定初始化和销毁方法</p>
+<p>④bean的后置处理器</p>
+<p>​        [1]bean后置处理器允许在调用<strong>初始化方法前后</strong>对bean进行额外的处理</p>
+<p>​        [2]bean后置处理器对IOC容器里的所有bean实例逐一处理，而非单一实例。其典型应用是：检查bean属性的正确性或根据特定的标准更改bean的属性。</p>
+<p>​        [3] bean后置处理器时需要实现接口：org.springframework.beans.factory.config.BeanPostProcessor。在初始化方法被调用前后，Spring将把每个bean实例分别传递给上述接口的以下两个方法：</p>
+<p>​        ●postProcessBeforeInitialization(Object, String)</p>
+<p>​        ●postProcessAfterInitialization(Object, String)</p>
+<p>⑤添加bean后置处理器后bean的生命周期</p>
+<p>​        [1]通过构造器或工厂方法<strong>创建<strong><strong>bean</strong></strong>实例</strong></p>
+<p>​        [2]为bean的<strong>属性设置值</strong>和对其他bean的引用</p>
+<p>​        [3]将bean实例传递给bean后置处理器的**postProcessBeforeInitialization()**方法</p>
+<p>​        [4]调用bean的<strong>初始化</strong>方法</p>
+<p>​        [5]将bean实例传递给bean后置处理器的**postProcessAfterInitialization()**方法</p>
+<p>​        [6]bean可以使用了</p>
+<p>​        [7]当容器关闭时调用bean的<strong>销毁方法</strong></p>
+<h4 id="引用外部属性文件"><a href="#引用外部属性文件" class="headerlink" title="引用外部属性文件"></a>引用外部属性文件</h4><p>当bean的配置信息逐渐增多时，查找和修改一些bean的配置信息就变得愈加困难。这时可以将一部分信息提取到bean配置文件的外部，以properties格式的属性文件保存起来，同时在bean的配置文件中引用properties属性文件中的内容，从而实现一部分属性值在发生变化时仅修改properties属性文件即可。这种技术多用于连接数据库的基本信息的配置。</p>
+<p>①直接配置</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 直接配置 <span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"dataSource"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.mchange.v2.c3p0.ComboPooledDataSource"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"user"</span> value<span class="token operator">=</span><span class="token string">"root"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"password"</span> value<span class="token operator">=</span><span class="token string">"root"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"jdbcUrl"</span> value<span class="token operator">=</span><span class="token string">"jdbc:mysql:///test"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"driverClass"</span> value<span class="token operator">=</span><span class="token string">"com.mysql.jdbc.Driver"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<p>②创建properties属性文件</p>
+<pre class="language-java" data-language="java"><code class="language-java">prop<span class="token punctuation">.</span>userName<span class="token operator">=</span>root
+prop<span class="token punctuation">.</span>password<span class="token operator">=</span>root
+prop<span class="token punctuation">.</span>url<span class="token operator">=</span>jdbc<span class="token operator">:</span>mysql<span class="token operator">:</span><span class="token operator">/</span><span class="token comment">//test</span>
+prop<span class="token punctuation">.</span>driverClass<span class="token operator">=</span><span class="token class-name"><span class="token namespace">com<span class="token punctuation">.</span>mysql<span class="token punctuation">.</span>jdbc<span class="token punctuation">.</span></span>Driver</span></code></pre>
+
+<p>③引入context名称空间</p>
+<p>④指定properties属性文件的位置</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 指定properties属性文件的位置 <span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> classpath<span class="token operator">:</span>xxx 表示属性文件位于类路径下 <span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>context<span class="token operator">:</span>property<span class="token operator">-</span>placeholder location<span class="token operator">=</span><span class="token string">"classpath:jdbc.properties"</span><span class="token operator">/</span><span class="token operator">></span></code></pre>
+
+<p>⑤从properties属性文件中引入属性值</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> 从properties属性文件中引入属性值 <span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"dataSource"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.mchange.v2.c3p0.ComboPooledDataSource"</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"user"</span> value<span class="token operator">=</span><span class="token string">"$&#123;prop.userName&#125;"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"password"</span> value<span class="token operator">=</span><span class="token string">"$&#123;prop.password&#125;"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"jdbcUrl"</span> value<span class="token operator">=</span><span class="token string">"$&#123;prop.url&#125;"</span><span class="token operator">/</span><span class="token operator">></span>
+	<span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"driverClass"</span> value<span class="token operator">=</span><span class="token string">"$&#123;prop.driverClass&#125;"</span><span class="token operator">/</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span></code></pre>
+
+<h4 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h4><p><strong>①自动装配的概念</strong></p>
+<p>[1]手动装配：以value或ref的方式<strong>明确指定属性值</strong>都是手动装配。</p>
+<p>[2]自动装配：根据指定的装配规则，<strong>不需要明确指定</strong>，Spring<strong>自动</strong>将匹配的属性值<strong>注入</strong>bean中。</p>
+<p><strong>②装配模式</strong></p>
+<p>[1]根据<strong>类型</strong>自动装配：将类型匹配的bean作为属性注入到另一个bean中。若IOC容器中有多个与目标bean类型一致的bean，Spring将无法判定哪个bean最合适该属性，所以不能执行自动装配</p>
+<p>[2]根据<strong>名称</strong>自动装配：必须将目标bean的名称和属性名设置的完全相同</p>
+<p>[3]通过构造器自动装配：当bean中存在多个构造器时，此种自动装配方式将会很复杂。不推荐使用。</p>
+<p><strong>③选用建议</strong></p>
+<p>相对于使用注解的方式实现的自动装配，在XML文档中进行的自动装配略显笨拙，在项目中更多的使用注解的方式实现。</p>
+<h3 id="通过注解配置bean"><a href="#通过注解配置bean" class="headerlink" title="通过注解配置bean"></a>通过注解配置bean</h3><p>相对于XML方式而言，通过注解的方式配置bean更加简洁和优雅，而且和MVC组件化开发的理念十分契合，是开发中常用的使用方式。</p>
+<h4 id="使用注解标识组件"><a href="#使用注解标识组件" class="headerlink" title="使用注解标识组件"></a>使用注解标识组件</h4><p>①普通组件：@Component</p>
+<p>标识一个受Spring IOC容器管理的组件</p>
+<p>②持久化层组件：@Respository</p>
+<p>标识一个受Spring IOC容器管理的持久化层组件</p>
+<p>③业务逻辑层组件：@Service</p>
+<p>标识一个受Spring IOC容器管理的业务逻辑层组件</p>
+<p>④表述层控制器组件：@Controller</p>
+<p>标识一个受Spring IOC容器管理的表述层控制器组件</p>
+<p>⑤组件命名规则</p>
+<p>​        [1]默认情况：使用组件的简单类名首字母小写后得到的字符串作为bean的id</p>
+<p>​        [2]使用组件注解的value属性指定bean的id</p>
+<p>注意：事实上Spring并没有能力识别一个组件到底是不是它所标记的类型，即使将@Respository注解用在一个表述层控制器组件上面也不会产生任何错误，所以@Respository、@Service、@Controller这几个注解仅仅是为了让开发人员自己明确当前的组件扮演的角色。</p>
+<h4 id="扫描组件"><a href="#扫描组件" class="headerlink" title="扫描组件"></a>扫描组件</h4><p>组件被上述注解标识后还需要通过Spring进行扫描才能够侦测到。</p>
+<p><strong>①指定被扫描的package</strong></p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>context<span class="token operator">:</span>component<span class="token operator">-</span>scan base<span class="token operator">-</span><span class="token keyword">package</span><span class="token operator">=</span><span class="token string">"com.atguigu.component"</span><span class="token operator">/</span><span class="token operator">></span></code></pre>
+
+<p><strong>②详细说明</strong></p>
+<p>[1]<strong>base-package</strong>属性指定一个需要扫描的基类包，Spring容器将会扫描这个基类包及其子包中的所有类。</p>
+<p>[2]当需要扫描多个包时可以使用逗号分隔。</p>
+<p>[3]如果仅希望扫描特定的类而非基包下的所有类，可使用resource-pattern属性过滤特定的类，示例：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>context<span class="token operator">:</span>component<span class="token operator">-</span>scan 
+	base<span class="token operator">-</span><span class="token keyword">package</span><span class="token operator">=</span><span class="token string">"com.atguigu.component"</span> 
+	resource<span class="token operator">-</span>pattern<span class="token operator">=</span><span class="token string">"autowire/*.class"</span><span class="token operator">/</span><span class="token operator">></span></code></pre>
+
+<p>[4]包含与排除</p>
+<p>●<a href="context:include-filter">context:include-filter</a>子节点表示要包含的目标类</p>
+<p>注意：通常需要与use-default-filters属性配合使用才能够达到“仅包含某些组件”这样的效果。即：通过将use-default-filters属性设置为false，禁用默认过滤器，然后扫描的就只是include-filter中的规则指定的组件了。</p>
+<p>●<a href="context:exclude-filter">context:exclude-filter</a>子节点表示要排除在外的目标类</p>
+<p>●component-scan下可以拥有若干个include-filter和exclude-filter子节点</p>
+<p><strong>③JAR包</strong></p>
+<p>必须在原有JAR包组合的基础上再导入一个：spring-aop-4.0.0.RELEASE.jar</p>
+<h4 id="组件装配"><a href="#组件装配" class="headerlink" title="组件装配"></a>组件装配</h4><p><strong>①需求</strong></p>
+<p>Controller组件中往往需要用到Service组件的实例，Service组件中往往需要用到Repository组件的实例。Spring可以通过注解的方式帮我们实现属性的装配。</p>
+<p><strong>②实现依据</strong></p>
+<p>在指定要扫描的包时，<a href="context:component-scan">context:component-scan</a> 元素会自动注册一个bean的后置处理器：AutowiredAnnotationBeanPostProcessor的实例。该后置处理器可以自动装配标记了**@Autowired**、@Resource或@Inject注解的属性。</p>
+<p><strong>③@Autowired注解</strong></p>
+<p>[1]根据类型实现自动装配。</p>
+<p>[2]构造器、普通字段(即使是非public)、一切具有参数的方法都可以应用@Autowired注解</p>
+<p>[3]默认情况下，所有使用@Autowired注解的属性都需要被设置。当Spring找不到匹配的bean装配属性时，会抛出异常。</p>
+<p>[4]若某一属性允许不被设置，可以设置@Autowired注解的required属性为 false</p>
+<p>[5]默认情况下，当IOC容器里存在多个类型兼容的bean时，Spring会尝试匹配bean的id值是否与变量名相同，如果相同则进行装配。如果bean的id值不相同，通过类型的自动装配将无法工作。此时可以在@Qualifier注解里提供bean的名称。Spring甚至允许在方法的形参上标注@Qualifiter注解以指定注入bean的名称。</p>
+<p>[6]@Autowired注解也可以应用在数组类型的属性上，此时Spring将会把所有匹配的bean进行自动装配。</p>
+<p>[7]@Autowired注解也可以应用在集合属性上，此时Spring读取该集合的类型信息，然后自动装配所有与之兼容的bean。</p>
+<p>[8]@Autowired注解用在java.util.Map上时，若该Map的键值为String，那么 Spring将自动装配与值类型兼容的bean作为值，并以bean的id值作为键。</p>
+<p><strong>④@Resource</strong></p>
+<p>@Resource注解要求提供一个bean名称的属性，若该属性为空，则自动采用标注处的变量或方法名作为bean的名称。</p>
+<p><strong>⑤@Inject</strong></p>
+<p>@Inject和@Autowired注解一样也是按类型注入匹配的bean，但没有reqired属性。</p>
+<h3 id="泛型依赖注入"><a href="#泛型依赖注入" class="headerlink" title="泛型依赖注入"></a>泛型依赖注入</h3><p>可以为子类注入子类对应的泛型类型的成员变量的引用。</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>[1]组件基类</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">BaseRepository</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BaseRepository</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>
+	
+	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Saved by BaseRepository"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span></code></pre>
+
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">BaseService</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BaseService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>
+	
+	<span class="token annotation punctuation">@Autowired</span>
+	<span class="token keyword">private</span> <span class="token class-name">BaseRepository</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> repository<span class="token punctuation">;</span>
+	
+	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		repository<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>[2]组件实体类</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">UserRepository</span>
+<span class="token annotation punctuation">@Repository</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserRepository</span> <span class="token keyword">extends</span> <span class="token class-name">BaseRepository</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">></span></span><span class="token punctuation">&#123;</span>
+	
+	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Saved by UserRepository"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span></code></pre>
+
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">UserService</span>
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserService</span> <span class="token keyword">extends</span> <span class="token class-name">BaseService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">></span></span><span class="token punctuation">&#123;</span>
+
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>[3]模型实体类</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">User</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">&#123;</span>
+	
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>[4]测试</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">ApplicationContext</span> ioc <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathXmlApplicationContext</span><span class="token punctuation">(</span><span class="token string">"di.xml"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token class-name">UserService</span> us <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">UserService</span><span class="token punctuation">)</span> ioc<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"userService"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+us<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<pre class="language-java" data-language="java"><code class="language-java">执行结果
+<span class="token class-name">Saved</span> by <span class="token class-name">UserRepository</span></code></pre>
+
+<h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>●AOP(Aspect-Oriented Programming，<strong>面向切面编程</strong>)：是一种新的方法论，是对传统 OOP(Object-Oriented Programming，面向对象编程)的补充。</p>
+<p>●AOP编程操作的主要对象是切面(aspect)，而切面<strong>模块化横切关注点</strong>。</p>
+<p>●在应用AOP编程时，仍然需要定义公共功能，但可以明确的定义这个功能应用在哪里，以什么方式应用，并且不必修改受影响的类。这样一来横切关注点就被模块化到特殊的类里——这样的类我们通常称之为“切面”。</p>
+<p>●AOP的好处：</p>
+<p>​        ○每个事物逻辑位于一个位置，代码不分散，便于维护和升级</p>
+<p>​        ○业务模块更简洁，只包含核心业务代码</p>
+<h3 id="相关术语"><a href="#相关术语" class="headerlink" title="相关术语"></a>相关术语</h3><p><em><strong>横切关注点</strong></em></p>
+<p>从每个方法中抽取出来的同一类非核心业务。</p>
+<p><em><strong>切面(Aspect)</strong></em></p>
+<p>封装横切关注点信息的类，每个关注点体现为一个通知方法。</p>
+<p><em><strong>通知(Advice)</strong></em></p>
+<p>切面必须要完成的各个具体工作</p>
+<p><em><strong>目标(Target)</strong></em></p>
+<p>被通知的对象</p>
+<p><em><strong>代理(Proxy)</strong></em></p>
+<p>向目标对象应用通知之后创建的代理对象</p>
+<p><em><strong>连接点(Joinpoint)</strong></em></p>
+<p>横切关注点在程序代码中的具体体现，对应程序执行的某个特定位置。例如：类某个方法调用前、调用后、方法捕获到异常后等。</p>
+<p>在应用程序中可以使用横纵两个坐标来定位一个具体的连接点</p>
+<p><em><strong>切入点(pointcut)</strong></em></p>
+<p>定位连接点的方式。每个类的方法中都包含多个连接点，所以连接点是类中客观存在的事物。如果把连接点看作数据库中的记录，那么切入点就是查询条件——AOP可以通过切入点定位到特定的连接点。切点通过org.springframework.aop.Pointcut 接口进行描述，它使用类和方法作为连接点的查询条件</p>
+<h3 id="相关细节"><a href="#相关细节" class="headerlink" title="相关细节"></a>相关细节</h3><h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a>切入点表达式</h4><p>通过<strong>表达式的方式</strong>定位<strong>一个或多个</strong>具体的连接点。</p>
+<p><strong>①切入点表达式的语法格式</strong></p>
+<p>  execution([权限修饰符] [返回值类型] [简单类名/全类名] <a href="%5B%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%5D">方法名</a>)  </p>
+<p><strong>②举例说明</strong></p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>execution(***** com.atguigu.spring.ArithmeticCalculator.*****(<strong>..</strong>))</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td>ArithmeticCalculator接口中声明的所有方法。  第一个“<em>”代表任意修饰符及任意返回值。  第二个“</em>”代表任意方法。  “..”匹配任意数量、任意类型的参数。  若目标类、接口与该切面类在同一个包中可以省略包名。</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>execution(<strong>public</strong> * ArithmeticCalculator.*(..))</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td>ArithmeticCalculator接口的所有公有方法</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>execution(public <strong>double</strong> ArithmeticCalculator.*(..))</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td>ArithmeticCalculator接口中返回double类型数值的方法</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>execution(public double ArithmeticCalculator.*(<strong>double</strong>,  ..))</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td>第一个参数为double类型的方法。  “..” 匹配任意数量、任意类型的参数。</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>execution(public double ArithmeticCalculator.*(<strong>double</strong>,  <strong>double</strong>))</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td>参数类型为double，double类型的方法</td>
+</tr>
+</tbody></table>
+<p><strong>③在AspectJ中，切入点表达式可以通过 “&amp;&amp;”、“||”、“!”等操作符结合起来。</strong></p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th align="left">execution (* <em>.add(int,..)) <strong>||</strong>  execution(</em> *.sub(int,..))</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td align="left">任意类中第一个参数为int类型的add方法或sub方法</td>
+</tr>
+</tbody></table>
+<p><strong>实际应用</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Rayucan/imageCloud/data/20210202151626.png" alt="Bw8iWt.png" loading="lazy"></p>
+<h3 id="当前连接点"><a href="#当前连接点" class="headerlink" title="当前连接点"></a>当前连接点</h3><p>切入点表达式通常都会是从宏观上定位一组方法，和具体某个通知的注解结合起来就能够确定对应的连接点。那么就一个具体的连接点而言，我们可能会关心这个连接点的一些具体信息，例如：当前连接点所在方法的方法名、当前传入的参数值等等。这些信息都封装在JoinPoint接口的实例对象中</p>
+<h3 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h3><p>在具体的连接点上要执行的操作。</p>
+<p>一个切面可以包括一个或者多个通知。</p>
+<p>通知所使用的注解的值往往是切入点表达式。</p>
+<h4 id="前置通知"><a href="#前置通知" class="headerlink" title="前置通知"></a>前置通知</h4><ul>
+<li><p>前置通知：在方法执行之前执行的通知</p>
+</li>
+<li><p>使用***@Before***注解</p>
+</li>
+</ul>
+<h4 id="后置通知"><a href="#后置通知" class="headerlink" title="后置通知"></a>后置通知</h4><ul>
+<li><p>后置通知：后置通知是在连接点完成之后执行的，即连接点返回结果或者抛出异常的时候</p>
+</li>
+<li><p>使用***@After***注解</p>
+</li>
+</ul>
+<h4 id="返回通知"><a href="#返回通知" class="headerlink" title="返回通知"></a>返回通知</h4><ul>
+<li><p>返回通知：无论连接点是正常返回还是抛出异常，后置通知都会执行。如果只想在连接点返回的时候记录日志，应使用返回通知代替后置通知。</p>
+</li>
+<li><p>使用***@AfterReturning***注解</p>
+</li>
+<li><p>在返回通知中访问连接点的返回值</p>
+<ul>
+<li>在返回通知中，只要将returning属性添加到@AfterReturning注解中，就可以访问连接点的返回值。该属性的值即为用来传入返回值的参数名称</li>
+<li>必须在通知方法的签名中添加一个同名参数。在运行时Spring AOP会通过这个参数传递返回值、</li>
+<li>原始的切点表达式需要出现在pointcut属性中                              </li>
+</ul>
+</li>
+</ul>
+<h4 id="异常通知"><a href="#异常通知" class="headerlink" title="异常通知"></a>异常通知</h4><ul>
+<li><p>异常通知：只在连接点抛出异常时才执行异常通知</p>
+</li>
+<li><p>将throwing属性添加到@AfterThrowing注解中，也可以访问连接点抛出的异常。Throwable是所有错误和异常类的顶级父类，所以在异常通知方法可以捕获到任何错误和异常。</p>
+</li>
+<li><p>如果只对某种特殊的异常类型感兴趣，可以将参数声明为其他异常的参数类型。然后通知就只在抛出这个类型及其子类的异常时才被执行</p>
+</li>
+</ul>
+<h4 id="环绕通知"><a href="#环绕通知" class="headerlink" title="环绕通知"></a>环绕通知</h4><ul>
+<li><p>环绕通知是所有通知类型中功能最为强大的，能够全面地控制连接点，甚至可以控制是否执行连接点。</p>
+</li>
+<li><p>对于环绕通知来说，连接点的参数类型必须是ProceedingJoinPoint。它是 JoinPoint的子接口，允许控制何时执行，是否执行连接点。</p>
+</li>
+<li><p>在环绕通知中需要明确调用ProceedingJoinPoint的proceed()方法来执行被代理的方法。如果忘记这样做就会导致通知被执行了，但目标方法没有被执行。</p>
+</li>
+<li><p>注意：环绕通知的方法需要返回目标方法执行之后的结果，即调用 joinPoint.proceed();的返回值，否则会出现空指针异常。</p>
+</li>
+</ul>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>rayucan</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2020/10/25/Spring/" title="Spring">http://example.com/2020/10/25/Spring/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/10/31/Cookie%20%E5%92%8C%20Session/" rel="prev" title="Cookie 和 Session"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Cookie 和 Session</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/10/05/Maven/" rel="next" title="Maven"><span class="post-nav-text">Maven</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2023 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> rayucan</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
