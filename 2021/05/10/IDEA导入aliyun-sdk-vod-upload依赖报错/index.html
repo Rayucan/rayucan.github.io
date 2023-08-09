@@ -5,7 +5,7 @@
 });
 </script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
     const Yun = window.Yun || {};
-    window.CONFIG = {"hostname":"example.com","root":"/","title":null,"version":"1.6.1","mode":"dark","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":null,"version":"1.6.1","mode":"dark","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
   </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="使用阿里云视频点播功能时，service_vod 模块的 aliyun-sdk-vod-upload 依赖一直爆红 查阅文档，发现该依赖并未正式开源，需要自行去阿里云官网下载 但是下载完成并通过 cmd 命令手动导入至 maven 仓库后，该依赖仍然爆红，让我感到十分疑惑">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IDEA 导入 aliyun-sdk-vod-upload 依赖报错">
@@ -32,7 +32,7 @@
 <h3 id="更新："><a href="#更新：" class="headerlink" title="更新："></a>更新：</h3><p>阿里云官方 SDK 依赖文档：</p>
 <p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/53406.htm?spm=a2c4g.11186623.0.0.576e4150G4WSyK#multiTask13370">https://help.aliyun.com/document_detail/53406.htm?spm=a2c4g.11186623.0.0.576e4150G4WSyK#multiTask13370</a></p>
 <p>使用如下命令安装(版本号替换成自己当前的)</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">mvn install:install-file -DgroupId&#x3D;com.aliyun -DartifactId&#x3D;aliyun-sdk-vod-upload -Dversion&#x3D;1.4.14 -Dpackaging&#x3D;jar -Dfile&#x3D;aliyun-java-vod-upload-1.4.14.jar</code></pre>
+<pre class="language-shell" data-language="shell"><code class="language-shell">mvn install:install-file -DgroupId<span class="token operator">=</span>com.aliyun -DartifactId<span class="token operator">=</span>aliyun-sdk-vod-upload -Dversion<span class="token operator">=</span><span class="token number">1.4</span>.14 -Dpackaging<span class="token operator">=</span>jar -Dfile<span class="token operator">=</span>aliyun-java-vod-upload-1.4.14.jar</code></pre>
 
 <p>注意：</p>
 <p><strong>maven 本地仓库一定要去 <code>settings.xml</code> 里配置好，否则以上会在 maven 默认仓库里安装！！！</strong></p>
